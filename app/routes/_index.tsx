@@ -64,7 +64,7 @@ export default function Index() {
             far={1000}
           />
           <CameraControls />
-          <Physics debug={false}>
+          <Physics debug={true}>
             {scene === "model" && <Model />}
             {scene === "world" && <WorldScene />}
           </Physics>

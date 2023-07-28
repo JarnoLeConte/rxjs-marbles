@@ -5,7 +5,9 @@ import { useModel } from "~/hooks/useModel";
 export function Base({
   block,
   ...props
-}: { block: keyof Model["nodes"] } & JSX.IntrinsicElements["group"]) {
+}: {
+  block: keyof Model["nodes"];
+} & JSX.IntrinsicElements["group"]) {
   const { nodes, materials } = useModel();
 
   return (
