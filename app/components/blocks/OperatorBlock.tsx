@@ -5,10 +5,10 @@ import { BallDetector } from "../BallDetector";
 import { Base } from "./Base";
 
 export function OperatorBlock(props: JSX.IntrinsicElements["group"]) {
-  const updateBallValue = useGameStore((state) => state.updateBallValue);
+  const updateBall = useGameStore((state) => state.updateBall);
 
-  const onBallDetection: BallDetectionHandler = (ball) => {
-    updateBallValue(ball.id, ball.value * 2);
+  const onBallDetection: BallDetectionHandler = ({ id }) => {
+    updateBall(id, (ball) => ({ ...ball, value: ball.value * 2 }));
   };
 
   return (

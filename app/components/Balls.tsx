@@ -11,6 +11,7 @@ export function Balls() {
           key={ball.id}
           id={ball.id}
           value={ball.value}
+          color={ball.color}
           position={ball.defaultPosition}
         />
       ))}

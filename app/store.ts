@@ -1,5 +1,7 @@
 import { create } from "zustand";
 import type { Ball } from "./types";
+import type { Color } from "@react-three/fiber";
+import { randomColor } from "./utils";
 
 let nextId = 1;
 
@@ -8,15 +10,16 @@ interface GameState {
   addBall: (options: {
     value: any;
     position: [number, number, number];
+    color?: Color;
   }) => void;
   getBall: (id: number) => Ball | undefined;
-  updateBallValue: (id: number, value: any) => void;
+  updateBall: (id: number, setter: (ball: Ball) => Ball) => void;
   removeBall: (id: number) => void;
 }
 
 export const useGameStore = create<GameState>((set, get) => ({
   balls: [],
-  addBall: ({ value, position }) =>
+  addBall: ({ value, position, color }) =>
     set((state) => ({
       balls: [
         ...state.balls,
@@ -24,15 +27,14 @@ export const useGameStore = create<GameState>((set, get) => ({
           id: nextId++,
           value,
           defaultPosition: position,
+          color: color || randomColor(),
         },
       ],
     })),
   getBall: (id: number) => get().balls.find((ball) => ball.id === id),
-  updateBallValue: (id, value) =>
+  updateBall: (id, setter) =>
     set((state) => ({
-      balls: state.balls.map((ball) =>
-        ball.id === id ? { ...ball, value } : ball
-      ),
+      balls: state.balls.map((ball) => (ball.id === id ? setter(ball) : ball)),
     })),
   removeBall: (id: number) =>
     set((state) => ({ balls: state.balls.filter((ball) => ball.id !== id) })),
