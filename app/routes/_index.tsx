@@ -23,7 +23,7 @@ export const meta: V2_MetaFunction = () => {
 };
 
 export default function Index() {
-  const { scene, ambiance } = useControls("Environment", {
+  const { scene, ambiance, debug } = useControls("Environment", {
     scene: {
       options: ["model", "world"],
       value: "world",
@@ -43,6 +43,7 @@ export default function Index() {
       ] as PresetsType[],
       value: "apartment" as PresetsType,
     },
+    debug: false,
   });
 
   return (
@@ -64,7 +65,7 @@ export default function Index() {
             far={1000}
           />
           <CameraControls />
-          <Physics debug={true}>
+          <Physics debug={debug}>
             {scene === "model" && <Model />}
             {scene === "world" && <WorldScene />}
           </Physics>
