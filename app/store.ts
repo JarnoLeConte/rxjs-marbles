@@ -15,6 +15,8 @@ interface GameState {
   getBall: (id: number) => Ball | undefined;
   updateBall: (id: number, setter: (ball: Ball) => Ball) => void;
   removeBall: (id: number) => void;
+  tick: number;
+  nextTick: () => void;
 }
 
 export const useGameStore = create<GameState>((set, get) => ({
@@ -38,4 +40,7 @@ export const useGameStore = create<GameState>((set, get) => ({
     })),
   removeBall: (id: number) =>
     set((state) => ({ balls: state.balls.filter((ball) => ball.id !== id) })),
+
+  tick: 0,
+  nextTick: () => set((state) => ({ tick: state.tick + 1 })),
 }));

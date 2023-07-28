@@ -8,7 +8,7 @@ export function OperatorBlock(props: JSX.IntrinsicElements["group"]) {
   const updateBall = useGameStore((state) => state.updateBall);
 
   const onBallDetection: BallDetectionHandler = ({ id }) => {
-    updateBall(id, (ball) => ({ ...ball, value: ball.value * 2 }));
+    updateBall(id, (ball) => ({ ...ball, value: 10 * ball.value }));
   };
 
   return (
@@ -22,7 +22,7 @@ export function OperatorBlock(props: JSX.IntrinsicElements["group"]) {
         position={[0, 0.5, 1]}
         fontSize={0.2}
       >
-        {`map((x) => x * 2),`}
+        {`map((x) => 10 * x),`}
       </Text>
     </group>
   );

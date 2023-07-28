@@ -1,5 +1,4 @@
-import { useEffect } from "react";
-import { useGameStore } from "~/store";
+import { useSimulator } from "~/hooks/useSimulator";
 import { Balls } from "./Balls";
 import { ForwardBlock } from "./blocks/ForwardBlock";
 import { OperatorBlock } from "./blocks/OperatorBlock";
@@ -7,22 +6,7 @@ import { SinkBlock } from "./blocks/SinkBlock";
 import { SourceBlock } from "./blocks/SourceBlock";
 
 export function WorldScene() {
-  const addBall = useGameStore((state) => state.addBall);
-
-  // Create an initial ball
-  useEffect(() => {
-    addBall({ value: 2, position: [-6.05, 1, 0] });
-
-    // delayed
-    setTimeout(() => {
-      addBall({ value: 5, position: [-6.05, 1, 0] });
-    }, 4000);
-
-    // delayed
-    setTimeout(() => {
-      addBall({ value: 8, position: [-6.05, 1, 0] });
-    }, 8000);
-  }, [addBall]);
+  useSimulator();
 
   return (
     <group>
