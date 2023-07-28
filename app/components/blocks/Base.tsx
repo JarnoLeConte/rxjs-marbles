@@ -1,3 +1,4 @@
+import { RigidBody } from "@react-three/rapier";
 import type { Model } from "~/hooks/useModel";
 import { useModel } from "~/hooks/useModel";
 
@@ -9,11 +10,13 @@ export function Base({
 
   return (
     <group {...props} dispose={null}>
-      <mesh
-        geometry={nodes[block].geometry}
-        material={materials.Wood_Dark}
-        scale={10}
-      />
+      <RigidBody type="fixed" colliders="trimesh">
+        <mesh
+          geometry={nodes[block].geometry}
+          material={materials.Wood_Dark}
+          scale={10}
+        />
+      </RigidBody>
     </group>
   );
 }
