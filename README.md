@@ -2,6 +2,25 @@
 
 - [Remix Docs](https://remix.run/docs)
 
+## Modals
+
+Export models from Blender as follow:
+
+- General: format gltf embedded
+- Include: **selected** objects
+- Transform: +Y up
+- Geometry: Apply modifiers, UVs, Normals, Vertex Colors, Export Materials
+- Animation: OFF
+
+Run gltfjsx helper to generate JSX:
+
+```sh
+npx gltfjsx ./model.gltf --transform --keepnames --keepmeshes --types --simplify
+```
+
+Drag `object-transformed.glb` to public models folder.
+Copy `Object.tsx`` to project, and edit to rename exports, and adjust loading paths.
+
 ## Development
 
 From your terminal:
