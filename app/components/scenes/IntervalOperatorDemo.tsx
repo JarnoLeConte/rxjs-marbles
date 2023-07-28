@@ -16,7 +16,7 @@ export function IntervalOperatorDemo() {
   return (
     <group>
       <SourceBlock position={[-2, 0, 0]} text="interval()" />
-      <SinkBlock position={[0, 0, 0]} logger text=".subscribe();" />
+      <SinkBlock position={[0, 0, 0]} text=".subscribe();" />
     </group>
   );
 }

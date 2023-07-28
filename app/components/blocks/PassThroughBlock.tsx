@@ -1,20 +1,20 @@
 import { Text } from "@react-three/drei";
-import { useGameStore } from "~/store";
 import type { BallDetectionHandler } from "../BallDetector";
 import { BallDetector } from "../BallDetector";
 import { Base } from "./Base";
 
-export function OperatorBlock(props: JSX.IntrinsicElements["group"]) {
-  const updateBall = useGameStore((state) => state.updateBall);
+type Props = JSX.IntrinsicElements["group"] & {
+  onBallDetection?: BallDetectionHandler;
+  text: string;
+};
 
-  const onBallDetection: BallDetectionHandler = ({ id }) => {
-    updateBall(id, (ball) => ({ ...ball, value: 10 * ball.value }));
-  };
-
+export function PassThroughBlock({ onBallDetection, text, ...props }: Props) {
   return (
     <group {...props}>
       <Base block="Cube062" position-y={1} rotation-y={Math.PI / 2} />
-      <BallDetector position-y={1} onDetection={onBallDetection} />
+      {onBallDetection && (
+        <BallDetector position-y={1} onDetection={onBallDetection} />
+      )}
       <Text
         color="black"
         anchorX="center"
@@ -22,7 +22,7 @@ export function OperatorBlock(props: JSX.IntrinsicElements["group"]) {
         position={[0, 0.5, 1]}
         fontSize={0.2}
       >
-        {`map((x) => 10 * x),`}
+        {text}
       </Text>
     </group>
   );

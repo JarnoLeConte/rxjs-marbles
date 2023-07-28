@@ -6,10 +6,12 @@ import { useEffect } from "react";
 import { useGameStore } from "~/store";
 import { useSimulator } from "~/hooks/useSimulator";
 import { IntervalOperatorDemo } from "./scenes/IntervalOperatorDemo";
+import { SwitchMapOperatorDemo } from "./scenes/SwitchMapOperatorDemo";
 
 enum Example {
   Map = "map",
   Interval = "interval",
+  SwitchMap = "switchMap",
   Dev = "[DEV] marble blocks",
 }
 
@@ -19,7 +21,7 @@ export function SceneContent() {
   const { example } = useControls("Demo", {
     example: {
       options: Object.values(Example),
-      value: Object.values(Example)[0],
+      value: "switchMap" || Object.values(Example)[0],
     },
   });
 
@@ -35,6 +37,8 @@ export function SceneContent() {
         return <MapOperatorDemo />;
       case "interval":
         return <IntervalOperatorDemo />;
+      case "switchMap":
+        return <SwitchMapOperatorDemo />;
       default:
         return <Model />;
     }
