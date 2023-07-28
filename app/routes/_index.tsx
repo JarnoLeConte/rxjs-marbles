@@ -14,8 +14,11 @@ import { WorldScene } from "~/components/WorldScene";
 
 export const meta: V2_MetaFunction = () => {
   return [
-    { title: "RxJS Marbles" },
-    { name: "description", content: "RxJS explained" },
+    { title: "RxJS Marbles 3D" },
+    {
+      name: "description",
+      content: "Reactive programming in RxJS visualized with 3D marbles.",
+    },
   ];
 };
 
@@ -45,7 +48,7 @@ export default function Index() {
   return (
     <>
       <Leva />
-      <Canvas shadows camera={{}}>
+      <Canvas shadows>
         <Suspense>
           <Environment preset={ambiance} />
           <directionalLight
