@@ -1,7 +1,9 @@
 import { Text } from "@react-three/drei";
 import { Base } from "./Base";
 
-export function SourceBlock(props: JSX.IntrinsicElements["group"]) {
+type Props = JSX.IntrinsicElements["group"];
+
+export function SourceBlock(props: Props) {
   return (
     <group {...props}>
       <Base block="Cube023" position={[0, 0, 0]} />
@@ -13,7 +15,7 @@ export function SourceBlock(props: JSX.IntrinsicElements["group"]) {
         position={[0, 0.5, 1]}
         fontSize={0.2}
       >
-        source$.pipe(
+        {`source$.pipe(`}
       </Text>
     </group>
   );

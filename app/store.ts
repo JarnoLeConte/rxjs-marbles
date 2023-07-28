@@ -9,11 +9,12 @@ interface GameState {
     value: any;
     position: [number, number, number];
   }) => void;
-  updateBallValue: (id: number, setter: (value: any) => any) => void;
+  getBall: (id: number) => Ball | undefined;
+  updateBallValue: (id: number, value: any) => void;
   removeBall: (id: number) => void;
 }
 
-export const useGameStore = create<GameState>((set) => ({
+export const useGameStore = create<GameState>((set, get) => ({
   balls: [],
   addBall: ({ value, position }) =>
     set((state) => ({
@@ -26,10 +27,11 @@ export const useGameStore = create<GameState>((set) => ({
         },
       ],
     })),
-  updateBallValue: (id, setter) =>
+  getBall: (id: number) => get().balls.find((ball) => ball.id === id),
+  updateBallValue: (id, value) =>
     set((state) => ({
       balls: state.balls.map((ball) =>
-        ball.id === id ? { ...ball, value: setter(ball.value) } : ball
+        ball.id === id ? { ...ball, value } : ball
       ),
     })),
   removeBall: (id: number) =>
