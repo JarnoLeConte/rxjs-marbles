@@ -3,10 +3,11 @@ import { Base } from "./Base";
 import { LoggerBlock } from "./LoggerBlock";
 
 type Props = JSX.IntrinsicElements["group"] & {
-  logger: boolean;
+  logger?: boolean;
+  text?: React.ReactNode;
 };
 
-export function SinkBlock({ logger, ...props }: Props) {
+export function SinkBlock({ logger, text, ...props }: Props) {
   return (
     <group {...props}>
       <Base block="Cube703" rotation-y={Math.PI} />
@@ -17,7 +18,7 @@ export function SinkBlock({ logger, ...props }: Props) {
         position={[0, 0.5, 1]}
         fontSize={0.2}
       >
-        {`).subscribe();`}
+        {text ?? `).subscribe();`}
       </Text>
       {logger && <LoggerBlock position={[0, -1, 0]} />}
     </group>

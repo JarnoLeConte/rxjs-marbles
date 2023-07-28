@@ -5,14 +5,21 @@ import { Balls } from "./Balls";
 import { useEffect } from "react";
 import { useGameStore } from "~/store";
 import { useSimulator } from "~/hooks/useSimulator";
+import { IntervalOperatorDemo } from "./scenes/IntervalOperatorDemo";
+
+enum Example {
+  Map = "map",
+  Interval = "interval",
+  Dev = "[DEV] marble blocks",
+}
 
 export function SceneContent() {
   const reset = useGameStore((state) => state.reset);
 
   const { example } = useControls("Demo", {
     example: {
-      options: ["map operator", "(dev) marble blocks"],
-      value: "map operator",
+      options: Object.values(Example),
+      value: Object.values(Example)[0],
     },
   });
 
@@ -24,8 +31,10 @@ export function SceneContent() {
 
   const renderScene = () => {
     switch (example) {
-      case "map operator":
+      case "map":
         return <MapOperatorDemo />;
+      case "interval":
+        return <IntervalOperatorDemo />;
       default:
         return <Model />;
     }
