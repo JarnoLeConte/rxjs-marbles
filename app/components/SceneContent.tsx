@@ -1,11 +1,11 @@
 import { useControls } from "leva";
+import { useEffect } from "react";
+import { useSimulator } from "~/hooks/useSimulator";
+import { useGameStore } from "~/store";
+import { Balls } from "./Balls";
+import { IntervalOperatorDemo } from "./scenes/IntervalOperatorDemo";
 import { MapOperatorDemo } from "./scenes/MapOperatorDemo";
 import { Model } from "./scenes/Model";
-import { Balls } from "./Balls";
-import { useEffect } from "react";
-import { useGameStore } from "~/store";
-import { useSimulator } from "~/hooks/useSimulator";
-import { IntervalOperatorDemo } from "./scenes/IntervalOperatorDemo";
 import { SwitchMapOperatorDemo } from "./scenes/SwitchMapOperatorDemo";
 
 enum Example {
@@ -21,7 +21,7 @@ export function SceneContent() {
   const { example } = useControls("Demo", {
     example: {
       options: Object.values(Example),
-      value: "switchMap" || Object.values(Example)[0],
+      value: "map" || Object.values(Example)[0],
     },
   });
 

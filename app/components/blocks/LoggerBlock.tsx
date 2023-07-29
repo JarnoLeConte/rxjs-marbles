@@ -5,7 +5,7 @@ import type { BallDetectionHandler } from "../BallDetector";
 import { TerminalBlock } from "./TerminalBlock";
 
 export function LoggerBlock(props: JSX.IntrinsicElements["group"]) {
-  const [value, setValue] = useState<any>();
+  const [value, setValue] = useState<any>("-");
 
   const removeBall = useGameStore((state) => state.removeBall);
 
@@ -18,7 +18,6 @@ export function LoggerBlock(props: JSX.IntrinsicElements["group"]) {
     <group {...props}>
       <TerminalBlock
         rotation={[0, Math.PI / 2, Math.PI / 2]}
-        position={[0, 1, -1]}
         onBallDetection={onBallDetection}
       />
       {value !== undefined && (
@@ -27,7 +26,7 @@ export function LoggerBlock(props: JSX.IntrinsicElements["group"]) {
             color="black"
             anchorX="center"
             anchorY="middle"
-            position={[0, 0.7, 1]}
+            position={[0, -0.3, 1]}
             fontSize={0.6}
           >
             {value}
@@ -36,10 +35,12 @@ export function LoggerBlock(props: JSX.IntrinsicElements["group"]) {
             color="black"
             anchorX="center"
             anchorY="middle"
-            position={[0, 1.4, 1]}
+            textAlign="center"
+            position={[0, 0.4, 1]}
             fontSize={0.2}
+            maxWidth={1.3}
           >
-            observer
+            observed value
           </Text>
         </>
       )}

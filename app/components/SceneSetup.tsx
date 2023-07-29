@@ -9,7 +9,7 @@ import { useControls } from "leva";
 import { SceneContent } from "~/components/SceneContent";
 
 export function SceneSetup() {
-  const { ambiance, debug } = useControls("Environment", {
+  const { ambiance, debug } = useControls("Debug", {
     debug: false,
     ambiance: {
       options: [
@@ -43,6 +43,8 @@ export function SceneSetup() {
       <Physics debug={debug}>
         <SceneContent />
       </Physics>
+      {debug && <gridHelper />}
+      {debug && <axesHelper args={[5]} />}
     </>
   );
 }

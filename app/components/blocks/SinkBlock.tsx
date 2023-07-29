@@ -1,5 +1,6 @@
 import { LoggerBlock } from "./LoggerBlock";
 import { HoleBlock } from "./HoleBlock";
+import { Center } from "@react-three/drei";
 
 type Props = JSX.IntrinsicElements["group"] & {
   text?: string;
@@ -8,8 +9,10 @@ type Props = JSX.IntrinsicElements["group"] & {
 export function SinkBlock({ text, ...props }: Props) {
   return (
     <group {...props}>
-      <HoleBlock text={text ?? ").subscribe();"} />
-      <LoggerBlock position={[0, -2, 0]} />
+      <Center>
+        <HoleBlock text={text ?? ").subscribe();"} />
+        <LoggerBlock position={[0, -1.5, 0]} />
+      </Center>
     </group>
   );
 }
