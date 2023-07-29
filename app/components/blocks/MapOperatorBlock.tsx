@@ -1,21 +1,18 @@
 import { useGameStore } from "~/store";
+import type { BallContent } from "~/types";
 import type { BallDetectionHandler } from "../BallDetector";
 import { PassThroughBlock } from "./PassThroughBlock";
 
-type Props<In, Out> = JSX.IntrinsicElements["group"] & {
-  operation: (x: In) => Out;
+type Props = JSX.IntrinsicElements["group"] & {
+  operation: (content: BallContent) => BallContent;
   text: string;
 };
 
-export function MapOperatorBlock<In, Out>({
-  operation,
-  text,
-  ...props
-}: Props<In, Out>) {
+export function MapOperatorBlock({ operation, text, ...props }: Props) {
   const updateBall = useGameStore((state) => state.updateBall);
 
   const onBallDetection: BallDetectionHandler = ({ id }) => {
-    updateBall(id, (ball) => ({ ...ball, value: operation(ball.value) }));
+    updateBall(id, (ball) => ({ ...ball, content: operation(ball.content) }));
   };
 
   return (

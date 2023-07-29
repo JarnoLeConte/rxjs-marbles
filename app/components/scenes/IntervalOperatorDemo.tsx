@@ -1,9 +1,10 @@
+import { Box, Flex } from "@react-three/flex";
 import { useEffect, useRef } from "react";
+import { Vector3, type Group } from "three";
 import { useGameStore } from "~/store";
+import type { BallContent } from "~/types";
 import { SinkBlock } from "../blocks/SinkBlock";
 import { SourceBlock } from "../blocks/SourceBlock";
-import { Box, Flex } from "@react-three/flex";
-import { Vector3, type Group } from "three";
 
 export function IntervalOperatorDemo() {
   const addBall = useGameStore((state) => state.addBall);
@@ -15,12 +16,12 @@ export function IntervalOperatorDemo() {
   useEffect(() => {
     if (tick === 0) return;
 
-    const value = tick - 1;
+    const content: BallContent = { type: "number", value: tick - 1 };
     const position = sourceRef.current
       .localToWorld(new Vector3(-0.05, 0, 0))
       .toArray();
 
-    addBall({ value, position });
+    addBall({ content, position });
   }, [addBall, tick]);
 
   return (

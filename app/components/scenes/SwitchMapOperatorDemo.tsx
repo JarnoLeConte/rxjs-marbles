@@ -1,11 +1,12 @@
 import { Box, Flex } from "@react-three/flex";
 import { useEffect, useRef } from "react";
+import { Vector3 } from "three";
 import { useGameStore } from "~/store";
+import type { BallContent } from "~/types";
 import { ForwardBlock } from "../blocks/ForwardBlock";
 import { SinkBlock } from "../blocks/SinkBlock";
 import { SourceBlock } from "../blocks/SourceBlock";
 import { SwitchMapBlock } from "../blocks/SwitchMapBlock";
-import { Vector3 } from "three";
 
 export function SwitchMapOperatorDemo() {
   const addBall = useGameStore((state) => state.addBall);
@@ -17,12 +18,12 @@ export function SwitchMapOperatorDemo() {
   useEffect(() => {
     if (tick === 0) return;
 
-    const value = tick;
+    const content: BallContent = { type: "number", value: tick };
     const position = sourceRef.current
       .localToWorld(new Vector3(-0.05, 0, 0))
       .toArray();
 
-    addBall({ value, position });
+    addBall({ content, position });
   }, [addBall, tick]);
 
   return (

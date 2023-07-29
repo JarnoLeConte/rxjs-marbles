@@ -1,9 +1,9 @@
+import { useEffect, useRef, useState } from "react";
+import { Vector3, type Group } from "three";
 import { useGameStore } from "~/store";
+import type { Ball, BallContent } from "~/types";
 import type { BallDetectionHandler } from "../BallDetector";
 import { ExchangeBlock } from "./ExchangeBlock";
-import { useEffect, useRef, useState } from "react";
-import type { Ball } from "~/types";
-import { Vector3, type Group } from "three";
 
 export function SwitchMapBlock(props: JSX.IntrinsicElements["group"]) {
   const addBall = useGameStore((state) => state.addBall);
@@ -20,18 +20,25 @@ export function SwitchMapBlock(props: JSX.IntrinsicElements["group"]) {
 
   useEffect(() => {
     if (!detected) return;
-    const { value, color } = detected;
+    const { content, color } = detected;
+
+    if (content.type !== "number") {
+      throw new Error(
+        `At the moment 'switchMap' is not implemented for content type ${content.type}.`
+      );
+    }
 
     const newBall = (value: any) => {
+      const content: BallContent = { type: "number", value };
       const position = ref.current
         .localToWorld(new Vector3(-1.05, 1, 0))
         .toArray();
-      addBall({ value, position, color });
+      addBall({ content, position, color });
     };
 
-    const timer0 = setTimeout(() => newBall(value), 0);
-    const timer1 = setTimeout(() => newBall(value + 1), 800);
-    const timer2 = setTimeout(() => newBall(value + 2), 1600);
+    const timer0 = setTimeout(() => newBall(content.value), 0);
+    const timer1 = setTimeout(() => newBall(content.value + 1), 800);
+    const timer2 = setTimeout(() => newBall(content.value + 2), 1600);
 
     return () => {
       clearTimeout(timer0);
