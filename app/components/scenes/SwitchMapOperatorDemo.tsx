@@ -20,7 +20,6 @@ export function SwitchMapOperatorDemo() {
       <SourceBlock position={[-6, 0, 0]} />
       <ForwardBlock position={[-4, 0, 0]} />
       <SwitchMapBlock position={[-2, 0, 0]} />
-      <ForwardBlock position={[0, 0, 0]} />
       <ForwardBlock position={[2, 0, 0]} />
       <SinkBlock position={[4, 0, 0]} />
     </group>

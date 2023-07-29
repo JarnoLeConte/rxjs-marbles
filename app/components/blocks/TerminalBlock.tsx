@@ -24,6 +24,7 @@ export function TerminalBlock({ text, onBallDetection, ...props }: Props) {
         anchorY="middle"
         position={[0, 0.5, 1]}
         fontSize={0.2}
+        maxWidth={1.7}
       >
         {text}
       </Text>

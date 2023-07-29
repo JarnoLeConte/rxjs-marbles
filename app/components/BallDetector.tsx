@@ -29,7 +29,7 @@ export function BallDetector({
   return (
     <group {...props}>
       <RigidBody type="fixed" colliders={false} sensor>
-        <BallCollider args={[0.2]} onIntersectionEnter={onIntersectionEnter} />
+        <BallCollider args={[0.05]} onIntersectionEnter={onIntersectionEnter} />
       </RigidBody>
     </group>
   );

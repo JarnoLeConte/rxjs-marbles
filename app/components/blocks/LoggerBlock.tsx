@@ -39,7 +39,7 @@ export function LoggerBlock(props: JSX.IntrinsicElements["group"]) {
             position={[0, 1.4, 1]}
             fontSize={0.2}
           >
-            observed
+            observer
           </Text>
         </>
       )}
