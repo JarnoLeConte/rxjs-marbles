@@ -20,13 +20,13 @@ export function SwitchMapBlock(props: JSX.IntrinsicElements["group"]) {
 
   useEffect(() => {
     if (!detected) return;
-    const { value } = detected;
+    const { value, color } = detected;
 
     const newBall = (value: any) => {
       const position = ref.current
         .localToWorld(new Vector3(-1.05, 1, 0))
         .toArray();
-      addBall({ value, position });
+      addBall({ value, position, color });
     };
 
     const timer0 = setTimeout(() => newBall(value), 0);

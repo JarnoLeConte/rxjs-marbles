@@ -10,7 +10,7 @@ export function SinkBlock({ text, ...props }: Props) {
   return (
     <group {...props}>
       <Center>
-        <HoleBlock text={text ?? ").subscribe();"} />
+        <HoleBlock text={text ?? ").subscribe(...);"} />
         <LoggerBlock position={[0, -1.5, 0]} />
       </Center>
     </group>

@@ -40,7 +40,7 @@ export function LoggerBlock(props: JSX.IntrinsicElements["group"]) {
             fontSize={0.2}
             maxWidth={1.3}
           >
-            observed value
+            {`console.log`}
           </Text>
         </>
       )}

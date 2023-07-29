@@ -29,7 +29,7 @@ export function IntervalOperatorDemo() {
         <SourceBlock text="interval()" />
       </Box>
       <Box centerAnchor>
-        <SinkBlock position-y={-1.75} text=".subscribe();" />
+        <SinkBlock position-y={-1.75} text=".subscribe(...);" />
       </Box>
     </Flex>
   );
