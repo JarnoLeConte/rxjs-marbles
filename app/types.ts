@@ -2,6 +2,8 @@ import type { Color } from "@react-three/fiber";
 
 export type Tick = number;
 
+export type Producer = Map<Tick, BallContent[]>;
+
 export type BallContent =
   | {
       type: "number";
@@ -17,7 +19,7 @@ export type BallContent =
     }
   | {
       type: "observable";
-      producer: Record<Tick, BallContent>;
+      producer: Producer;
     };
 
 export type Ball = {

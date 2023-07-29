@@ -7,12 +7,14 @@ import { IntervalOperatorDemo } from "./scenes/IntervalOperatorDemo";
 import { MapOperatorDemo } from "./scenes/MapOperatorDemo";
 import { Model } from "./scenes/Model";
 import { SwitchMapOperatorDemo } from "./scenes/SwitchMapOperatorDemo";
+import { MergeAllOperatorDemo } from "./scenes/MergeAllOperatorDemo";
 
 enum Example {
+  Dev = "-",
   Map = "map",
   Interval = "interval",
   SwitchMap = "switchMap",
-  Dev = "[DEV] marble blocks",
+  MergeAll = "mergeAll",
 }
 
 export function SceneContent() {
@@ -21,7 +23,7 @@ export function SceneContent() {
   const { example } = useControls("Demo", {
     example: {
       options: Object.values(Example),
-      value: "map" || Object.values(Example)[0],
+      value: Object.values(Example).reverse()[0],
     },
   });
 
@@ -39,6 +41,8 @@ export function SceneContent() {
         return <IntervalOperatorDemo />;
       case "switchMap":
         return <SwitchMapOperatorDemo />;
+      case "mergeAll":
+        return <MergeAllOperatorDemo />;
       default:
         return <Model />;
     }

@@ -5,6 +5,14 @@ export function randomColor() {
   return colors[Math.floor(Math.random() * colors.length)];
 }
 
+export function mapKeys<K, V>(aMap: Map<K, V>, fn: (key: K) => K): Map<K, V> {
+  const newMap = new Map<K, V>();
+  for (const [key, value] of aMap) {
+    newMap.set(fn(key), value);
+  }
+  return newMap;
+}
+
 export function renderValue(content?: BallContent): React.ReactNode {
   if (!content) return "-";
   switch (content.type) {
@@ -15,6 +23,6 @@ export function renderValue(content?: BallContent): React.ReactNode {
     case "boolean":
       return content.value ? "true" : "false";
     case "observable":
-      return "O";
+      return "[···]";
   }
 }
