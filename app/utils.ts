@@ -19,10 +19,10 @@ export function renderValue(content?: BallContent): React.ReactNode {
     case "number":
       return content.value;
     case "string":
-      return content.value;
+      return `"${content.value}"`;
     case "boolean":
       return content.value ? "true" : "false";
     case "observable":
-      return "[···]";
+      return content.label;
   }
 }

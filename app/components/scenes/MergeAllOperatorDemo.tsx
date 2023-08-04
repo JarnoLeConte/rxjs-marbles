@@ -19,9 +19,9 @@ export function MergeAllOperatorDemo() {
   const producer = useMemo(
     () =>
       new Map<Tick, BallContent[]>([
-        [1, [{ type: "observable", producer: makeProducer(1, 3) }]],
-        [2, [{ type: "observable", producer: makeProducer(2, 3) }]],
-        [3, [{ type: "observable", producer: makeProducer(3, 3) }]],
+        [1, [{ type: "observable", label: "A", producer: makeProducer(1, 3) }]],
+        [2, [{ type: "observable", label: "A", producer: makeProducer(2, 3) }]],
+        [3, [{ type: "observable", label: "A", producer: makeProducer(3, 3) }]],
       ]),
     []
   );

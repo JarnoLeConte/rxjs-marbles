@@ -14,7 +14,9 @@ export function MergeAllBlock(props: JSX.IntrinsicElements["group"]) {
 
   // Keep track of the active producers which are currently emitting balls
   // and being merged
-  const [producers, setProducers] = useState<Producer[]>([]);
+  const [blocks, setBlocks] = useState<{ label: string; producer: Producer }[]>(
+    []
+  );
 
   const onBallDetection: BallDetectionHandler = (ball) => {
     if (ball.content.type !== "observable") {
@@ -22,10 +24,13 @@ export function MergeAllBlock(props: JSX.IntrinsicElements["group"]) {
     }
 
     // Modify the ticks inside the producer to start counting from the current tick
-    const producer = mapKeys(ball.content.producer, (t) => tick + t);
+    const block = {
+      label: `${ball.content.label}-${blocks.length + 1}`,
+      producer: mapKeys(ball.content.producer, (t) => tick + t),
+    };
 
-    // Add the producer to the list of producers
-    setProducers((producers) => [...producers, producer]);
+    // Add the producer to the list of blocks
+    setBlocks((blocks) => [...blocks, block]);
 
     // Remove icoming ball
     removeBall(ball.id);
@@ -40,9 +45,9 @@ export function MergeAllBlock(props: JSX.IntrinsicElements["group"]) {
             onBallDetection={onBallDetection}
           />
         </Box>
-        {producers.map((producer, index) => (
+        {blocks.map(({ label, producer }, index) => (
           <Box centerAnchor key={index}>
-            <SourceBlock producer={producer} text={`${index}$`} />
+            <SourceBlock producer={producer} text={label} />
           </Box>
         ))}
       </Box>

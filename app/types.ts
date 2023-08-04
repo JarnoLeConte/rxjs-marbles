@@ -19,6 +19,7 @@ export type BallContent =
     }
   | {
       type: "observable";
+      label: string; // observable name
       producer: Producer;
     };
 
