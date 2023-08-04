@@ -37,7 +37,7 @@ Export models from Blender as follow:
 Run gltfjsx helper to generate JSX:
 
 ```sh
-npx gltfjsx ./model.gltf --transform --keepnames --keepmeshes --types --simplify
+npx gltfjsx ./model.gltf --transform --keepnames --keepmeshes --types
 ```
 
 Drag `object-transformed.glb` to public models folder.

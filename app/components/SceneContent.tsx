@@ -3,11 +3,12 @@ import { useEffect } from "react";
 import { useSimulator } from "~/hooks/useSimulator";
 import { useGameStore } from "~/store";
 import { Balls } from "./Balls";
+import { EggFactory } from "./scenes/EggFactory";
 import { IntervalOperatorDemo } from "./scenes/IntervalOperatorDemo";
 import { MapOperatorDemo } from "./scenes/MapOperatorDemo";
+import { MergeAllOperatorDemo } from "./scenes/MergeAllOperatorDemo";
 import { Model } from "./scenes/Model";
 import { SwitchMapOperatorDemo } from "./scenes/SwitchMapOperatorDemo";
-import { MergeAllOperatorDemo } from "./scenes/MergeAllOperatorDemo";
 
 enum Example {
   Dev = "-",
@@ -15,6 +16,7 @@ enum Example {
   Interval = "interval",
   SwitchMap = "switchMap",
   MergeAll = "mergeAll",
+  Eggs = "eggs",
 }
 
 export function SceneContent() {
@@ -43,6 +45,8 @@ export function SceneContent() {
         return <SwitchMapOperatorDemo />;
       case "mergeAll":
         return <MergeAllOperatorDemo />;
+      case "eggs":
+        return <EggFactory />;
       default:
         return <Model />;
     }
