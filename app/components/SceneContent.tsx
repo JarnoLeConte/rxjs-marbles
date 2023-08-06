@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { useSimulator } from "~/hooks/useSimulator";
 import { useGameStore } from "~/store";
 import { Balls } from "./Balls";
+import { ConcatAllOperatorDemo } from "./scenes/ConcatAllOperatorDemo";
 import { IntervalOperatorDemo } from "./scenes/IntervalOperatorDemo";
 import { MapOperatorDemo } from "./scenes/MapOperatorDemo";
 import { MergeAllOperatorDemo } from "./scenes/MergeAllOperatorDemo";
@@ -15,6 +16,7 @@ enum Example {
   Interval = "interval",
   SwitchMap = "switchMap",
   MergeAll = "mergeAll",
+  ConcatAll = "concatAll",
 }
 
 export function SceneContent() {
@@ -43,6 +45,8 @@ export function SceneContent() {
         return <SwitchMapOperatorDemo />;
       case "mergeAll":
         return <MergeAllOperatorDemo />;
+      case "concatAll":
+        return <ConcatAllOperatorDemo />;
       default:
         return <Model />;
     }
