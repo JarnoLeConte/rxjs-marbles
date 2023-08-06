@@ -5,9 +5,9 @@ import { useGameStore } from "~/store";
 import { Balls } from "./Balls";
 import { IntervalOperatorDemo } from "./scenes/IntervalOperatorDemo";
 import { MapOperatorDemo } from "./scenes/MapOperatorDemo";
+import { MergeAllOperatorDemo } from "./scenes/MergeAllOperatorDemo";
 import { Model } from "./scenes/Model";
 import { SwitchMapOperatorDemo } from "./scenes/SwitchMapOperatorDemo";
-import { MergeAllOperatorDemo } from "./scenes/MergeAllOperatorDemo";
 
 enum Example {
   Dev = "-",

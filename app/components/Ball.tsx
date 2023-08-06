@@ -1,16 +1,16 @@
 import { Sphere, Text } from "@react-three/drei";
 import type { Color } from "@react-three/fiber";
 import { BallCollider, RigidBody } from "@react-three/rapier";
-import type { BallContent } from "~/types";
+import type { Value } from "~/types";
 import { renderValue } from "~/utils";
 
 type Props = JSX.IntrinsicElements["group"] & {
   id: number;
-  content: BallContent;
+  value: Value;
   color?: Color;
 };
 
-export function Ball({ id, content, color, ...props }: Props) {
+export function Ball({ id, value, color, ...props }: Props) {
   const radius = 0.57;
 
   return (
@@ -24,7 +24,7 @@ export function Ball({ id, content, color, ...props }: Props) {
           position={[0, 0, 0]}
           fontSize={0.25}
         >
-          {renderValue(content)}
+          {renderValue(value)}
         </Text>
         <Sphere args={[radius]}>
           <meshStandardMaterial

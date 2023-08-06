@@ -1,31 +1,16 @@
 import type { Color } from "@react-three/fiber";
+import type { Observable } from "rxjs";
 
-export type Tick = number;
+export type TaggedObservable = {
+  label: string;
+  observable$: Observable<Value>;
+};
 
-export type Producer = Map<Tick, BallContent[]>;
-
-export type BallContent =
-  | {
-      type: "number";
-      value: number;
-    }
-  | {
-      type: "string";
-      value: string;
-    }
-  | {
-      type: "boolean";
-      value: boolean;
-    }
-  | {
-      type: "observable";
-      label: string; // observable name
-      producer: Producer;
-    };
+export type Value = number | string | boolean | TaggedObservable;
 
 export type Ball = {
   id: number;
-  content: BallContent;
+  value: Value;
   defaultPosition: [number, number, number];
   color: Color;
 };

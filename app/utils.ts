@@ -1,28 +1,36 @@
-import type { BallContent } from "./types";
+import type { Observable } from "rxjs";
+import type { TaggedObservable, Value } from "./types";
 
 export function randomColor() {
   const colors = ["red", "blue", "green", "yellow", "orange", "purple"];
   return colors[Math.floor(Math.random() * colors.length)];
 }
 
-export function mapKeys<K, V>(aMap: Map<K, V>, fn: (key: K) => K): Map<K, V> {
-  const newMap = new Map<K, V>();
-  for (const [key, value] of aMap) {
-    newMap.set(fn(key), value);
-  }
-  return newMap;
+export function isTaggedObservable(value: Value): value is TaggedObservable {
+  return typeof value === "object" && "observable$" in value;
 }
 
-export function renderValue(content?: BallContent): React.ReactNode {
-  if (!content) return "-";
-  switch (content.type) {
+export function renderValue(value?: Value): React.ReactNode {
+  if (value === undefined || value === null) return "-";
+  switch (typeof value) {
     case "number":
-      return content.value;
+      return value;
     case "string":
-      return `"${content.value}"`;
+      return `"${value}"`;
     case "boolean":
-      return content.value ? "true" : "false";
-    case "observable":
-      return content.label;
+      return value ? "true" : "false";
+    case "object":
+      if (isTaggedObservable(value)) {
+        return value.label;
+      }
+    default:
+      throw new Error(`Unknown value type ${value}`);
   }
+}
+
+export function tag(
+  label: string,
+  observable$: Observable<Value>
+): TaggedObservable {
+  return { observable$, label };
 }

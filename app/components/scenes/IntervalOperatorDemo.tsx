@@ -1,15 +1,18 @@
 import { Box, Flex } from "@react-three/flex";
-import { useNumberProducer } from "~/hooks/useNumberProducer";
+import { useMemo } from "react";
+import { frameTimer } from "~/rxjs/frameTimer";
 import { SinkBlock } from "../blocks/SinkBlock";
 import { SourceBlock } from "../blocks/SourceBlock";
 
 export function IntervalOperatorDemo() {
-  const producer = useNumberProducer({ start: 0, count: 100 });
+  const source$ = useMemo(() => {
+    return frameTimer(0, 1);
+  }, []);
 
   return (
     <Flex justifyContent="center" alignItems="flex-end" dir="row">
       <Box centerAnchor>
-        <SourceBlock text="interval()" producer={producer} />
+        <SourceBlock text="interval()" source$={source$} />
       </Box>
       <Box centerAnchor>
         <SinkBlock position-y={-1.75} text=".subscribe(...);" />

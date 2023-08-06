@@ -1,36 +1,36 @@
+import { Center } from "@react-three/drei";
 import { Box } from "@react-three/flex";
 import { useState } from "react";
+import { delay } from "rxjs";
 import { useGameStore } from "~/store";
-import type { Producer } from "~/types";
+import type { TaggedObservable } from "~/types";
+import { isTaggedObservable } from "~/utils";
 import type { BallDetectionHandler } from "../BallDetector";
 import { Base } from "./Base";
-import { TerminalBlock } from "./TerminalBlock";
-import { mapKeys } from "~/utils";
 import { SourceBlock } from "./SourceBlock";
+import { TerminalBlock } from "./TerminalBlock";
 
 export function MergeAllBlock(props: JSX.IntrinsicElements["group"]) {
-  const tick = useGameStore((state) => state.tick);
   const removeBall = useGameStore((state) => state.removeBall);
 
   // Keep track of the active producers which are currently emitting balls
   // and being merged
-  const [blocks, setBlocks] = useState<{ label: string; producer: Producer }[]>(
-    []
-  );
+  const [observables, setObservables] = useState<TaggedObservable[]>([]);
 
   const onBallDetection: BallDetectionHandler = (ball) => {
-    if (ball.content.type !== "observable") {
-      throw new Error(`Expected an observable, but got ${ball.content.type}.`);
+    if (!isTaggedObservable(ball.value)) {
+      throw new Error(`Expected a tagged observable, but got ${ball.value}.`);
     }
+    const { observable$, label } = ball.value;
 
     // Modify the ticks inside the producer to start counting from the current tick
-    const block = {
-      label: `${ball.content.label}-${blocks.length + 1}`,
-      producer: mapKeys(ball.content.producer, (t) => tick + t),
+    const observable: TaggedObservable = {
+      label,
+      observable$: observable$.pipe(delay(observables.length * 750)),
     };
 
     // Add the producer to the list of blocks
-    setBlocks((blocks) => [...blocks, block]);
+    setObservables((observables) => [...observables, observable]);
 
     // Remove icoming ball
     removeBall(ball.id);
@@ -45,14 +45,21 @@ export function MergeAllBlock(props: JSX.IntrinsicElements["group"]) {
             onBallDetection={onBallDetection}
           />
         </Box>
-        {blocks.map(({ label, producer }, index) => (
+        {observables.map(({ observable$, label }, index) => (
           <Box centerAnchor key={index}>
-            <SourceBlock producer={producer} text={label} />
+            <SourceBlock source$={observable$} text={label} />
           </Box>
         ))}
       </Box>
       <Box centerAnchor>
-        <Base block="Cube034" rotation-y={Math.PI / 2} />
+        <Center rotation-y={Math.PI / 2}>
+          <Base block="Cube547" />
+        </Center>
+      </Box>
+      <Box centerAnchor>
+        <Center rotation-y={Math.PI / 2}>
+          <Base block="Cube546" />
+        </Center>
       </Box>
     </>
   );

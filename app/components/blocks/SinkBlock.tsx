@@ -1,6 +1,6 @@
-import { LoggerBlock } from "./LoggerBlock";
-import { HoleBlock } from "./HoleBlock";
 import { Center } from "@react-three/drei";
+import { HoleBlock } from "./HoleBlock";
+import { LoggerBlock } from "./LoggerBlock";
 
 type Props = JSX.IntrinsicElements["group"] & {
   text?: string;

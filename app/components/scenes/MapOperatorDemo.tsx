@@ -1,21 +1,24 @@
 import { Box, Flex } from "@react-three/flex";
-import { useNumberProducer } from "~/hooks/useNumberProducer";
-import type { BallContent } from "~/types";
+import { useMemo } from "react";
+import { frameTimer } from "~/rxjs/frameTimer";
+import type { Value } from "~/types";
 import { ForwardBlock } from "../blocks/ForwardBlock";
 import { MapOperatorBlock } from "../blocks/MapOperatorBlock";
 import { SinkBlock } from "../blocks/SinkBlock";
 import { SourceBlock } from "../blocks/SourceBlock";
 
 export function MapOperatorDemo() {
-  const producer = useNumberProducer({ start: 1, count: 100 });
+  const source$ = useMemo(() => {
+    return frameTimer(0, 1);
+  }, []);
 
-  const mapOperation = (content: BallContent): BallContent => {
-    switch (content.type) {
+  const projection = (value: Value): Value => {
+    switch (typeof value) {
       case "number":
-        return { type: "number", value: 10 * content.value };
+        return value * 10;
       default:
         throw new Error(
-          `At the moment 'map' is not implemented for content type ${content.type}.`
+          `At the moment 'map' is not implemented for content type ${value}.`
         );
     }
   };
@@ -23,16 +26,13 @@ export function MapOperatorDemo() {
   return (
     <Flex justifyContent="center" alignItems="flex-end" dir="row">
       <Box centerAnchor>
-        <SourceBlock producer={producer} />
+        <SourceBlock source$={source$} />
       </Box>
       <Box centerAnchor>
         <ForwardBlock />
       </Box>
       <Box centerAnchor>
-        <ForwardBlock />
-      </Box>
-      <Box centerAnchor>
-        <MapOperatorBlock text="map((x) => 10 * x)," operation={mapOperation} />
+        <MapOperatorBlock text="map((x) => 10 * x)," project={projection} />
       </Box>
       <Box centerAnchor>
         <ForwardBlock />

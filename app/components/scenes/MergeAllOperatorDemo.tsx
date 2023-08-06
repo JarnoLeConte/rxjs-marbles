@@ -1,43 +1,30 @@
 import { Box, Flex } from "@react-three/flex";
 import { useMemo } from "react";
-import type { BallContent, Tick } from "~/types";
+import { map, of, zip } from "rxjs";
+import { frameTimer } from "~/rxjs/frameTimer";
+import { tag } from "~/utils";
 import { ForwardBlock } from "../blocks/ForwardBlock";
 import { MergeAllBlock } from "../blocks/MergeAllBlock";
 import { SinkBlock } from "../blocks/SinkBlock";
 import { SourceBlock } from "../blocks/SourceBlock";
 
-function makeProducer(startValue: number, count: number) {
-  const values: BallContent[] = [...Array(count).keys()].map((i) => ({
-    type: "number",
-    value: startValue + i,
-  }));
-
-  return new Map<Tick, BallContent[]>([[0, values]]);
-}
-
 export function MergeAllOperatorDemo() {
-  const producer = useMemo(
-    () =>
-      new Map<Tick, BallContent[]>([
-        [1, [{ type: "observable", label: "A", producer: makeProducer(1, 3) }]],
-        [2, [{ type: "observable", label: "A", producer: makeProducer(2, 3) }]],
-        [3, [{ type: "observable", label: "A", producer: makeProducer(3, 3) }]],
-      ]),
-    []
-  );
+  const source$ = useMemo(() => {
+    const A$ = tag("A", frameTimer(0, 1));
+    const B$ = tag("B", frameTimer(0, 2));
+    const C$ = tag("C", frameTimer(0, 3));
+    return zip(frameTimer(0, 2), of(A$, B$, C$)).pipe(map(([, x]) => x));
+  }, []);
 
   return (
     <Flex justifyContent="center" alignItems="flex-end" dir="row">
       <Box centerAnchor>
-        <SourceBlock producer={producer} />
+        <SourceBlock source$={source$} />
       </Box>
       <Box centerAnchor>
         <ForwardBlock />
       </Box>
       <MergeAllBlock />
-      <Box centerAnchor>
-        <ForwardBlock />
-      </Box>
       <Box centerAnchor>
         <SinkBlock position-y={-1.75} />
       </Box>

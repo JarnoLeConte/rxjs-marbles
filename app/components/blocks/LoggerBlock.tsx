@@ -1,18 +1,20 @@
 import { Text } from "@react-three/drei";
 import { useState } from "react";
 import { useGameStore } from "~/store";
-import type { BallContent } from "~/types";
+import type { Value } from "~/types";
 import { renderValue } from "~/utils";
 import type { BallDetectionHandler } from "../BallDetector";
 import { TerminalBlock } from "./TerminalBlock";
 
-export function LoggerBlock(props: JSX.IntrinsicElements["group"]) {
-  const [content, setContent] = useState<BallContent>();
+type Props = JSX.IntrinsicElements["group"];
+
+export function LoggerBlock(props: Props) {
+  const [value, setValue] = useState<Value>();
 
   const removeBall = useGameStore((state) => state.removeBall);
 
   const onBallDetection: BallDetectionHandler = (ball) => {
-    setContent(ball.content);
+    setValue(ball.value);
     removeBall(ball.id);
   };
 
@@ -30,7 +32,7 @@ export function LoggerBlock(props: JSX.IntrinsicElements["group"]) {
         position={[0, -0.3, 1]}
         fontSize={0.6}
       >
-        {renderValue(content)}
+        {renderValue(value)}
       </Text>
       <Text
         color="black"
