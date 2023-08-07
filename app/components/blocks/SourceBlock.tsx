@@ -12,6 +12,7 @@ type Props = JSX.IntrinsicElements["group"] & {
 
 export function SourceBlock({ text, source$, ...props }: Props) {
   const addBall = useGameStore((state) => state.addBall);
+  const updateActivity = useGameStore((state) => state.updateActivity);
   const ref = useRef<THREE.Group>(null!);
 
   // Every tick, check if a ball needs to be created by the producer
@@ -19,6 +20,8 @@ export function SourceBlock({ text, source$, ...props }: Props) {
     if (!source$) return;
 
     const sub = source$.subscribe((value) => {
+      updateActivity();
+
       // Initial ball ppsition
       const position = ref.current
         .localToWorld(new Vector3(-0.05, 0, 0)) // start from inside the wall to give the ball a push
@@ -29,7 +32,7 @@ export function SourceBlock({ text, source$, ...props }: Props) {
     });
 
     return () => sub.unsubscribe();
-  }, [source$, addBall]);
+  }, [source$, addBall, updateActivity]);
 
   return (
     <group ref={ref} {...props}>

@@ -1,5 +1,6 @@
 import { Text } from "@react-three/drei";
 import { Base } from "./Base";
+import { BallDetector } from "../BallDetector";
 
 type Props = JSX.IntrinsicElements["group"] & {
   text?: React.ReactNode;
@@ -18,6 +19,7 @@ export function HoleBlock({ text, ...props }: Props) {
       >
         {text}
       </Text>
+      <BallDetector position={[0, 0.5, 0]} />
     </group>
   );
 }

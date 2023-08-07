@@ -10,7 +10,8 @@ export type BallDetectionHandler = (ball: Ball) => void;
 export function BallDetector({
   onDetection,
   ...props
-}: { onDetection: BallDetectionHandler } & JSX.IntrinsicElements["group"]) {
+}: { onDetection?: BallDetectionHandler } & JSX.IntrinsicElements["group"]) {
+  const updateActivity = useGameStore((state) => state.updateActivity);
   const getBall = useGameStore((state) => state.getBall);
   const detection = useRef(null); // store the id of the ball that was detected
 
@@ -24,7 +25,9 @@ export function BallDetector({
     if (!ball) return;
 
     detection.current = ballId;
-    onDetection(ball);
+    onDetection?.(ball);
+
+    updateActivity();
   };
 
   // Listen to reflow changes to reposition rigid body

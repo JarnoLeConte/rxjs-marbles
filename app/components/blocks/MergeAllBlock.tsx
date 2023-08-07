@@ -5,7 +5,7 @@ import { delay } from "rxjs";
 import { useGameStore } from "~/store";
 import type { TaggedObservable } from "~/types";
 import { isTaggedObservable } from "~/utils";
-import type { BallDetectionHandler } from "../BallDetector";
+import { BallDetector, type BallDetectionHandler } from "../BallDetector";
 import { Base } from "./Base";
 import { SourceBlock } from "./SourceBlock";
 import { TerminalBlock } from "./TerminalBlock";
@@ -54,6 +54,7 @@ export function MergeAllBlock(props: JSX.IntrinsicElements["group"]) {
       <Box centerAnchor>
         <Center rotation-y={Math.PI / 2}>
           <Base block="Cube547" />
+          <BallDetector position={[0, 2, 0]} />
         </Center>
       </Box>
       <Box centerAnchor>

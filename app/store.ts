@@ -15,6 +15,8 @@ interface GameState {
   getBall: (id: number) => Ball | undefined;
   updateBall: (id: number, setter: (ball: Ball) => Ball) => void;
   removeBall: (id: number) => void;
+  lastActivity: number;
+  updateActivity: () => void;
   reset: () => void;
 }
 
@@ -39,5 +41,7 @@ export const useGameStore = create<GameState>((set, get) => ({
     })),
   removeBall: (id: number) =>
     set((state) => ({ balls: state.balls.filter((ball) => ball.id !== id) })),
-  reset: () => set({ balls: [] }),
+  lastActivity: Date.now(),
+  updateActivity: () => set({ lastActivity: Date.now() }),
+  reset: () => set({ balls: [], lastActivity: Date.now() }),
 }));
