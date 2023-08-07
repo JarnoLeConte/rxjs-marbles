@@ -9,6 +9,7 @@ import { MapOperatorDemo } from "./scenes/MapOperatorDemo";
 import { MergeAllOperatorDemo } from "./scenes/MergeAllOperatorDemo";
 import { Model } from "./scenes/Model";
 import { SwitchMapOperatorDemo } from "./scenes/SwitchMapOperatorDemo";
+import { TestScene } from "./scenes/TestScene";
 
 enum Example {
   Dev = "-",
@@ -17,6 +18,7 @@ enum Example {
   SwitchMap = "switchMap",
   MergeAll = "mergeAll",
   ConcatAll = "concatAll",
+  Test = "test",
 }
 
 export function SceneContent() {
@@ -47,6 +49,8 @@ export function SceneContent() {
         return <MergeAllOperatorDemo />;
       case "concatAll":
         return <ConcatAllOperatorDemo />;
+      case "test":
+        return <TestScene />;
       default:
         return <Model />;
     }

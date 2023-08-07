@@ -14,3 +14,5 @@ export type Ball = {
   defaultPosition: [number, number, number];
   color: Color;
 };
+
+export type { Track } from "./components/track/segements";
