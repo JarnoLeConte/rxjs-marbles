@@ -1,7 +1,7 @@
 import { Text } from "@react-three/drei";
 import type { BallDetectionHandler } from "../BallDetector";
 import { BallDetector } from "../BallDetector";
-import { Base } from "./Base";
+import { Base } from "../Base";
 
 type Props = JSX.IntrinsicElements["group"] & {
   text?: string;
@@ -13,11 +13,11 @@ export function TerminalBlock({ text, onBallDetection, ...props }: Props) {
     <group {...props}>
       <group>
         <group position-y={-0.5}>
-          <Base block="Cube023" position={[0, -0.5, 0]} />
+          <Base element="Cube023" position={[0, -0.5, 0]} />
         </group>
         <group position-y={0.5}>
           <group rotation-x={Math.PI}>
-            <Base block="Cube023" position-y={-0.5} />
+            <Base element="Cube023" position-y={-0.5} />
           </group>
         </group>
       </group>

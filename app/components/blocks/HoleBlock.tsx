@@ -1,5 +1,5 @@
 import { Text } from "@react-three/drei";
-import { Base } from "./Base";
+import { Base } from "../Base";
 import { BallDetector } from "../BallDetector";
 
 type Props = JSX.IntrinsicElements["group"] & {
@@ -9,7 +9,7 @@ type Props = JSX.IntrinsicElements["group"] & {
 export function HoleBlock({ text, ...props }: Props) {
   return (
     <group {...props}>
-      <Base block="Cube703" rotation-y={Math.PI} position={[0, -0.5, 0]} />
+      <Base element="Cube703" rotation-y={Math.PI} position={[0, -0.5, 0]} />
       <Text
         color="black"
         anchorX="center"

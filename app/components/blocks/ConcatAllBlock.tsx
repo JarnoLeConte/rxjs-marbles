@@ -1,4 +1,4 @@
-import { Center, Circle, Plane } from "@react-three/drei";
+import { Center, Circle } from "@react-three/drei";
 import { Box } from "@react-three/flex";
 import { useState } from "react";
 import { finalize } from "rxjs";
@@ -6,7 +6,7 @@ import { useGameStore } from "~/store";
 import type { TaggedObservable } from "~/types";
 import { isTaggedObservable } from "~/utils";
 import { BallDetector, type BallDetectionHandler } from "../BallDetector";
-import { Base } from "./Base";
+import { Base } from "../Base";
 import { SourceBlock } from "./SourceBlock";
 import { TerminalBlock } from "./TerminalBlock";
 import { RigidBody } from "@react-three/rapier";
@@ -56,13 +56,13 @@ export function ConcatAllBlock(props: JSX.IntrinsicElements["group"]) {
     <>
       <Box centerAnchor>
         <Center rotation-y={Math.PI / 2}>
-          <Base block="Cube547" />
+          <Base element="Cube547" />
           <BallDetector position={[0, 2, 0]} />
         </Center>
       </Box>
       <Box centerAnchor>
         <Center rotation-y={Math.PI / 2}>
-          <Base block="Cube546" />
+          <Base element="Cube546" />
         </Center>
       </Box>
       <Box dir="column-reverse">
@@ -94,7 +94,7 @@ export function ConcatAllBlock(props: JSX.IntrinsicElements["group"]) {
       </Box>
       <Box centerAnchor>
         <Center rotation-y={Math.PI / 2}>
-          <Base block="Cube034" />
+          <Base element="Cube034" />
         </Center>
       </Box>
     </>

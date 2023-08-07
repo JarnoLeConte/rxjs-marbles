@@ -1,7 +1,7 @@
 import { Text } from "@react-three/drei";
 import type { BallDetectionHandler } from "../BallDetector";
 import { BallDetector } from "../BallDetector";
-import { Base } from "./Base";
+import { Base } from "../Base";
 
 type Props = JSX.IntrinsicElements["group"] & {
   onBallDetection?: BallDetectionHandler;
@@ -11,7 +11,7 @@ type Props = JSX.IntrinsicElements["group"] & {
 export function PassThroughBlock({ onBallDetection, text, ...props }: Props) {
   return (
     <group {...props}>
-      <Base block="Cube062" rotation-y={Math.PI / 2} />
+      <Base element="Cube062" rotation-y={Math.PI / 2} />
       {onBallDetection && (
         <BallDetector position={[0, 0, 0]} onDetection={onBallDetection} />
       )}

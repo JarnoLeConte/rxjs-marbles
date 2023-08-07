@@ -4,10 +4,10 @@ import { useModel } from "~/hooks/useModel";
 import { useReflowKey } from "~/hooks/useReflowKey";
 
 export function Base({
-  block,
+  element,
   ...props
 }: {
-  block: keyof Model["nodes"];
+  element: keyof Model["nodes"];
 } & JSX.IntrinsicElements["group"]) {
   const { nodes, materials } = useModel();
 
@@ -18,7 +18,7 @@ export function Base({
     <group {...props} dispose={null}>
       <RigidBody key={key} type="fixed" colliders="trimesh">
         <mesh
-          geometry={nodes[block].geometry}
+          geometry={nodes[element].geometry}
           material={materials.Wood_Dark}
           scale={10}
         />
