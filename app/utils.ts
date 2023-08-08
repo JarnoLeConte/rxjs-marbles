@@ -6,6 +6,10 @@ export function randomColor() {
   return colors[Math.floor(Math.random() * colors.length)];
 }
 
+export function numberToChar(number: number) {
+  return String.fromCharCode(65 + number);
+}
+
 export function isTaggedObservable(value: Value): value is TaggedObservable {
   return typeof value === "object" && "observable$" in value;
 }

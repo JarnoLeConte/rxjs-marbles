@@ -3,34 +3,18 @@ import {
   Environment,
   PerspectiveCamera,
 } from "@react-three/drei";
-import type { PresetsType } from "@react-three/drei/helpers/environment-assets";
 import { Physics } from "@react-three/rapier";
 import { useControls } from "leva";
 import { SceneContent } from "./SceneContent";
 
 export function SceneSetup() {
-  const { ambiance, debug } = useControls("Debug", {
+  const { debug } = useControls("Debug", {
     debug: true,
-    ambiance: {
-      options: [
-        "city",
-        "dawn",
-        "sunset",
-        "night",
-        "warehouse",
-        "forest",
-        "apartment",
-        "studio",
-        "park",
-        "lobby",
-      ] as PresetsType[],
-      value: "apartment" as PresetsType,
-    },
   });
 
   return (
     <>
-      <Environment preset={ambiance} />
+      <Environment preset="apartment" />
       <directionalLight position={[0, 3, 2]} intensity={0.4} color="beige" />
       <PerspectiveCamera
         makeDefault

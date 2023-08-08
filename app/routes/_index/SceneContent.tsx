@@ -10,6 +10,7 @@ import { MapScene } from "~/scenes/MapScene";
 import { Model } from "~/scenes/Model";
 import { SwitchAllScene } from "~/scenes/SwitchAllScene";
 import { MergeAllScene } from "~/scenes/MergeAllScene";
+import { ConcatMapScene } from "~/scenes/ConcatMapScene";
 
 enum Example {
   Dev = "-",
@@ -18,6 +19,7 @@ enum Example {
   SwitchAll = "switchAll",
   MergeAll = "mergeAll",
   ConcatAll = "concatAll",
+  ConcatMap = "concatMap",
   // Test = "test",
 }
 
@@ -49,6 +51,8 @@ export function SceneContent() {
         return <MergeAllScene />;
       case "concatAll":
         return <ConcatAllScene />;
+      case "concatMap":
+        return <ConcatMapScene />;
       // case "test":
       //   return <TestScene />;
       default:
