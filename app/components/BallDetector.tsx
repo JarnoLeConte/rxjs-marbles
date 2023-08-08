@@ -1,7 +1,6 @@
 import type { IntersectionEnterHandler } from "@react-three/rapier";
 import { BallCollider, RigidBody } from "@react-three/rapier";
 import { useRef } from "react";
-import { useReflowKey } from "~/hooks/useReflowKey";
 import { useGameStore } from "~/store";
 import type { Ball } from "~/types";
 
@@ -30,12 +29,9 @@ export function BallDetector({
     updateActivity();
   };
 
-  // Listen to reflow changes to reposition rigid body
-  const key = useReflowKey();
-
   return (
     <group {...props}>
-      <RigidBody key={key} type="fixed" colliders={false} sensor>
+      <RigidBody type="fixed" colliders={false} sensor>
         <BallCollider args={[0.05]} onIntersectionEnter={onIntersectionEnter} />
       </RigidBody>
     </group>

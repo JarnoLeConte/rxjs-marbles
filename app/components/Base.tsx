@@ -1,7 +1,6 @@
 import { RigidBody } from "@react-three/rapier";
 import type { Model } from "~/hooks/useModel";
 import { useModel } from "~/hooks/useModel";
-import { useReflowKey } from "~/hooks/useReflowKey";
 
 export function Base({
   element,
@@ -11,12 +10,9 @@ export function Base({
 } & JSX.IntrinsicElements["group"]) {
   const { nodes, materials } = useModel();
 
-  // Listen to reflow changes to reposition rigid body
-  const key = useReflowKey();
-
   return (
     <group {...props} dispose={null}>
-      <RigidBody key={key} type="fixed" colliders="trimesh">
+      <RigidBody type="fixed" colliders="trimesh">
         <mesh
           geometry={nodes[element].geometry}
           material={materials.Wood_Dark}

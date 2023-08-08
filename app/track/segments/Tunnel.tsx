@@ -1,0 +1,43 @@
+import { Text } from "@react-three/drei";
+import type { BallDetectionHandler } from "../../components/BallDetector";
+import { BallDetector } from "../../components/BallDetector";
+import { Base } from "../../components/Base";
+import { Stopper } from "../elements/Stopper";
+
+type Props = JSX.IntrinsicElements["group"] & {
+  onBallDetection?: BallDetectionHandler;
+  entryClosed?: boolean;
+  exitClosed?: boolean;
+  displayText?: string;
+};
+
+export function Tunnel({
+  onBallDetection,
+  entryClosed,
+  exitClosed,
+  displayText,
+  ...props
+}: Props) {
+  return (
+    <group {...props}>
+      <group position={[1, 1, 0]}>
+        <Base element="Cube062" rotation={[0, Math.PI / 2, 0]} />
+        <BallDetector position={[0, 0, 0]} onDetection={onBallDetection} />
+        {entryClosed && <Stopper position={[-0.99, 0, 0]} />}
+        {exitClosed && <Stopper position={[0.99, 0, 0]} />}
+        {displayText && (
+          <Text
+            color="black"
+            anchorX="center"
+            anchorY="middle"
+            position={[0, -0.5, 1]}
+            fontSize={0.2}
+            maxWidth={1.7}
+          >
+            {displayText}
+          </Text>
+        )}
+      </group>
+    </group>
+  );
+}
