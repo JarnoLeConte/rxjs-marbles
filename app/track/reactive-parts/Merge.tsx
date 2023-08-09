@@ -1,4 +1,4 @@
-import { RightJoin } from "../segments/RightJoin";
+import { RightJoin } from "../parts/RightJoin";
 
 type Props = JSX.IntrinsicElements["group"] & {
   displayText?: string;

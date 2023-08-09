@@ -3,7 +3,7 @@ import type { BallDetectionHandler } from "~/components/BallDetector";
 import { useGameStore } from "~/store";
 import type { TaggedObservable } from "~/types";
 import { isTaggedObservable } from "~/utils";
-import { Tunnel } from "../segments/Tunnel";
+import { Tunnel } from "../parts/Tunnel";
 import { Producer } from "./Producer";
 
 type Props = JSX.IntrinsicElements["group"] & {

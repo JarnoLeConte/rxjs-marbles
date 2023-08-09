@@ -1,6 +1,6 @@
 import { useNumberProducer } from "~/hooks/useNumberProducer";
 import { render } from "~/track/render";
-import { TrackSegment } from "~/track/segements";
+import { Part } from "~/track/parts";
 import type { Track } from "~/types";
 
 export function MergeScene() {
@@ -8,40 +8,40 @@ export function MergeScene() {
   const B$ = useNumberProducer(6);
 
   const trackA: Track = {
-    segment: TrackSegment.Producer,
+    part: Part.Producer,
     props: {
       source$: A$,
       displayText: "A",
     },
     next: {
-      segment: TrackSegment.Ramp,
+      part: Part.Ramp,
       next: null,
     },
   };
 
   const trackB: Track = {
-    segment: TrackSegment.Producer,
+    part: Part.Producer,
     props: {
       source$: B$,
       displayText: "B",
     },
     next: {
-      segment: TrackSegment.Ramp,
+      part: Part.Ramp,
       next: {
-        segment: TrackSegment.Straight,
+        part: Part.Straight,
         next: null,
       },
     },
   };
 
   const track: Track = {
-    segment: TrackSegment.Merge,
+    part: Part.Merge,
     incoming: [trackA, trackB],
     props: {
       displayText: "merge(A, B)",
     },
     next: {
-      segment: TrackSegment.Subscriber,
+      part: Part.Subscriber,
       props: {
         displayText: ".subscribe(...)",
       },

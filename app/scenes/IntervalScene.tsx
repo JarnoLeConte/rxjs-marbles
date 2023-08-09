@@ -1,19 +1,19 @@
 import { useNumberProducer } from "~/hooks/useNumberProducer";
 import type { Track } from "~/types";
 import { render } from "~/track/render";
-import { TrackSegment } from "~/track/segements";
+import { Part } from "~/track/parts";
 
 export function IntervalScene() {
   const source$ = useNumberProducer();
 
   const track: Track = {
-    segment: TrackSegment.Producer,
+    part: Part.Producer,
     props: {
       source$,
       displayText: "interval()",
     },
     next: {
-      segment: TrackSegment.Subscriber,
+      part: Part.Subscriber,
       props: {
         displayText: ".subscribe(...)",
       },

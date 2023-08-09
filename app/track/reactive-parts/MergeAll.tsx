@@ -1,32 +1,22 @@
 import { useState } from "react";
-import { finalize } from "rxjs";
+import { delay } from "rxjs";
 import type { BallDetectionHandler } from "~/components/BallDetector";
 import { useGameStore } from "~/store";
 import type { TaggedObservable } from "~/types";
 import { isTaggedObservable } from "~/utils";
-import { Tunnel } from "../segments/Tunnel";
+import { Tunnel } from "../parts/Tunnel";
 import { Producer } from "./Producer";
 
 type Props = JSX.IntrinsicElements["group"] & {
   displayText?: string;
 };
 
-export function ConcatAll({ displayText, ...props }: Props) {
+export function MergeAll({ displayText, ...props }: Props) {
   const removeBall = useGameStore((state) => state.removeBall);
 
   // Keep track of the active producers which are currently emitting balls
   // and being merged
   const [observables, setObservables] = useState<TaggedObservable[]>([]);
-
-  const addObservable = (observable: TaggedObservable) => {
-    setObservables((observables) => [...observables, observable]);
-  };
-
-  const removeObservable = (observable: TaggedObservable) => {
-    setObservables((observables) =>
-      observables.filter((o) => o !== observable)
-    );
-  };
 
   const onBallDetection: BallDetectionHandler = (ball) => {
     if (!isTaggedObservable(ball.value)) {
@@ -38,13 +28,11 @@ export function ConcatAll({ displayText, ...props }: Props) {
     // Modify the ticks inside the producer to start counting from the current tick
     const observable: TaggedObservable = {
       label,
-      observable$: observable$.pipe(
-        finalize(() => setTimeout(() => removeObservable(observable), 1000))
-      ),
+      observable$: observable$.pipe(delay(observables.length * 750)),
     };
 
     // Add the producer to the list of blocks
-    addObservable(observable);
+    setObservables((observables) => [...observables, observable]);
 
     // Remove icoming ball
     removeBall(ball.id);
@@ -54,16 +42,14 @@ export function ConcatAll({ displayText, ...props }: Props) {
     <group {...props}>
       <Tunnel
         onBallDetection={onBallDetection}
-        displayText={displayText ?? "concatAll(),"}
-        entryClosed={observables.length > 0}
+        displayText={displayText}
         exitClosed
       />
-      <group position={[0, 2, 0]}>
-        <Producer
-          source$={observables[0]?.observable$}
-          displayText={observables[0]?.label ?? ""}
-        />
-      </group>
+      {observables.map(({ observable$, label }, index) => (
+        <group key={index} position={[0, 2 + index * 2, 0]}>
+          <Producer source$={observable$} displayText={label ?? ""} />
+        </group>
+      ))}
     </group>
   );
 }

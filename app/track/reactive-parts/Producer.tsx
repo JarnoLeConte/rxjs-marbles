@@ -3,7 +3,7 @@ import type { Observable } from "rxjs";
 import { Vector3 } from "three";
 import { useGameStore } from "~/store";
 import type { Value } from "~/types";
-import { Begin } from "../segments/Begin";
+import { Begin } from "../parts/Begin";
 
 type Props = JSX.IntrinsicElements["group"] & {
   source$?: Observable<Value>;

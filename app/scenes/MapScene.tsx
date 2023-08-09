@@ -1,28 +1,28 @@
 import { useNumberProducer } from "~/hooks/useNumberProducer";
 import type { Track, Value } from "~/types";
 import { render } from "~/track/render";
-import { TrackSegment } from "~/track/segements";
+import { Part } from "~/track/parts";
 
 export function MapScene() {
   const source$ = useNumberProducer();
 
   const track: Track = {
-    segment: TrackSegment.Producer,
+    part: Part.Producer,
     props: {
       source$,
     },
     next: {
-      segment: TrackSegment.Ramp,
+      part: Part.Ramp,
       next: {
-        segment: TrackSegment.Map,
+        part: Part.Map,
         props: {
           project: (value: Value) => Number(value) * 2,
           displayText: "map((x) => x * 2),",
         },
         next: {
-          segment: TrackSegment.DownHill,
+          part: Part.DownHill,
           next: {
-            segment: TrackSegment.Subscriber,
+            part: Part.Subscriber,
           },
         },
       },

@@ -1,6 +1,6 @@
 import type { BallDetectionHandler } from "../../components/BallDetector";
 import { BallDetector } from "../../components/BallDetector";
-import { Base } from "../../components/Base";
+import { Base } from "../elements/Base";
 
 type Props = JSX.IntrinsicElements["group"] & {
   onBallDetection?: BallDetectionHandler;

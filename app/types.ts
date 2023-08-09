@@ -15,4 +15,4 @@ export type Ball = {
   color: Color;
 };
 
-export type { Track } from "~/track/segements";
+export type { Track } from "~/track/parts";

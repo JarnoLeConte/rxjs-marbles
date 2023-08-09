@@ -1,7 +1,7 @@
 import type { BallDetectionHandler } from "~/components/BallDetector";
 import { useGameStore } from "~/store";
 import type { Value } from "~/types";
-import { Tunnel } from "../segments/Tunnel";
+import { Tunnel } from "../parts/Tunnel";
 
 type Props = JSX.IntrinsicElements["group"] & {
   project: (value: Value) => Value;

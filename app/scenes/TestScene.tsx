@@ -1,7 +1,7 @@
 import { useObservableProducer } from "~/hooks/useObservableProducer";
 import type { Track } from "~/types";
 import { render } from "~/track/render";
-import { TrackSegment } from "~/track/segements";
+import { Part } from "~/track/parts";
 
 export function TestScene() {
   // const source$ = useNumberProducer();
@@ -9,32 +9,32 @@ export function TestScene() {
   const B$ = useObservableProducer("E");
 
   const trackA: Track = {
-    segment: TrackSegment.Producer,
+    part: Part.Producer,
     props: {
       source$: A$,
     },
     next: {
-      segment: TrackSegment.Ramp,
+      part: Part.Ramp,
       next: null,
     },
   };
 
   const trackB: Track = {
-    segment: TrackSegment.Producer,
+    part: Part.Producer,
     props: {
       source$: B$,
     },
     next: {
-      segment: TrackSegment.Ramp,
+      part: Part.Ramp,
       next: null,
     },
   };
 
   const track: Track = {
-    segment: TrackSegment.Merge,
+    part: Part.Merge,
     incoming: [trackA, trackB],
     next: {
-      segment: TrackSegment.Subscriber,
+      part: Part.Subscriber,
     },
   };
 

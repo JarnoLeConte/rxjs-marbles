@@ -1,24 +1,24 @@
 import { useObservableProducer } from "~/hooks/useObservableProducer";
 import { render } from "~/track/render";
-import type { Track } from "~/track/segements";
-import { TrackSegment } from "~/track/segements";
+import type { Track } from "~/track/parts";
+import { Part } from "~/track/parts";
 
 export function SwitchAllScene() {
   const source$ = useObservableProducer();
 
   const track: Track = {
-    segment: TrackSegment.Producer,
+    part: Part.Producer,
     props: {
       source$,
     },
     next: {
-      segment: TrackSegment.Ramp,
+      part: Part.Ramp,
       next: {
-        segment: TrackSegment.SwitchAll,
+        part: Part.SwitchAll,
         next: {
-          segment: TrackSegment.DownHill,
+          part: Part.DownHill,
           next: {
-            segment: TrackSegment.Subscriber,
+            part: Part.Subscriber,
           },
         },
       },

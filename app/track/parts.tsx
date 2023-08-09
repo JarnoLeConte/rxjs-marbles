@@ -1,8 +1,7 @@
 import type { Observable } from "rxjs";
 import type { Value } from "~/types";
 
-export enum TrackSegment {
-  /* Base segments */
+export enum Part {
   Begin = "Begin",
   Bucket = "Bucket",
   Straight = "Straight",
@@ -13,7 +12,7 @@ export enum TrackSegment {
   Ramp = "Ramp",
   DownHill = "DownHill",
 
-  /* Interactive */
+  /* Reactive parts */
   Producer = "Producer",
   Subscriber = "Subscriber",
   Map = "Map",
@@ -23,45 +22,45 @@ export enum TrackSegment {
   Merge = "Merge",
 }
 
-export type Segment =
+export type TrackPart =
   | {
-      segment: TrackSegment.Begin;
+      part: Part.Begin;
       next: Track;
     }
   | {
-      segment: TrackSegment.Bucket;
+      part: Part.Bucket;
     }
   | {
-      segment: TrackSegment.Straight;
+      part: Part.Straight;
       next: Track;
     }
   | {
-      segment: TrackSegment.Tunnel;
+      part: Part.Tunnel;
       next: Track;
     }
   | {
-      segment: TrackSegment.LeftShift;
+      part: Part.LeftShift;
       next: Track;
     }
   | {
-      segment: TrackSegment.RightShift;
+      part: Part.RightShift;
       next: Track;
     }
   | {
-      segment: TrackSegment.RightJoin;
+      part: Part.RightJoin;
       incoming: [Track, Track];
       next: Track;
     }
   | {
-      segment: TrackSegment.Ramp;
+      part: Part.Ramp;
       next: Track;
     }
   | {
-      segment: TrackSegment.DownHill;
+      part: Part.DownHill;
       next: Track;
     }
   | {
-      segment: TrackSegment.Producer;
+      part: Part.Producer;
       props: {
         source$: Observable<Value>;
         displayText?: string;
@@ -69,13 +68,13 @@ export type Segment =
       next: Track;
     }
   | {
-      segment: TrackSegment.Subscriber;
+      part: Part.Subscriber;
       props?: {
         displayText?: string;
       };
     }
   | {
-      segment: TrackSegment.Map;
+      part: Part.Map;
       props: {
         project: (value: Value) => Value;
         displayText: string;
@@ -83,19 +82,19 @@ export type Segment =
       next: Track;
     }
   | {
-      segment: TrackSegment.SwitchAll;
+      part: Part.SwitchAll;
       next: Track;
     }
   | {
-      segment: TrackSegment.ConcatAll;
+      part: Part.ConcatAll;
       next: Track;
     }
   | {
-      segment: TrackSegment.MergeAll;
+      part: Part.MergeAll;
       next: Track;
     }
   | {
-      segment: TrackSegment.Merge;
+      part: Part.Merge;
       props?: {
         displayText?: string;
       };
@@ -103,4 +102,4 @@ export type Segment =
       next: Track;
     };
 
-export type Track = Segment | null;
+export type Track = TrackPart | null;

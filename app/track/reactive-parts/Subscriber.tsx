@@ -2,7 +2,7 @@ import { useState } from "react";
 import type { BallDetectionHandler } from "~/components/BallDetector";
 import { useGameStore } from "~/store";
 import type { Value } from "~/types";
-import { Bucket } from "../segments/Bucket";
+import { Bucket } from "../parts/Bucket";
 import { Text } from "@react-three/drei";
 import { renderValue } from "~/utils";
 

@@ -1,24 +1,24 @@
 import { useObservableProducer } from "~/hooks/useObservableProducer";
 import { render } from "~/track/render";
-import type { Track } from "~/track/segements";
-import { TrackSegment } from "~/track/segements";
+import type { Track } from "~/track/parts";
+import { Part } from "~/track/parts";
 
 export function ConcatAllScene() {
   const source$ = useObservableProducer();
 
   const track: Track = {
-    segment: TrackSegment.Producer,
+    part: Part.Producer,
     props: {
       source$,
     },
     next: {
-      segment: TrackSegment.Ramp,
+      part: Part.Ramp,
       next: {
-        segment: TrackSegment.ConcatAll,
+        part: Part.ConcatAll,
         next: {
-          segment: TrackSegment.DownHill,
+          part: Part.DownHill,
           next: {
-            segment: TrackSegment.Subscriber,
+            part: Part.Subscriber,
           },
         },
       },
