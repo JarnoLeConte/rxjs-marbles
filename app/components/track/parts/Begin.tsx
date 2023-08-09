@@ -1,5 +1,5 @@
 import { Text } from "@react-three/drei";
-import { BallDetector } from "../../components/BallDetector";
+import { BallDetector } from "../../BallDetector";
 import { Base } from "../elements/Base";
 
 type Props = JSX.IntrinsicElements["group"] & {

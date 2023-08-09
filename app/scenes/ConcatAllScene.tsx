@@ -1,7 +1,7 @@
 import { useObservableProducer } from "~/hooks/useObservableProducer";
-import { render } from "~/track/render";
-import type { Track } from "~/track/parts";
-import { Part } from "~/track/parts";
+import { render } from "~/components/track/render";
+import type { Track } from "~/components/track/parts";
+import { Part } from "~/components/track/parts";
 
 export function ConcatAllScene() {
   const source$ = useObservableProducer();

@@ -1,6 +1,6 @@
 import { Text } from "@react-three/drei";
-import type { BallDetectionHandler } from "../../components/BallDetector";
-import { BallDetector } from "../../components/BallDetector";
+import type { BallDetectionHandler } from "../../BallDetector";
+import { BallDetector } from "../../BallDetector";
 import { Base } from "../elements/Base";
 import { Stopper } from "../elements/Stopper";
 

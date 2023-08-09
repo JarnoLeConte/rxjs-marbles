@@ -1,6 +1,6 @@
 import { useNumberProducer } from "~/hooks/useNumberProducer";
-import { render } from "~/track/render";
-import { Part } from "~/track/parts";
+import { render } from "~/components/track/render";
+import { Part } from "~/components/track/parts";
 import type { Track } from "~/types";
 
 export function MergeScene() {

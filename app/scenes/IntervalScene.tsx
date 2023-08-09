@@ -1,7 +1,7 @@
 import { useNumberProducer } from "~/hooks/useNumberProducer";
 import type { Track } from "~/types";
-import { render } from "~/track/render";
-import { Part } from "~/track/parts";
+import { render } from "~/components/track/render";
+import { Part } from "~/components/track/parts";
 
 export function IntervalScene() {
   const source$ = useNumberProducer();
