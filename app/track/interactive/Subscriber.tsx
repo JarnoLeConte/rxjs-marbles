@@ -6,9 +6,11 @@ import { Bucket } from "../segments/Bucket";
 import { Text } from "@react-three/drei";
 import { renderValue } from "~/utils";
 
-type Props = JSX.IntrinsicElements["group"];
+type Props = JSX.IntrinsicElements["group"] & {
+  displayText?: string;
+};
 
-export function Subscriber({ ...props }: Props) {
+export function Subscriber({ displayText, ...props }: Props) {
   const [value, setValue] = useState<Value>();
 
   const removeBall = useGameStore((state) => state.removeBall);
@@ -30,7 +32,7 @@ export function Subscriber({ ...props }: Props) {
         fontSize={0.2}
         maxWidth={1.3}
       >
-        {`).subscribe(...)`}
+        {displayText ?? `).subscribe(...)`}
       </Text>
       <Text
         color="black"

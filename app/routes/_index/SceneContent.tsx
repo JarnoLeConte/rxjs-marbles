@@ -1,16 +1,18 @@
 import { Center } from "@react-three/drei";
 import { useControls } from "leva";
 import { useEffect } from "react";
-import { useSimulator } from "~/hooks/useSimulator";
-import { useGameStore } from "~/store";
 import { Balls } from "~/components/Balls";
+import { useSimulator } from "~/hooks/useSimulator";
 import { ConcatAllScene } from "~/scenes/ConcatAllScene";
+import { ConcatMapScene } from "~/scenes/ConcatMapScene";
 import { IntervalScene } from "~/scenes/IntervalScene";
 import { MapScene } from "~/scenes/MapScene";
+import { MergeAllScene } from "~/scenes/MergeAllScene";
+import { MergeScene } from "~/scenes/MergeScene";
 import { Model } from "~/scenes/Model";
 import { SwitchAllScene } from "~/scenes/SwitchAllScene";
-import { MergeAllScene } from "~/scenes/MergeAllScene";
-import { ConcatMapScene } from "~/scenes/ConcatMapScene";
+import { TestScene } from "~/scenes/TestScene";
+import { useGameStore } from "~/store";
 
 enum Example {
   Dev = "-",
@@ -20,7 +22,8 @@ enum Example {
   MergeAll = "mergeAll",
   ConcatAll = "concatAll",
   ConcatMap = "concatMap",
-  // Test = "test",
+  Merge = "merge",
+  Test = "test",
 }
 
 export function SceneContent() {
@@ -29,7 +32,7 @@ export function SceneContent() {
   const { example } = useControls("Demo", {
     example: {
       options: Object.values(Example),
-      value: Object.values(Example).reverse()[0],
+      value: Example.Merge,
     },
   });
 
@@ -53,17 +56,23 @@ export function SceneContent() {
         return <ConcatAllScene />;
       case "concatMap":
         return <ConcatMapScene />;
-      // case "test":
-      //   return <TestScene />;
+      case "merge":
+        return <MergeScene />;
+      case "test":
+        return <TestScene />;
       default:
         return <Model />;
     }
   };
 
+  const disableCenter = example === "test";
+
   return (
     <>
       <Balls />
-      <Center key={example}>{renderScene()}</Center>
+      <Center key={example} disable={disableCenter}>
+        {renderScene()}
+      </Center>
     </>
   );
 }

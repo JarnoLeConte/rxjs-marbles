@@ -6,8 +6,9 @@ export function randomColor() {
   return colors[Math.floor(Math.random() * colors.length)];
 }
 
-export function numberToChar(number: number) {
-  return String.fromCharCode(65 + number);
+export function numberToChar(index: number, startChar = "A") {
+  const startCharCode = startChar.charCodeAt(0);
+  return String.fromCharCode(startCharCode + index);
 }
 
 export function isTaggedObservable(value: Value): value is TaggedObservable {

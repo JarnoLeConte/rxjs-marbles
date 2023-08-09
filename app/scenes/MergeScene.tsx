@@ -1,17 +1,17 @@
-import { useObservableProducer } from "~/hooks/useObservableProducer";
-import type { Track } from "~/types";
+import { useNumberProducer } from "~/hooks/useNumberProducer";
 import { render } from "~/track/render";
 import { TrackSegment } from "~/track/segements";
+import type { Track } from "~/types";
 
-export function TestScene() {
-  // const source$ = useNumberProducer();
-  const A$ = useObservableProducer("A");
-  const B$ = useObservableProducer("E");
+export function MergeScene() {
+  const A$ = useNumberProducer(1);
+  const B$ = useNumberProducer(6);
 
   const trackA: Track = {
     segment: TrackSegment.Producer,
     props: {
       source$: A$,
+      displayText: "A",
     },
     next: {
       segment: TrackSegment.Ramp,
@@ -23,18 +23,28 @@ export function TestScene() {
     segment: TrackSegment.Producer,
     props: {
       source$: B$,
+      displayText: "B",
     },
     next: {
       segment: TrackSegment.Ramp,
-      next: null,
+      next: {
+        segment: TrackSegment.Straight,
+        next: null,
+      },
     },
   };
 
   const track: Track = {
     segment: TrackSegment.Merge,
     incoming: [trackA, trackB],
+    props: {
+      displayText: "merge(A, B)",
+    },
     next: {
       segment: TrackSegment.Subscriber,
+      props: {
+        displayText: ".subscribe(...)",
+      },
     },
   };
 

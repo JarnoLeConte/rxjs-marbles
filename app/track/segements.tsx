@@ -3,14 +3,16 @@ import type { Value } from "~/types";
 
 export enum TrackSegment {
   /* Base segments */
+  Begin = "Begin",
+  Bucket = "Bucket",
   Straight = "Straight",
   Tunnel = "Tunnel",
   LeftShift = "LeftShift",
   RightShift = "RightShift",
+  RightJoin = "RightJoin",
   Ramp = "Ramp",
   DownHill = "DownHill",
-  Begin = "Begin",
-  Bucket = "Bucket",
+
   /* Interactive */
   Producer = "Producer",
   Subscriber = "Subscriber",
@@ -18,9 +20,17 @@ export enum TrackSegment {
   SwitchAll = "SwitchAll",
   ConcatAll = "ConcatAll",
   MergeAll = "MergeAll",
+  Merge = "Merge",
 }
 
 export type Segment =
+  | {
+      segment: TrackSegment.Begin;
+      next: Track;
+    }
+  | {
+      segment: TrackSegment.Bucket;
+    }
   | {
       segment: TrackSegment.Straight;
       next: Track;
@@ -38,6 +48,11 @@ export type Segment =
       next: Track;
     }
   | {
+      segment: TrackSegment.RightJoin;
+      incoming: [Track, Track];
+      next: Track;
+    }
+  | {
       segment: TrackSegment.Ramp;
       next: Track;
     }
@@ -46,21 +61,18 @@ export type Segment =
       next: Track;
     }
   | {
-      segment: TrackSegment.Begin;
-      next: Track;
-    }
-  | {
-      segment: TrackSegment.Bucket;
-    }
-  | {
       segment: TrackSegment.Producer;
       props: {
         source$: Observable<Value>;
+        displayText?: string;
       };
       next: Track;
     }
   | {
       segment: TrackSegment.Subscriber;
+      props?: {
+        displayText?: string;
+      };
     }
   | {
       segment: TrackSegment.Map;
@@ -80,6 +92,14 @@ export type Segment =
     }
   | {
       segment: TrackSegment.MergeAll;
+      next: Track;
+    }
+  | {
+      segment: TrackSegment.Merge;
+      props?: {
+        displayText?: string;
+      };
+      incoming: [Track, Track];
       next: Track;
     };
 

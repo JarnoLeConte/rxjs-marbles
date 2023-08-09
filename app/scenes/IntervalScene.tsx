@@ -10,9 +10,13 @@ export function IntervalScene() {
     segment: TrackSegment.Producer,
     props: {
       source$,
+      displayText: "interval()",
     },
     next: {
       segment: TrackSegment.Subscriber,
+      props: {
+        displayText: ".subscribe(...)",
+      },
     },
   };
 
