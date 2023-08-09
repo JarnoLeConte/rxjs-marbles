@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { frame$ } from "~/rxjs/frame$";
+import { frame$ } from "~/observables/frame$";
 import { useGameStore } from "~/store";
 
 export function useSimulator() {

@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { map, of, take, zip } from "rxjs";
-import { frameTimer } from "~/rxjs/frameTimer";
+import { frameTimer } from "~/observables/frameTimer";
 import { numberToChar, tag } from "~/utils";
 
 export function useObservableProducer(startChar = "A") {
