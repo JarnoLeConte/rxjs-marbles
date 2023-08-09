@@ -2,7 +2,7 @@ import { Canvas } from "@react-three/fiber";
 import type { V2_MetaFunction } from "@remix-run/node";
 import { Leva } from "leva";
 import { Suspense } from "react";
-import { SceneSetup } from "./SceneSetup";
+import { SceneSetup } from "~/components/SceneSetup";
 
 export const meta: V2_MetaFunction = () => {
   return [
