@@ -3,7 +3,7 @@ import { render } from "~/components/track/render";
 import type { Track } from "~/components/track/parts";
 import { Part } from "~/components/track/parts";
 
-export function SwitchAllScene() {
+export function SwitchAll() {
   const source$ = useObservableProducer();
 
   const track: Track = {

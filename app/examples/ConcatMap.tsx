@@ -7,7 +7,7 @@ import { Part } from "~/components/track/parts";
 import type { Value } from "~/types";
 import { numberToChar, tag } from "~/utils";
 
-export function ConcatMapScene() {
+export function ConcatMap() {
   const source$ = useNumberProducer(0, 3);
 
   const track: Track = {

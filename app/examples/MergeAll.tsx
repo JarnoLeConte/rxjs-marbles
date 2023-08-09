@@ -3,7 +3,7 @@ import { render } from "~/components/track/render";
 import type { Track } from "~/components/track/parts";
 import { Part } from "~/components/track/parts";
 
-export function ConcatAllScene() {
+export function MergeAll() {
   const source$ = useObservableProducer();
 
   const track: Track = {
@@ -14,7 +14,7 @@ export function ConcatAllScene() {
     next: {
       part: Part.Ramp,
       next: {
-        part: Part.ConcatAll,
+        part: Part.MergeAll,
         next: {
           part: Part.DownHill,
           next: {

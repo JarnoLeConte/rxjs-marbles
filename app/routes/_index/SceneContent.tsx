@@ -2,16 +2,16 @@ import { Center } from "@react-three/drei";
 import { useControls } from "leva";
 import { useEffect } from "react";
 import { Balls } from "~/components/Balls";
+import { Model } from "~/components/Model";
+import { ConcatAll } from "~/examples/ConcatAll";
+import { ConcatMap } from "~/examples/ConcatMap";
+import { Interval } from "~/examples/Interval";
+import { Map } from "~/examples/Map";
+import { Merge } from "~/examples/Merge";
+import { MergeAll } from "~/examples/MergeAll";
+import { SwitchAll } from "~/examples/SwitchAll";
+import { Test } from "~/examples/Test";
 import { useSimulator } from "~/hooks/useSimulator";
-import { ConcatAllScene } from "~/scenes/ConcatAllScene";
-import { ConcatMapScene } from "~/scenes/ConcatMapScene";
-import { IntervalScene } from "~/scenes/IntervalScene";
-import { MapScene } from "~/scenes/MapScene";
-import { MergeAllScene } from "~/scenes/MergeAllScene";
-import { MergeScene } from "~/scenes/MergeScene";
-import { Model } from "~/scenes/Model";
-import { SwitchAllScene } from "~/scenes/SwitchAllScene";
-import { TestScene } from "~/scenes/TestScene";
 import { useGameStore } from "~/store";
 
 enum Example {
@@ -45,21 +45,21 @@ export function SceneContent() {
   const renderScene = () => {
     switch (example) {
       case "map":
-        return <MapScene />;
+        return <Map />;
       case "interval":
-        return <IntervalScene />;
+        return <Interval />;
       case "switchAll":
-        return <SwitchAllScene />;
+        return <SwitchAll />;
       case "mergeAll":
-        return <MergeAllScene />;
+        return <MergeAll />;
       case "concatAll":
-        return <ConcatAllScene />;
+        return <ConcatAll />;
       case "concatMap":
-        return <ConcatMapScene />;
+        return <ConcatMap />;
       case "merge":
-        return <MergeScene />;
+        return <Merge />;
       case "test":
-        return <TestScene />;
+        return <Test />;
       default:
         return <Model />;
     }

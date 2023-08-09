@@ -1,10 +1,10 @@
-import { useObservableProducer } from "~/hooks/useObservableProducer";
+import { useNumberProducer } from "~/hooks/useNumberProducer";
+import type { Track, Value } from "~/types";
 import { render } from "~/components/track/render";
-import type { Track } from "~/components/track/parts";
 import { Part } from "~/components/track/parts";
 
-export function MergeAllScene() {
-  const source$ = useObservableProducer();
+export function Map() {
+  const source$ = useNumberProducer();
 
   const track: Track = {
     part: Part.Producer,
@@ -14,7 +14,11 @@ export function MergeAllScene() {
     next: {
       part: Part.Ramp,
       next: {
-        part: Part.MergeAll,
+        part: Part.Map,
+        props: {
+          project: (value: Value) => Number(value) * 2,
+          displayText: "map((x) => x * 2),",
+        },
         next: {
           part: Part.DownHill,
           next: {

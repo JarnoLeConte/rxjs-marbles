@@ -3,7 +3,7 @@ import type { Track } from "~/types";
 import { render } from "~/components/track/render";
 import { Part } from "~/components/track/parts";
 
-export function IntervalScene() {
+export function Interval() {
   const source$ = useNumberProducer();
 
   const track: Track = {
