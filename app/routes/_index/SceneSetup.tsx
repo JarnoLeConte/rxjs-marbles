@@ -14,7 +14,7 @@ export function SceneSetup() {
 
   return (
     <>
-      <Environment preset="apartment" />
+      <Environment path="/" files="lebombo_1k.hdr" />
       <directionalLight position={[0, 3, 2]} intensity={0.4} color="beige" />
       <PerspectiveCamera
         makeDefault
