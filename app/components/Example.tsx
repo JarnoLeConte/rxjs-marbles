@@ -1,13 +1,13 @@
 import { Model } from "~/components/Model";
-import { Concat } from "~/components/examples/Concat";
-import { ConcatAll } from "~/components/examples/ConcatAll";
-import { ConcatMap } from "~/components/examples/ConcatMap";
-import { Interval } from "~/components/examples/Interval";
-import { Map } from "~/components/examples/Map";
-import { Merge } from "~/components/examples/Merge";
-import { MergeAll } from "~/components/examples/MergeAll";
-import { SwitchAll } from "~/components/examples/SwitchAll";
-import { Test } from "~/components/examples/Test";
+import { Concat } from "~/examples/Concat";
+import { ConcatAll } from "~/examples/ConcatAll";
+import { ConcatMap } from "~/examples/ConcatMap";
+import { Interval } from "~/examples/Interval";
+import { Map } from "~/examples/Map";
+import { Merge } from "~/examples/Merge";
+import { MergeAll } from "~/examples/MergeAll";
+import { SwitchAll } from "~/examples/SwitchAll";
+import { Test } from "~/examples/Test";
 
 export enum ExampleEnum {
   None = "-",

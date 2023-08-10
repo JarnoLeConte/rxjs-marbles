@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { Balls } from "~/components/Balls";
 import { useSimulator } from "~/hooks/useSimulator";
 import { useGameStore } from "~/store";
-import { Example, ExampleEnum, defaultExample } from "./examples";
+import { Example, ExampleEnum, defaultExample } from "./Example";
 
 export function SceneContent() {
   const reset = useGameStore((state) => state.reset);
