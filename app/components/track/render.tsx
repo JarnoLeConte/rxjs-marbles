@@ -10,6 +10,7 @@ import { RightJoin } from "./parts/RightJoin";
 import { RightShift } from "./parts/RightShift";
 import { Straight } from "./parts/Straight";
 import { Tunnel } from "./parts/Tunnel";
+import { Concat } from "./reactive-parts/Concat";
 import { ConcatAll } from "./reactive-parts/ConcatAll";
 import { Map } from "./reactive-parts/Map";
 import { Merge } from "./reactive-parts/Merge";
@@ -144,6 +145,20 @@ export function render(track: Track) {
           <group position={[6, 0, 0]}>{render(track.next)}</group>
         </group>
       );
+    case Part.Concat: {
+      return (
+        <group position={[0, 0, 0]}>
+          <Concat {...track.props} />
+          <Center left top>
+            {render(track.incoming[0])}
+          </Center>
+          <Center left top position={[0, 0, -2]}>
+            {render(track.incoming[1])}
+          </Center>
+          <group position={[6, 0, 0]}>{render(track.next)}</group>
+        </group>
+      );
+    }
     default:
       throw new Error(`Unknown track segment ${track}`);
   }

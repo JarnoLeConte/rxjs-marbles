@@ -20,6 +20,7 @@ export enum Part {
   ConcatAll = "ConcatAll",
   MergeAll = "MergeAll",
   Merge = "Merge",
+  Concat = "Concat",
 }
 
 export type TrackPart =
@@ -95,6 +96,14 @@ export type TrackPart =
     }
   | {
       part: Part.Merge;
+      props?: {
+        displayText?: string;
+      };
+      incoming: [Track, Track];
+      next: Track;
+    }
+  | {
+      part: Part.Concat;
       props?: {
         displayText?: string;
       };

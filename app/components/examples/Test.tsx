@@ -1,7 +1,7 @@
+import { Part } from "~/components/track/parts";
+import { render } from "~/components/track/render";
 import { useObservableProducer } from "~/hooks/useObservableProducer";
 import type { Track } from "~/types";
-import { render } from "~/components/track/render";
-import { Part } from "~/components/track/parts";
 
 export function Test() {
   // const source$ = useNumberProducer();
@@ -31,7 +31,7 @@ export function Test() {
   };
 
   const track: Track = {
-    part: Part.Merge,
+    part: Part.Concat,
     incoming: [trackA, trackB],
     next: {
       part: Part.Subscriber,

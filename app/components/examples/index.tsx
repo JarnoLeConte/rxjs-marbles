@@ -1,4 +1,5 @@
 import { Model } from "~/components/Model";
+import { Concat } from "~/components/examples/Concat";
 import { ConcatAll } from "~/components/examples/ConcatAll";
 import { ConcatMap } from "~/components/examples/ConcatMap";
 import { Interval } from "~/components/examples/Interval";
@@ -17,6 +18,7 @@ export enum ExampleEnum {
   ConcatAll = "concatAll",
   ConcatMap = "concatMap",
   Merge = "merge",
+  Concat = "concat",
   Test = "test",
 }
 
@@ -38,9 +40,11 @@ export function Example({ example }: { example: ExampleEnum }) {
       return <ConcatMap />;
     case "merge":
       return <Merge />;
+    case "concat":
+      return <Concat />;
     case "test":
       return <Test />;
   }
 }
 
-export const defaultExample = ExampleEnum.Merge;
+export const defaultExample = ExampleEnum.Concat;
