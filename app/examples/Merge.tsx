@@ -1,11 +1,11 @@
-import { useNumberProducer } from "~/hooks/useNumberProducer";
-import { render } from "~/components/track/render";
+import { Run } from "~/components/Run";
 import { Part } from "~/components/track/parts";
+import { useNumberProducer } from "~/hooks/useNumberProducer";
 import type { Track } from "~/types";
 
 export function Merge() {
   const A$ = useNumberProducer(1);
-  const B$ = useNumberProducer(6);
+  const B$ = useNumberProducer(10);
 
   const trackA: Track = {
     part: Part.Producer,
@@ -48,5 +48,5 @@ export function Merge() {
     },
   };
 
-  return render(track);
+  return <Run track={track} />;
 }

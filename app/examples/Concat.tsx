@@ -1,9 +1,9 @@
-import { useNumberProducer } from "~/hooks/useNumberProducer";
-import { render } from "~/components/track/render";
-import { Part } from "~/components/track/parts";
-import type { Track } from "~/types";
-import { concatWith, ignoreElements } from "rxjs";
 import { useMemo } from "react";
+import { concatWith, ignoreElements } from "rxjs";
+import { Run } from "~/components/Run";
+import { Part } from "~/components/track/parts";
+import { useNumberProducer } from "~/hooks/useNumberProducer";
+import type { Track } from "~/types";
 
 export function Concat() {
   const A$ = useNumberProducer(1, 3);
@@ -13,46 +13,55 @@ export function Concat() {
     [A$, B$]
   );
 
-  const trackA: Track = {
-    part: Part.Producer,
-    props: {
-      source$: A$,
-      displayText: "A",
-    },
-    tail: {
-      part: Part.Ramp,
-      tail: null,
-    },
-  };
-
-  const trackB: Track = {
-    part: Part.Producer,
-    props: {
-      source$: newB$,
-      displayText: "B",
-    },
-    tail: {
-      part: Part.Ramp,
+  const trackA: Track = useMemo(
+    () => ({
+      part: Part.Producer,
+      props: {
+        source$: A$,
+        displayText: "A",
+      },
       tail: {
-        part: Part.Straight,
+        part: Part.Ramp,
         tail: null,
       },
-    },
-  };
+    }),
+    [A$]
+  );
 
-  const track: Track = {
-    part: Part.Concat,
-    incoming: [trackA, trackB],
-    props: {
-      displayText: "concat(A, B)",
-    },
-    tail: {
-      part: Part.Subscriber,
+  const trackB: Track = useMemo(
+    () => ({
+      part: Part.Producer,
       props: {
-        displayText: ".subscribe(...)",
+        source$: newB$,
+        displayText: "B",
       },
-    },
-  };
+      tail: {
+        part: Part.Ramp,
+        tail: {
+          part: Part.Straight,
+          tail: null,
+        },
+      },
+    }),
+    [newB$]
+  );
 
-  return render(track);
+  const track: Track = useMemo(
+    () => ({
+      part: Part.Concat,
+      incoming: [trackA, trackB],
+      props: {
+        displayText: "concat(A, B)",
+      },
+      tail: {
+        part: Part.Subscriber,
+        props: {
+          displayText: ".subscribe(...)",
+        },
+      },
+    }),
+    [trackA, trackB]
+  );
+
+  return <Run track={track} />;
 }

@@ -2,13 +2,7 @@ import type { Observable } from "rxjs";
 import type { Value } from "~/types";
 
 export enum Part {
-  Begin = "Begin",
-  Bucket = "Bucket",
   Straight = "Straight",
-  Tunnel = "Tunnel",
-  LeftShift = "LeftShift",
-  RightShift = "RightShift",
-  RightJoin = "RightJoin",
   Ramp = "Ramp",
   DownHill = "DownHill",
 
@@ -23,50 +17,45 @@ export enum Part {
   Concat = "Concat",
 }
 
-export type TrackPart =
-  | {
-      part: Part.Begin;
-      tail: Track;
-    }
-  | {
-      part: Part.Bucket;
-    }
-  | {
-      part: Part.Straight;
-      tail: Track;
-    }
-  | {
-      part: Part.Tunnel;
-      tail: Track;
-    }
-  | {
-      part: Part.LeftShift;
-      tail: Track;
-    }
-  | {
-      part: Part.RightShift;
-      tail: Track;
-    }
-  | {
-      part: Part.RightJoin;
-      incoming: [Track, Track];
-      tail: Track;
-    }
-  | {
-      part: Part.Ramp;
-      tail: Track;
-    }
-  | {
-      part: Part.DownHill;
-      tail: Track;
-    }
+export type TrackHead =
   | {
       part: Part.Producer;
       props: {
         source$: Observable<Value>;
         displayText?: string;
       };
-      tail: Track;
+      tail: TrackTail;
+    }
+  | {
+      part: Part.Merge;
+      props?: {
+        displayText?: string;
+      };
+      incoming: [Track, Track];
+      tail: TrackTail;
+    }
+  | {
+      part: Part.Concat;
+      props?: {
+        displayText?: string;
+      };
+      incoming: [Track, Track];
+      tail: TrackTail;
+    };
+
+export type TrackTail =
+  | null
+  | {
+      part: Part.Straight;
+      tail: TrackTail;
+    }
+  | {
+      part: Part.Ramp;
+      tail: TrackTail;
+    }
+  | {
+      part: Part.DownHill;
+      tail: TrackTail;
     }
   | {
       part: Part.Subscriber;
@@ -80,39 +69,21 @@ export type TrackPart =
         project: (value: Value) => Value;
         displayText: string;
       };
-      tail: Track;
+      tail: TrackTail;
     }
   | {
       part: Part.SwitchAll;
-      tail: Track;
+      tail: TrackTail;
     }
   | {
       part: Part.ConcatAll;
-      tail: Track;
+      tail: TrackTail;
     }
   | {
       part: Part.MergeAll;
-      tail: Track;
-    }
-  | {
-      part: Part.Merge;
-      props?: {
-        displayText?: string;
-      };
-      incoming: [Track, Track];
-      tail: Track;
-    }
-  | {
-      part: Part.Concat;
-      props?: {
-        displayText?: string;
-      };
-      incoming: [Track, Track];
-      tail: Track;
+      tail: TrackTail;
     };
 
-// type TrackHead =
+export type TrackPart = TrackHead | TrackTail;
 
-// type TrackTail =
-
-export type Track = TrackPart | null;
+export type Track = TrackHead;
