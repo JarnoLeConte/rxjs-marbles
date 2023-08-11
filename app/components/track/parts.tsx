@@ -15,6 +15,7 @@ export enum Part {
   MergeAll = "MergeAll",
   Merge = "Merge",
   Concat = "Concat",
+  CombineLatest = "CombineLatest",
 }
 
 export type TrackHead =
@@ -36,6 +37,14 @@ export type TrackHead =
     }
   | {
       part: Part.Concat;
+      props?: {
+        displayText?: string;
+      };
+      incoming: [Track, Track];
+      tail: TrackTail;
+    }
+  | {
+      part: Part.CombineLatest;
       props?: {
         displayText?: string;
       };

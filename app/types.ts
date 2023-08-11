@@ -6,7 +6,7 @@ export type TaggedObservable = {
   observable$: Observable<Value>;
 };
 
-export type Value = number | string | boolean | TaggedObservable;
+export type Value = number | string | boolean | Value[] | TaggedObservable;
 
 export type Ball = {
   id: number;

@@ -1,4 +1,5 @@
 import { Model } from "~/components/Model";
+import { CombineLatest } from "~/examples/CombineLatest";
 import { Concat } from "~/examples/Concat";
 import { ConcatAll } from "~/examples/ConcatAll";
 import { ConcatMap } from "~/examples/ConcatMap";
@@ -19,10 +20,11 @@ export enum ExampleEnum {
   ConcatMap = "concatMap",
   Merge = "merge",
   Concat = "concat",
+  CombineLatest = "combineLatest",
   Test = "test",
 }
 
-export const defaultExample = ExampleEnum.Test;
+export const defaultExample = ExampleEnum.CombineLatest;
 
 export function Example({ example }: { example: ExampleEnum }) {
   switch (example) {
@@ -44,6 +46,8 @@ export function Example({ example }: { example: ExampleEnum }) {
       return <Merge />;
     case "concat":
       return <Concat />;
+    case "combineLatest":
+      return <CombineLatest />;
     case "test":
       return <Test />;
   }

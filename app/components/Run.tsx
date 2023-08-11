@@ -12,7 +12,7 @@ export function Run({ track }: { track: Track }) {
 
   // Run observable
   useEffect(() => {
-    const subscription = observable.subscribe();
+    const subscription = observable.subscribe(console.debug);
     return () => subscription.unsubscribe();
   }, [observable]);
 

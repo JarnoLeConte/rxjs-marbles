@@ -17,7 +17,7 @@ export function Begin({ displayText, ...props }: Props) {
           anchorX="center"
           anchorY="middle"
           position={[0, 0.5, 1]}
-          fontSize={0.2}
+          fontSize={0.18}
           maxWidth={1.7}
         >
           {displayText}

@@ -3,6 +3,7 @@ import type { Observable, OperatorFunction } from "rxjs";
 import {
   EMPTY,
   Subject,
+  combineLatest,
   concat,
   concatAll,
   map,
@@ -28,6 +29,7 @@ import { MergeAll } from "./reactive-parts/MergeAll";
 import { Producer } from "./reactive-parts/Producer";
 import { Subscriber } from "./reactive-parts/Subscriber";
 import { SwitchAll } from "./reactive-parts/SwitchAll";
+import { CombineLatest } from "./reactive-parts/CombineLatest";
 
 type Result = {
   observable: Observable<Value>;
@@ -102,6 +104,27 @@ export function build(track: Track): Result {
               {contentB}
             </Center>
             <group position={[6, 0, 0]}>{children}</group>
+          </group>
+        ),
+      };
+    }
+    case Part.CombineLatest: {
+      const [trackA, trackB] = track.incoming;
+      const { observable: A$, content: contentA } = build(trackA);
+      const { observable: B$, content: contentB } = build(trackB);
+      const { operator, children } = buildTail(track.tail);
+      return {
+        observable: combineLatest([A$, B$]).pipe(operator),
+        content: (
+          <group position={[0, 0, 0]}>
+            <CombineLatest {...track.props} />
+            <Center left top>
+              {contentA}
+            </Center>
+            <Center left top position={[2, 0, -2]}>
+              {contentB}
+            </Center>
+            <group position={[4, -3, 0]}>{children}</group>
           </group>
         ),
       };

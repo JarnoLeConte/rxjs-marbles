@@ -15,16 +15,19 @@ export function isTaggedObservable(value: Value): value is TaggedObservable {
   return typeof value === "object" && "observable$" in value;
 }
 
-export function renderValue(value?: Value): React.ReactNode {
+export function renderValue(value?: Value): string {
   if (value === undefined || value === null) return "-";
   switch (typeof value) {
     case "number":
-      return value;
+      return `${value}`;
     case "string":
       return `"${value}"`;
     case "boolean":
       return value ? "true" : "false";
     case "object":
+      if (Array.isArray(value)) {
+        return `[${value.map(renderValue).join(", ")}]`;
+      }
       if (isTaggedObservable(value)) {
         return value.label;
       }

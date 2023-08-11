@@ -3,7 +3,7 @@ import { Part } from "~/components/track/parts";
 import { useNumberProducer } from "~/hooks/useNumberProducer";
 import type { Track } from "~/types";
 
-export function Test() {
+export function CombineLatest() {
   const A$ = useNumberProducer(1);
   const B$ = useNumberProducer(10);
 
