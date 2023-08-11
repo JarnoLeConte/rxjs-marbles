@@ -9,5 +9,5 @@ export function useObservableProducer(startChar = "A") {
     const B$ = tag(numberToChar(1, startChar), frameTimer(0, 1).pipe(take(3)));
     const C$ = tag(numberToChar(2, startChar), frameTimer(0, 1).pipe(take(3)));
     return zip(frameTimer(0, 1), of(A$, B$, C$)).pipe(map(([, x]) => x));
-  }, []);
+  }, [startChar]);
 }

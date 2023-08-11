@@ -8,5 +8,5 @@ export function useNumberProducer(start = 0, amount = Infinity) {
       map((val) => val + start),
       take(amount)
     );
-  }, []);
+  }, [start, amount]);
 }
