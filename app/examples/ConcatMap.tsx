@@ -15,20 +15,20 @@ export function ConcatMap() {
     props: {
       source$,
     },
-    next: {
+    tail: {
       part: Part.Ramp,
-      next: {
+      tail: {
         part: Part.Map,
         props: {
           project: (value: Value) =>
             tag(numberToChar(Number(value)), frameTimer(0, 1).pipe(take(3))),
           displayText: "map((x) => ...),",
         },
-        next: {
+        tail: {
           part: Part.DownHill,
-          next: {
+          tail: {
             part: Part.ConcatAll,
-            next: {
+            tail: {
               part: Part.Subscriber,
             },
           },

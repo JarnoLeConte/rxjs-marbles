@@ -12,9 +12,9 @@ export function Interval() {
       source$,
       displayText: "interval()",
     },
-    next: {
+    tail: {
       part: Part.DownHill,
-      next: {
+      tail: {
         part: Part.Subscriber,
         props: {
           displayText: ".subscribe(...)",

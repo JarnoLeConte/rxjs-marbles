@@ -11,17 +11,17 @@ export function Map() {
     props: {
       source$,
     },
-    next: {
+    tail: {
       part: Part.Ramp,
-      next: {
+      tail: {
         part: Part.Map,
         props: {
           project: (value: Value) => Number(value) * 2,
           displayText: "map((x) => x * 2),",
         },
-        next: {
+        tail: {
           part: Part.DownHill,
-          next: {
+          tail: {
             part: Part.Subscriber,
           },
         },

@@ -17,9 +17,9 @@ export function Test() {
       source$: A$,
       displayText: "A",
     },
-    next: {
+    tail: {
       part: Part.Ramp,
-      next: null,
+      tail: null,
     },
   };
 
@@ -29,11 +29,11 @@ export function Test() {
       source$: B$,
       displayText: "B",
     },
-    next: {
+    tail: {
       part: Part.Ramp,
-      next: {
+      tail: {
         part: Part.Straight,
-        next: null,
+        tail: null,
       },
     },
   };
@@ -44,7 +44,7 @@ export function Test() {
     props: {
       displayText: "merge(A, B)",
     },
-    next: {
+    tail: {
       part: Part.Subscriber,
       props: {
         displayText: ".subscribe(...)",

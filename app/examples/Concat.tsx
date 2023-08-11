@@ -19,9 +19,9 @@ export function Concat() {
       source$: A$,
       displayText: "A",
     },
-    next: {
+    tail: {
       part: Part.Ramp,
-      next: null,
+      tail: null,
     },
   };
 
@@ -31,11 +31,11 @@ export function Concat() {
       source$: newB$,
       displayText: "B",
     },
-    next: {
+    tail: {
       part: Part.Ramp,
-      next: {
+      tail: {
         part: Part.Straight,
-        next: null,
+        tail: null,
       },
     },
   };
@@ -46,7 +46,7 @@ export function Concat() {
     props: {
       displayText: "concat(A, B)",
     },
-    next: {
+    tail: {
       part: Part.Subscriber,
       props: {
         displayText: ".subscribe(...)",

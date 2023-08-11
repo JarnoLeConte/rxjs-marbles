@@ -21,19 +21,19 @@ export function reactive(track: Track): Observable<Value> {
   switch (track.part) {
     case Part.Producer: {
       const { source$ } = track.props;
-      return source$.pipe(buildPipe(track.next));
+      return source$.pipe(buildPipe(track.tail));
     }
     case Part.Merge: {
       const [trackA, trackB] = track.incoming;
       const A$ = reactive(trackA);
       const B$ = reactive(trackB);
-      return merge(A$, B$).pipe(buildPipe(track.next));
+      return merge(A$, B$).pipe(buildPipe(track.tail));
     }
     case Part.Concat: {
       const [trackA, trackB] = track.incoming;
       const A$ = reactive(trackA);
       const B$ = reactive(trackB);
-      return concat(A$, B$).pipe(buildPipe(track.next));
+      return concat(A$, B$).pipe(buildPipe(track.tail));
     }
     default:
       throw new Error(
@@ -57,7 +57,7 @@ function buildPipe(track: Track): OperatorFunction<Value, Value> {
     case Part.RightJoin:
     case Part.Ramp:
     case Part.DownHill:
-      return buildPipe(track.next);
+      return buildPipe(track.tail);
     case Part.Map:
       return map(track.props.project);
     case Part.SwitchAll:

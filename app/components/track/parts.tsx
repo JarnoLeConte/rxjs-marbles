@@ -26,39 +26,39 @@ export enum Part {
 export type TrackPart =
   | {
       part: Part.Begin;
-      next: Track;
+      tail: Track;
     }
   | {
       part: Part.Bucket;
     }
   | {
       part: Part.Straight;
-      next: Track;
+      tail: Track;
     }
   | {
       part: Part.Tunnel;
-      next: Track;
+      tail: Track;
     }
   | {
       part: Part.LeftShift;
-      next: Track;
+      tail: Track;
     }
   | {
       part: Part.RightShift;
-      next: Track;
+      tail: Track;
     }
   | {
       part: Part.RightJoin;
       incoming: [Track, Track];
-      next: Track;
+      tail: Track;
     }
   | {
       part: Part.Ramp;
-      next: Track;
+      tail: Track;
     }
   | {
       part: Part.DownHill;
-      next: Track;
+      tail: Track;
     }
   | {
       part: Part.Producer;
@@ -66,7 +66,7 @@ export type TrackPart =
         source$: Observable<Value>;
         displayText?: string;
       };
-      next: Track;
+      tail: Track;
     }
   | {
       part: Part.Subscriber;
@@ -80,19 +80,19 @@ export type TrackPart =
         project: (value: Value) => Value;
         displayText: string;
       };
-      next: Track;
+      tail: Track;
     }
   | {
       part: Part.SwitchAll;
-      next: Track;
+      tail: Track;
     }
   | {
       part: Part.ConcatAll;
-      next: Track;
+      tail: Track;
     }
   | {
       part: Part.MergeAll;
-      next: Track;
+      tail: Track;
     }
   | {
       part: Part.Merge;
@@ -100,7 +100,7 @@ export type TrackPart =
         displayText?: string;
       };
       incoming: [Track, Track];
-      next: Track;
+      tail: Track;
     }
   | {
       part: Part.Concat;
@@ -108,7 +108,11 @@ export type TrackPart =
         displayText?: string;
       };
       incoming: [Track, Track];
-      next: Track;
+      tail: Track;
     };
+
+// type TrackHead =
+
+// type TrackTail =
 
 export type Track = TrackPart | null;

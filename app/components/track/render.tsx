@@ -27,7 +27,7 @@ export function render(track: Track) {
       return (
         <group>
           <Begin />
-          <group position={[2, 0, 0]}>{render(track.next)}</group>
+          <group position={[2, 0, 0]}>{render(track.tail)}</group>
         </group>
       );
     case Part.Bucket:
@@ -40,28 +40,28 @@ export function render(track: Track) {
       return (
         <group>
           <Straight />
-          <group position={[2, 0, 0]}>{render(track.next)}</group>
+          <group position={[2, 0, 0]}>{render(track.tail)}</group>
         </group>
       );
     case Part.Tunnel:
       return (
         <group>
           <Tunnel />
-          <group position={[2, 0, 0]}>{render(track.next)}</group>
+          <group position={[2, 0, 0]}>{render(track.tail)}</group>
         </group>
       );
     case Part.LeftShift:
       return (
         <group>
           <LeftShift />
-          <group position={[4, 0, -2]}>{render(track.next)}</group>
+          <group position={[4, 0, -2]}>{render(track.tail)}</group>
         </group>
       );
     case Part.RightShift:
       return (
         <group>
           <RightShift />
-          <group position={[4, 0, 2]}>{render(track.next)}</group>
+          <group position={[4, 0, 2]}>{render(track.tail)}</group>
         </group>
       );
     case Part.RightJoin:
@@ -74,28 +74,28 @@ export function render(track: Track) {
           <Center left top position={[0, 0, -2]}>
             {render(track.incoming[1])}
           </Center>
-          <group position={[6, 0, 0]}>{render(track.next)}</group>
+          <group position={[6, 0, 0]}>{render(track.tail)}</group>
         </group>
       );
     case Part.Ramp:
       return (
         <group>
           <Ramp />
-          <group position={[2, -1, 0]}>{render(track.next)}</group>
+          <group position={[2, -1, 0]}>{render(track.tail)}</group>
         </group>
       );
     case Part.DownHill:
       return (
         <group>
           <DownHill />
-          <group position={[4, -1, 0]}>{render(track.next)}</group>
+          <group position={[4, -1, 0]}>{render(track.tail)}</group>
         </group>
       );
     case Part.Producer:
       return (
         <group>
           <Producer {...track.props} />
-          <group position={[2, 0, 0]}>{render(track.next)}</group>
+          <group position={[2, 0, 0]}>{render(track.tail)}</group>
         </group>
       );
     case Part.Subscriber:
@@ -108,28 +108,28 @@ export function render(track: Track) {
       return (
         <group>
           <Map {...track.props} />
-          <group position={[2, 0, 0]}>{render(track.next)}</group>
+          <group position={[2, 0, 0]}>{render(track.tail)}</group>
         </group>
       );
     case Part.SwitchAll:
       return (
         <group>
           <SwitchAll />
-          <group position={[2, 0, 0]}>{render(track.next)}</group>
+          <group position={[2, 0, 0]}>{render(track.tail)}</group>
         </group>
       );
     case Part.ConcatAll:
       return (
         <group>
           <ConcatAll />
-          <group position={[2, 0, 0]}>{render(track.next)}</group>
+          <group position={[2, 0, 0]}>{render(track.tail)}</group>
         </group>
       );
     case Part.MergeAll:
       return (
         <group>
           <MergeAll />
-          <group position={[2, 0, 0]}>{render(track.next)}</group>
+          <group position={[2, 0, 0]}>{render(track.tail)}</group>
         </group>
       );
     case Part.Merge:
@@ -142,7 +142,7 @@ export function render(track: Track) {
           <Center left top position={[0, 0, -2]}>
             {render(track.incoming[1])}
           </Center>
-          <group position={[6, 0, 0]}>{render(track.next)}</group>
+          <group position={[6, 0, 0]}>{render(track.tail)}</group>
         </group>
       );
     case Part.Concat: {
@@ -155,7 +155,7 @@ export function render(track: Track) {
           <Center left top position={[0, 0, -2]}>
             {render(track.incoming[1])}
           </Center>
-          <group position={[6, 0, 0]}>{render(track.next)}</group>
+          <group position={[6, 0, 0]}>{render(track.tail)}</group>
         </group>
       );
     }

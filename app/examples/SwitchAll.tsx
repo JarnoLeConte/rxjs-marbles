@@ -11,13 +11,13 @@ export function SwitchAll() {
     props: {
       source$,
     },
-    next: {
+    tail: {
       part: Part.Ramp,
-      next: {
+      tail: {
         part: Part.SwitchAll,
-        next: {
+        tail: {
           part: Part.DownHill,
-          next: {
+          tail: {
             part: Part.Subscriber,
           },
         },
