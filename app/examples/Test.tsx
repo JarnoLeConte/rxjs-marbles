@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { delayWhen } from "rxjs";
+import { Render } from "~/components/Render";
 import { Part } from "~/components/track/parts";
 import { reactive } from "~/components/track/reactive";
-import { render } from "~/components/track/render";
 import { useNumberProducer } from "~/hooks/useNumberProducer";
 import { frame$ } from "~/observables/frame$";
 import type { Track } from "~/types";
@@ -58,5 +58,5 @@ export function Test() {
       .subscribe(console.log);
   }, [A$, B$]);
 
-  return render(track);
+  return <Render track={track} />;
 }

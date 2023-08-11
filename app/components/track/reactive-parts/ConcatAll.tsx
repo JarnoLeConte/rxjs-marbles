@@ -60,6 +60,7 @@ export function ConcatAll({ displayText, ...props }: Props) {
       />
       <group position={[0, 2, 0]}>
         <Producer
+          subscribed={observables.length > 0}
           source$={observables[0]?.observable$}
           displayText={observables[0]?.label ?? ""}
         />

@@ -1,9 +1,9 @@
 import { take } from "rxjs";
-import { useNumberProducer } from "~/hooks/useNumberProducer";
-import { frameTimer } from "~/observables/frameTimer";
-import { render } from "~/components/track/render";
+import { Render } from "~/components/Render";
 import type { Track } from "~/components/track/parts";
 import { Part } from "~/components/track/parts";
+import { useNumberProducer } from "~/hooks/useNumberProducer";
+import { frameTimer } from "~/observables/frameTimer";
 import type { Value } from "~/types";
 import { numberToChar, tag } from "~/utils";
 
@@ -37,5 +37,5 @@ export function ConcatMap() {
     },
   };
 
-  return render(track);
+  return <Render track={track} />;
 }

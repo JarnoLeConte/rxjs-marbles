@@ -33,6 +33,7 @@ export function SwitchAll({ displayText, ...props }: Props) {
       />
       <group position={[0, 2, 0]}>
         <Producer
+          subscribed={!!observable}
           source$={observable?.observable$}
           displayText={observable?.label ?? ""}
         />

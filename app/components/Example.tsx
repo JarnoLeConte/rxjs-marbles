@@ -22,7 +22,7 @@ export enum ExampleEnum {
   Test = "test",
 }
 
-export const defaultExample = ExampleEnum.Test;
+export const defaultExample = ExampleEnum.Interval;
 
 export function Example({ example }: { example: ExampleEnum }) {
   switch (example) {

@@ -1,7 +1,7 @@
+import { Render } from "~/components/Render";
+import { Part } from "~/components/track/parts";
 import { useNumberProducer } from "~/hooks/useNumberProducer";
 import type { Track } from "~/types";
-import { render } from "~/components/track/render";
-import { Part } from "~/components/track/parts";
 
 export function Interval() {
   const source$ = useNumberProducer();
@@ -23,5 +23,5 @@ export function Interval() {
     },
   };
 
-  return render(track);
+  return <Render track={track} />;
 }

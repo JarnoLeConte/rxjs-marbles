@@ -47,7 +47,11 @@ export function MergeAll({ displayText, ...props }: Props) {
       />
       {observables.map(({ observable$, label }, index) => (
         <group key={index} position={[0, 2 + index * 2, 0]}>
-          <Producer source$={observable$} displayText={label ?? ""} />
+          <Producer
+            subscribed
+            source$={observable$}
+            displayText={label ?? ""}
+          />
         </group>
       ))}
     </group>

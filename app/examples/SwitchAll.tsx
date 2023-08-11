@@ -1,7 +1,7 @@
-import { useObservableProducer } from "~/hooks/useObservableProducer";
-import { render } from "~/components/track/render";
+import { Render } from "~/components/Render";
 import type { Track } from "~/components/track/parts";
 import { Part } from "~/components/track/parts";
+import { useObservableProducer } from "~/hooks/useObservableProducer";
 
 export function SwitchAll() {
   const source$ = useObservableProducer();
@@ -25,5 +25,5 @@ export function SwitchAll() {
     },
   };
 
-  return render(track);
+  return <Render track={track} />;
 }

@@ -1,7 +1,7 @@
+import { Render } from "~/components/Render";
+import { Part } from "~/components/track/parts";
 import { useNumberProducer } from "~/hooks/useNumberProducer";
 import type { Track, Value } from "~/types";
-import { render } from "~/components/track/render";
-import { Part } from "~/components/track/parts";
 
 export function Map() {
   const source$ = useNumberProducer();
@@ -29,5 +29,5 @@ export function Map() {
     },
   };
 
-  return render(track);
+  return <Render track={track} />;
 }

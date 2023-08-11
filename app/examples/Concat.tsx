@@ -1,9 +1,9 @@
-import { useNumberProducer } from "~/hooks/useNumberProducer";
-import { render } from "~/components/track/render";
-import { Part } from "~/components/track/parts";
-import type { Track } from "~/types";
-import { concatWith, ignoreElements } from "rxjs";
 import { useMemo } from "react";
+import { concatWith, ignoreElements } from "rxjs";
+import { Render } from "~/components/Render";
+import { Part } from "~/components/track/parts";
+import { useNumberProducer } from "~/hooks/useNumberProducer";
+import type { Track } from "~/types";
 
 export function Concat() {
   const A$ = useNumberProducer(1, 3);
@@ -54,5 +54,5 @@ export function Concat() {
     },
   };
 
-  return render(track);
+  return <Render track={track} />;
 }

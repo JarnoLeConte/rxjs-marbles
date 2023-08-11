@@ -1,6 +1,6 @@
-import { useNumberProducer } from "~/hooks/useNumberProducer";
-import { render } from "~/components/track/render";
+import { Render } from "~/components/Render";
 import { Part } from "~/components/track/parts";
+import { useNumberProducer } from "~/hooks/useNumberProducer";
 import type { Track } from "~/types";
 
 export function Merge() {
@@ -48,5 +48,5 @@ export function Merge() {
     },
   };
 
-  return render(track);
+  return <Render track={track} />;
 }

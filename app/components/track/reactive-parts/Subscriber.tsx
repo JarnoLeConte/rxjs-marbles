@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { BallDetectionHandler } from "~/components/BallDetector";
 import { useGameStore } from "~/store";
 import type { Value } from "~/types";
@@ -6,11 +6,12 @@ import { Bucket } from "../parts/Bucket";
 import { Text } from "@react-three/drei";
 import { renderValue } from "~/utils";
 
-type Props = JSX.IntrinsicElements["group"] & {
+type Props = {
   displayText?: string;
+  onSubscribe: () => void;
 };
 
-export function Subscriber({ displayText, ...props }: Props) {
+export function Subscriber({ displayText, onSubscribe }: Props) {
   const [value, setValue] = useState<Value>();
 
   const removeBall = useGameStore((state) => state.removeBall);
@@ -20,8 +21,12 @@ export function Subscriber({ displayText, ...props }: Props) {
     removeBall(ball.id);
   };
 
+  useEffect(() => {
+    onSubscribe();
+  }, [onSubscribe]);
+
   return (
-    <group {...props}>
+    <group>
       <Bucket onBallDetection={onBallDetection} />
       <Text
         color="black"
