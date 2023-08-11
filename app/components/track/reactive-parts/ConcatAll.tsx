@@ -8,10 +8,11 @@ import { Tunnel } from "../parts/Tunnel";
 import { Producer } from "./Producer";
 
 type Props = JSX.IntrinsicElements["group"] & {
+  name: string;
   displayText?: string;
 };
 
-export function ConcatAll({ displayText, ...props }: Props) {
+export function ConcatAll({ name, displayText, ...props }: Props) {
   const removeBall = useGameStore((state) => state.removeBall);
 
   // Keep track of the active producers which are currently emitting balls
@@ -60,6 +61,7 @@ export function ConcatAll({ displayText, ...props }: Props) {
       />
       <group position={[0, 2, 0]}>
         <Producer
+          name={`${name}#0`}
           source$={observables[0]?.observable$}
           displayText={observables[0]?.label ?? ""}
         />

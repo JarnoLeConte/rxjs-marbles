@@ -63,6 +63,7 @@ export type TrackPart =
   | {
       part: Part.Producer;
       props: {
+        name: string;
         source$: Observable<Value>;
         displayText?: string;
       };
@@ -88,6 +89,9 @@ export type TrackPart =
     }
   | {
       part: Part.ConcatAll;
+      props: {
+        name: string;
+      };
       next: Track;
     }
   | {

@@ -1,20 +1,24 @@
-import { useObservableProducer } from "~/hooks/useObservableProducer";
-import { render } from "~/components/track/render";
-import type { Track } from "~/components/track/parts";
+import { Run } from "~/components/Run";
+import type { Track } from "~/types";
 import { Part } from "~/components/track/parts";
+import { useObservableProducer } from "~/hooks/useObservableProducer";
 
 export function ConcatAll() {
-  const source$ = useObservableProducer();
+  const A$ = useObservableProducer();
 
   const track: Track = {
     part: Part.Producer,
     props: {
-      source$,
+      name: "A",
+      source$: A$,
     },
     next: {
       part: Part.Ramp,
       next: {
         part: Part.ConcatAll,
+        props: {
+          name: "concatAll",
+        },
         next: {
           part: Part.DownHill,
           next: {
@@ -25,5 +29,5 @@ export function ConcatAll() {
     },
   };
 
-  return render(track);
+  return <Run track={track} />;
 }

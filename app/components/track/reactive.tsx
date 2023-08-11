@@ -2,15 +2,18 @@ import type { Observable, OperatorFunction } from "rxjs";
 import {
   EMPTY,
   concat,
-  concatAll,
+  concatMap,
   map,
   merge,
-  mergeAll,
+  mergeMap,
+  of,
   pipe,
-  switchAll,
+  switchMap,
+  tap,
   throwError,
 } from "rxjs";
-import type { Value } from "~/types";
+import { notification$ } from "~/observables/notification$";
+import type { TaggedObservable, Value } from "~/types";
 import { isTaggedObservable } from "~/utils";
 import type { Track } from "./parts";
 import { Part } from "./parts";
@@ -20,8 +23,11 @@ export function reactive(track: Track): Observable<Value> {
 
   switch (track.part) {
     case Part.Producer: {
-      const { source$ } = track.props;
-      return source$.pipe(buildPipe(track.next));
+      const { name: producer, source$ } = track.props;
+      return source$.pipe(
+        tap((value) => notification$.next({ type: "emit", producer, value })),
+        buildPipe(track.next)
+      );
     }
     case Part.Merge: {
       const [trackA, trackB] = track.incoming;
@@ -61,11 +67,31 @@ function buildPipe(track: Track): OperatorFunction<Value, Value> {
     case Part.Map:
       return map(track.props.project);
     case Part.SwitchAll:
-      return pipe(assertObservable(), switchAll());
+      return pipe(
+        assertObservable(),
+        switchMap(({ observable$ }) => {
+          return observable$; // TODO - add notification
+        })
+      );
     case Part.ConcatAll:
-      return pipe(assertObservable(), concatAll());
+      return pipe(
+        assertObservable(),
+        concatMap(({ observable$ }, index) => {
+          const producer = `${track.props.name}#${index}`;
+          return observable$.pipe(
+            tap((value) =>
+              notification$.next({ type: "emit", producer, value })
+            )
+          );
+        })
+      );
     case Part.MergeAll:
-      return pipe(assertObservable(), mergeAll());
+      return pipe(
+        assertObservable(),
+        mergeMap(({ observable$ }) => {
+          return observable$; // TODO - add notification
+        })
+      );
     default:
       throw new Error(
         `Unknown how to construct pipe operator from track part ${track.part}`
@@ -73,10 +99,10 @@ function buildPipe(track: Track): OperatorFunction<Value, Value> {
   }
 }
 
-function assertObservable(): OperatorFunction<Value, Observable<Value>> {
-  return map<Value, Observable<Value>>((value) =>
+function assertObservable(): OperatorFunction<Value, TaggedObservable> {
+  return mergeMap<Value, Observable<TaggedObservable>>((value) =>
     isTaggedObservable(value)
-      ? value.observable$
+      ? of(value)
       : throwError(
           () => new Error(`Expected an observable value, but got: ${value}`)
         )

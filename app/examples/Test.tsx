@@ -1,11 +1,7 @@
-import { useEffect } from "react";
-import { delayWhen } from "rxjs";
-import { Part } from "~/components/track/parts";
-import { reactive } from "~/components/track/reactive";
-import { render } from "~/components/track/render";
-import { useNumberProducer } from "~/hooks/useNumberProducer";
-import { frame$ } from "~/observables/frame$";
 import type { Track } from "~/types";
+import { Run } from "~/components/Run";
+import { Part } from "~/components/track/parts";
+import { useNumberProducer } from "~/hooks/useNumberProducer";
 
 export function Test() {
   const A$ = useNumberProducer(1);
@@ -14,6 +10,7 @@ export function Test() {
   const trackA: Track = {
     part: Part.Producer,
     props: {
+      name: "A",
       source$: A$,
       displayText: "A",
     },
@@ -26,6 +23,7 @@ export function Test() {
   const trackB: Track = {
     part: Part.Producer,
     props: {
+      name: "B",
       source$: B$,
       displayText: "B",
     },
@@ -52,11 +50,5 @@ export function Test() {
     },
   };
 
-  useEffect(() => {
-    reactive(track)
-      .pipe(delayWhen(() => frame$))
-      .subscribe(console.log);
-  }, [A$, B$]);
-
-  return render(track);
+  return <Run track={track} />;
 }

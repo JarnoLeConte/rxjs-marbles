@@ -121,7 +121,7 @@ export function render(track: Track) {
     case Part.ConcatAll:
       return (
         <group>
-          <ConcatAll />
+          <ConcatAll {...track.props} />
           <group position={[2, 0, 0]}>{render(track.next)}</group>
         </group>
       );
