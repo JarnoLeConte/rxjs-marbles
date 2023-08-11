@@ -2,6 +2,7 @@ import { Center } from "@react-three/drei";
 import type { Observable, OperatorFunction } from "rxjs";
 import {
   EMPTY,
+  Subject,
   concat,
   concatAll,
   map,
@@ -9,6 +10,7 @@ import {
   mergeAll,
   pipe,
   switchAll,
+  tap,
   throwError,
 } from "rxjs";
 import type { Value } from "~/types";
@@ -42,13 +44,21 @@ export function build(track: Track): Result {
 
   switch (track.part) {
     case Part.Producer: {
-      const { source$ } = track.props;
+      const { source$: provided$ } = track.props;
       const { operator, children } = buildTail(track.tail);
+      const source$ = new Subject<Value>();
       return {
-        observable: source$.pipe(operator),
+        // Don't use the provided source$ directly in the Producer component,
+        // because it will be subscribed to immediatly, while we want to wait
+        // for the subscription to the actual observable we build here.
+        // Therefore tap values from the actual observable and pass them on.
+        observable: provided$.pipe(
+          tap((val) => source$.next(val)),
+          operator
+        ),
         content: (
           <group>
-            <Producer {...track.props} />
+            <Producer {...track.props} source$={source$} />
             <group position={[2, 0, 0]}>{children}</group>
           </group>
         ),

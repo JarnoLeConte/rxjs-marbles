@@ -1,5 +1,4 @@
 import { useMemo } from "react";
-import { concatWith, ignoreElements } from "rxjs";
 import { Run } from "~/components/Run";
 import { Part } from "~/components/track/parts";
 import { useNumberProducer } from "~/hooks/useNumberProducer";
@@ -8,10 +7,6 @@ import type { Track } from "~/types";
 export function Concat() {
   const A$ = useNumberProducer(1, 3);
   const B$ = useNumberProducer(1, 3);
-  const newB$ = useMemo(
-    () => A$.pipe(ignoreElements(), concatWith(B$)),
-    [A$, B$]
-  );
 
   const trackA: Track = useMemo(
     () => ({
@@ -32,7 +27,7 @@ export function Concat() {
     () => ({
       part: Part.Producer,
       props: {
-        source$: newB$,
+        source$: B$,
         displayText: "B",
       },
       tail: {
@@ -43,7 +38,7 @@ export function Concat() {
         },
       },
     }),
-    [newB$]
+    [B$]
   );
 
   const track: Track = useMemo(
