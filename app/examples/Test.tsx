@@ -1,17 +1,21 @@
+import { useEffect } from "react";
+import { delayWhen } from "rxjs";
 import { Part } from "~/components/track/parts";
+import { reactive } from "~/components/track/reactive";
 import { render } from "~/components/track/render";
-import { useObservableProducer } from "~/hooks/useObservableProducer";
+import { useNumberProducer } from "~/hooks/useNumberProducer";
+import { frame$ } from "~/observables/frame$";
 import type { Track } from "~/types";
 
 export function Test() {
-  // const source$ = useNumberProducer();
-  const A$ = useObservableProducer("A");
-  const B$ = useObservableProducer("E");
+  const A$ = useNumberProducer(1);
+  const B$ = useNumberProducer(6);
 
   const trackA: Track = {
     part: Part.Producer,
     props: {
       source$: A$,
+      displayText: "A",
     },
     next: {
       part: Part.Ramp,
@@ -23,20 +27,36 @@ export function Test() {
     part: Part.Producer,
     props: {
       source$: B$,
+      displayText: "B",
     },
     next: {
       part: Part.Ramp,
-      next: null,
+      next: {
+        part: Part.Straight,
+        next: null,
+      },
     },
   };
 
   const track: Track = {
-    part: Part.Concat,
+    part: Part.Merge,
     incoming: [trackA, trackB],
+    props: {
+      displayText: "merge(A, B)",
+    },
     next: {
       part: Part.Subscriber,
+      props: {
+        displayText: ".subscribe(...)",
+      },
     },
   };
+
+  useEffect(() => {
+    reactive(track)
+      .pipe(delayWhen(() => frame$))
+      .subscribe(console.log);
+  }, [A$, B$]);
 
   return render(track);
 }

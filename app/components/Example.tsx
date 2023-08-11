@@ -22,6 +22,8 @@ export enum ExampleEnum {
   Test = "test",
 }
 
+export const defaultExample = ExampleEnum.Test;
+
 export function Example({ example }: { example: ExampleEnum }) {
   switch (example) {
     case "-":
@@ -46,5 +48,3 @@ export function Example({ example }: { example: ExampleEnum }) {
       return <Test />;
   }
 }
-
-export const defaultExample = ExampleEnum.Concat;
