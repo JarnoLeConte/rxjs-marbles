@@ -1,14 +1,14 @@
 import { Model } from "~/components/Model";
-import { CombineLatest } from "~/examples/CombineLatest";
-import { Concat } from "~/examples/Concat";
-import { ConcatAll } from "~/examples/ConcatAll";
-import { ConcatMap } from "~/examples/ConcatMap";
-import { Interval } from "~/examples/Interval";
-import { Map } from "~/examples/Map";
-import { Merge } from "~/examples/Merge";
-import { MergeAll } from "~/examples/MergeAll";
-import { SwitchAll } from "~/examples/SwitchAll";
-import { Test } from "~/examples/Test";
+import { CombineLatest } from "~/components/track/scenes/CombineLatest";
+import { Concat } from "~/components/track/scenes/Concat";
+import { ConcatAll } from "~/components/track/scenes/ConcatAll";
+import { ConcatMap } from "~/components/track/scenes/ConcatMap";
+import { Interval } from "~/components/track/scenes/Interval";
+import { Map } from "~/components/track/scenes/Map";
+import { Merge } from "~/components/track/scenes/Merge";
+import { MergeAll } from "~/components/track/scenes/MergeAll";
+import { SwitchAll } from "~/components/track/scenes/SwitchAll";
+import { Test } from "~/components/track/scenes/Test";
 
 export enum ExampleEnum {
   None = "-",
@@ -26,7 +26,7 @@ export enum ExampleEnum {
 
 export const defaultExample = ExampleEnum.Test;
 
-export function Example({ example }: { example: ExampleEnum }) {
+export function Scene({ example }: { example: ExampleEnum }) {
   switch (example) {
     case "-":
       return <Model />;

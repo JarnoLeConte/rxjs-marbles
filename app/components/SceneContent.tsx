@@ -3,7 +3,7 @@ import { useControls } from "leva";
 import { useEffect } from "react";
 import { Balls } from "~/components/Balls";
 import { useGameStore } from "~/store";
-import { Example, ExampleEnum, defaultExample } from "./Example";
+import { Scene, ExampleEnum, defaultExample } from "./Scene";
 
 export function SceneContent() {
   const reset = useGameStore((state) => state.reset);
@@ -25,7 +25,7 @@ export function SceneContent() {
     <>
       <Balls />
       <Center key={example} disable={disableCenter}>
-        <Example example={example} />
+        <Scene example={example} />
       </Center>
     </>
   );
