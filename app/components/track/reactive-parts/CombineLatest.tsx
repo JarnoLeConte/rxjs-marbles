@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { Subject } from "rxjs";
 import type { BallDetectionHandler } from "~/components/BallDetector";
-import { useGameStore } from "~/store";
+import { useStore } from "~/store";
 import type { Value } from "~/types";
 import { renderValue } from "~/utils";
 import { Bucket } from "../parts/Bucket";
@@ -13,7 +13,7 @@ type Props = JSX.IntrinsicElements["group"] & {
 };
 
 export function CombineLatest({ displayText, ...props }: Props) {
-  const removeBall = useGameStore((state) => state.removeBall);
+  const removeBall = useStore((state) => state.removeBall);
 
   const [valueA, setValueA] = useState<Value>();
   const [valueB, setValueB] = useState<Value>();

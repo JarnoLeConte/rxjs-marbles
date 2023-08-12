@@ -1,7 +1,7 @@
-import { useGameStore } from "~/store";
+import { useStore } from "~/store";
 
 export function Overlay() {
-  const frame = useGameStore((state) => state.frame);
+  const frame = useStore((state) => state.frame);
   return (
     <div
       id="overlay"

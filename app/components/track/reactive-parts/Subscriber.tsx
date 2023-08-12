@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { BallDetectionHandler } from "~/components/BallDetector";
-import { useGameStore } from "~/store";
+import { useStore } from "~/store";
 import type { Value } from "~/types";
 import { renderValue } from "~/utils";
 import { Bucket } from "../parts/Bucket";
@@ -12,7 +12,7 @@ type Props = JSX.IntrinsicElements["group"] & {
 export function Subscriber({ displayText, ...props }: Props) {
   const [value, setValue] = useState<Value>();
 
-  const removeBall = useGameStore((state) => state.removeBall);
+  const removeBall = useStore((state) => state.removeBall);
 
   const onBallDetection: BallDetectionHandler = (ball) => {
     setValue(ball.value);

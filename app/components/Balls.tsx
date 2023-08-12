@@ -1,8 +1,8 @@
-import { useGameStore } from "~/store";
+import { useStore } from "~/store";
 import { Ball } from "./Ball";
 
 export function Balls() {
-  const balls = useGameStore((state) => state.balls);
+  const balls = useStore((state) => state.balls);
 
   return (
     <>

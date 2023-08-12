@@ -1,5 +1,5 @@
 import type { BallDetectionHandler } from "~/components/BallDetector";
-import { useGameStore } from "~/store";
+import { useStore } from "~/store";
 import type { Value } from "~/types";
 import { Tunnel } from "../parts/Tunnel";
 
@@ -9,7 +9,7 @@ type Props = JSX.IntrinsicElements["group"] & {
 };
 
 export function Map({ project, displayText, ...props }: Props) {
-  const updateBall = useGameStore((state) => state.updateBall);
+  const updateBall = useStore((state) => state.updateBall);
 
   const onBallDetection: BallDetectionHandler = ({ id }) => {
     updateBall(id, (ball) => ({ ...ball, value: project(ball.value) }));

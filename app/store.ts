@@ -5,7 +5,7 @@ import { randomColor } from "./utils";
 
 let nextId = 1;
 
-interface GameState {
+interface Store {
   balls: Ball[];
   addBall: (options: {
     value: Value;
@@ -22,7 +22,7 @@ interface GameState {
   reset: () => void;
 }
 
-export const useGameStore = create<GameState>((set, get) => ({
+export const useStore = create<Store>((set, get) => ({
   balls: [],
   addBall: ({ value, position, color }) =>
     set((state) => ({

@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import type { Observable } from "rxjs";
 import { Vector3 } from "three";
-import { useGameStore } from "~/store";
+import { useStore } from "~/store";
 import type { Value } from "~/types";
 import { Begin } from "../parts/Begin";
 import { delayInBetween } from "~/observables/delayInBetween";
@@ -12,8 +12,8 @@ type Props = JSX.IntrinsicElements["group"] & {
 };
 
 export function Producer({ source$, displayText, ...props }: Props) {
-  const addBall = useGameStore((state) => state.addBall);
-  const updateActivity = useGameStore((state) => state.updateActivity);
+  const addBall = useStore((state) => state.addBall);
+  const updateActivity = useStore((state) => state.updateActivity);
   const ref = useRef<THREE.Group>(null!);
 
   // Every tick, check if a ball needs to be created by the producer

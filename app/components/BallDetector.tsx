@@ -1,7 +1,7 @@
 import type { IntersectionEnterHandler } from "@react-three/rapier";
 import { BallCollider, RigidBody } from "@react-three/rapier";
 import { useRef } from "react";
-import { useGameStore } from "~/store";
+import { useStore } from "~/store";
 import type { Ball } from "~/types";
 
 export type BallDetectionHandler = (ball: Ball) => void;
@@ -10,8 +10,8 @@ export function BallDetector({
   onDetection,
   ...props
 }: { onDetection?: BallDetectionHandler } & JSX.IntrinsicElements["group"]) {
-  const updateActivity = useGameStore((state) => state.updateActivity);
-  const getBall = useGameStore((state) => state.getBall);
+  const updateActivity = useStore((state) => state.updateActivity);
+  const getBall = useStore((state) => state.getBall);
   const detection = useRef(null); // store the id of the ball that was detected
 
   const onIntersectionEnter: IntersectionEnterHandler = ({ other }) => {
