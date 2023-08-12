@@ -6,6 +6,17 @@ import type { Value } from "~/types";
 import { Begin } from "../parts/Begin";
 import { delayInBetween } from "~/observables/delayInBetween";
 
+/*
+  ⚠️ Current implementation differs from rxjs, in that:
+
+  Virtual time is used to perform animations.
+  Therefore processing a single frame takes an unknown amount of time,
+  it depends on the amount of balls being produced in the current frame.
+
+  Values that are emitted within the same frame are delayed
+  to make them appear one after the other.
+*/
+
 type Props = JSX.IntrinsicElements["group"] & {
   source$?: Observable<Value>;
   displayText?: string;

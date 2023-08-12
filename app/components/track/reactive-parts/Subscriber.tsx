@@ -5,6 +5,14 @@ import type { Value } from "~/types";
 import { renderValue } from "~/utils";
 import { Bucket } from "../parts/Bucket";
 
+/*
+  ⚠️ Current implementation differs from rxjs, in that:
+
+  The subscriber component is used for presentation only,
+  and does not actually subscribe to the observable, because
+  that is currently handled by the runtime.
+*/
+
 type Props = JSX.IntrinsicElements["group"] & {
   displayText?: string;
 };

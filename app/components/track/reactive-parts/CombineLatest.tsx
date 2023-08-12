@@ -8,6 +8,18 @@ import { Bucket } from "../parts/Bucket";
 import { Producer } from "./Producer";
 import { Base } from "../elements/Base";
 
+/*
+  ⚠️ Current implementation differs from rxjs, in that:
+
+  Virtual time is used to perform animations.
+  Therefore processing a single frame takes an unknown amount of time,
+  it depends on the amount of balls and their incoming speed.
+
+  This operator is sensitive to the order in which values occur,
+  and because in a single animated frame the order is not guaranteed,
+  the output can differ from rxjs.
+*/
+
 type Props = JSX.IntrinsicElements["group"] & {
   displayText?: string;
 };
