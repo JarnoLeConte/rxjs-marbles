@@ -1,11 +1,12 @@
 import { useEffect, useMemo } from "react";
+import { frame$ } from "~/observables/frame$";
+import { useGameStore } from "~/store";
 import type { Track } from "./track/parts";
 import { build } from "./track/track-builder";
-import { useGameStore } from "~/store";
-import { frame$ } from "~/observables/frame$";
 
 export function Run({ track }: { track: Track }) {
   const lastActivity = useGameStore((state) => state.lastActivity);
+  const nextFrame = useGameStore((state) => state.nextFrame);
 
   // Build track
   const { observable, content } = useMemo(() => build(track), [track]);
@@ -18,13 +19,13 @@ export function Run({ track }: { track: Track }) {
 
   // Run frame timer
   useEffect(() => {
-    const nextFrame = () => {
+    const timer = setInterval(() => {
       console.debug("next frame");
       frame$.next();
-    };
-    const timer = setInterval(nextFrame, 1500);
+      nextFrame();
+    }, 1500);
     return () => clearInterval(timer);
-  }, [lastActivity]);
+  }, [lastActivity, nextFrame]);
 
   return content;
 }

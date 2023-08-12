@@ -2,6 +2,7 @@ import { Canvas } from "@react-three/fiber";
 import type { V2_MetaFunction } from "@remix-run/node";
 import { Leva } from "leva";
 import { Suspense } from "react";
+import { Overlay } from "~/components/Overlay";
 import { SceneSetup } from "~/components/SceneSetup";
 
 export const meta: V2_MetaFunction = () => {
@@ -23,6 +24,7 @@ export default function Index() {
           <SceneSetup />
         </Suspense>
       </Canvas>
+      <Overlay />
     </>
   );
 }
