@@ -6,15 +6,21 @@ import { Part } from "~/components/track/parts";
 import type { Value } from "~/types";
 
 export function Test() {
-  const source$ = useMemo(
-    () => fromEvent(document, "click").pipe(map(() => "{click}")),
+  const click$ = useMemo(
+    () => fromEvent<MouseEvent>(document, "click").pipe(map(() => "{click}")),
     []
   );
 
-  const track: Track = {
+  const keyboard$ = useMemo(
+    () =>
+      fromEvent<KeyboardEvent>(window, "keyup").pipe(map((event) => event.key)),
+    []
+  );
+
+  const trackA: Track = {
     part: Part.Producer,
     props: {
-      source$,
+      source$: click$,
       displayText: "click$.pipe(",
     },
     tail: {
@@ -25,13 +31,31 @@ export function Test() {
           project: (value: Value, index: number) => index,
           displayText: `map((x, i) => i),`,
         },
-        tail: {
-          part: Part.DownHill,
-          tail: {
-            part: Part.Subscriber,
-          },
-        },
+        tail: null,
       },
+    },
+  };
+
+  const trackB: Track = {
+    part: Part.Producer,
+    props: {
+      source$: keyboard$,
+      displayText: "keyboard$.pipe(",
+    },
+    tail: {
+      part: Part.Ramp,
+      tail: {
+        part: Part.DownHill,
+        tail: null,
+      },
+    },
+  };
+
+  const track: Track = {
+    part: Part.Merge,
+    incoming: [trackA, trackB],
+    tail: {
+      part: Part.Subscriber,
     },
   };
 
