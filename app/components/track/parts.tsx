@@ -24,6 +24,7 @@ export type TrackHead =
       props: {
         source$: Observable<Value>;
         displayText?: string;
+        waitForFrame?: boolean;
       };
       tail: TrackTail;
     }

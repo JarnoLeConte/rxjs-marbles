@@ -22,6 +22,7 @@ export function Test() {
     props: {
       source$: A$,
       displayText: "A",
+      waitForFrame: true,
     },
     tail: null,
   };
@@ -31,6 +32,7 @@ export function Test() {
     props: {
       source$: B$,
       displayText: "B",
+      waitForFrame: true,
     },
     tail: {
       part: Part.Ramp,

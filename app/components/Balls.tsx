@@ -13,6 +13,7 @@ export function Balls() {
           value={ball.value}
           color={ball.color}
           position={ball.defaultPosition}
+          ghost={ball.ghost}
         />
       ))}
     </>

@@ -13,6 +13,7 @@ export type Ball = {
   value: Value;
   defaultPosition: [number, number, number];
   color: Color;
+  ghost?: boolean; // Not taking part in physics simulation
 };
 
 export type { Track } from "~/components/track/parts";

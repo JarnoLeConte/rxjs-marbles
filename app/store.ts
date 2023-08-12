@@ -11,7 +11,8 @@ interface Store {
     value: Value;
     position: [number, number, number];
     color?: Color;
-  }) => void;
+    ghost?: boolean;
+  }) => number;
   getBall: (id: number) => Ball | undefined;
   updateBall: (id: number, setter: (ball: Ball) => Ball) => void;
   removeBall: (id: number) => void;
@@ -24,18 +25,22 @@ interface Store {
 
 export const useStore = create<Store>((set, get) => ({
   balls: [],
-  addBall: ({ value, position, color }) =>
+  addBall: ({ value, position, color, ghost }) => {
+    const id = nextId++;
     set((state) => ({
       balls: [
         ...state.balls,
         {
-          id: nextId++,
+          id,
           value,
           defaultPosition: position,
           color: color || randomColor(),
+          ghost,
         },
       ],
-    })),
+    }));
+    return id;
+  },
   getBall: (id: number) => get().balls.find((ball) => ball.id === id),
   updateBall: (id, setter) =>
     set((state) => ({
