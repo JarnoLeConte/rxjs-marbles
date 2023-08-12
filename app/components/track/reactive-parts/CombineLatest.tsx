@@ -39,13 +39,13 @@ export function CombineLatest({ displayText, ...props }: Props) {
     <group {...props}>
       <Bucket
         position={[0, 0, 0]}
-        content={renderValue(valueA) ?? "?"}
+        content={valueA !== undefined ? renderValue(valueA) : "?"}
         contentLabel="memory"
         onBallDetection={handleA}
       />
       <Bucket
         position={[2, 0, -2]}
-        content={renderValue(valueB) ?? "?"}
+        content={valueB !== undefined ? renderValue(valueB) : "?"}
         contentLabel="memory"
         onBallDetection={handleB}
       />

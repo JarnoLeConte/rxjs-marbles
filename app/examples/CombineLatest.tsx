@@ -1,11 +1,21 @@
+import { useMemo } from "react";
+import { from, map, switchMap } from "rxjs";
 import { Run } from "~/components/Run";
 import { Part } from "~/components/track/parts";
 import { useNumberProducer } from "~/hooks/useNumberProducer";
+import { frameTimer } from "~/observables/frameTimer";
 import type { Track } from "~/types";
 
 export function CombineLatest() {
-  const A$ = useNumberProducer(1);
-  const B$ = useNumberProducer(10);
+  const A$ = useNumberProducer(10);
+  const B$ = useMemo(
+    () =>
+      frameTimer(0, 1).pipe(
+        map((x) => x * 2 + 1),
+        switchMap((x) => from([x, x + 1]))
+      ),
+    []
+  );
 
   const trackA: Track = {
     part: Part.Producer,
@@ -24,13 +34,7 @@ export function CombineLatest() {
     },
     tail: {
       part: Part.Ramp,
-      tail: {
-        part: Part.Straight,
-        tail: {
-          part: Part.Straight,
-          tail: null,
-        },
-      },
+      tail: null,
     },
   };
 

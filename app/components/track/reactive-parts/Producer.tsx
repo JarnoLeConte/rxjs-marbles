@@ -4,6 +4,7 @@ import { Vector3 } from "three";
 import { useGameStore } from "~/store";
 import type { Value } from "~/types";
 import { Begin } from "../parts/Begin";
+import { delayInBetween } from "~/observables/delayInBetween";
 
 type Props = JSX.IntrinsicElements["group"] & {
   source$?: Observable<Value>;
@@ -19,7 +20,7 @@ export function Producer({ source$, displayText, ...props }: Props) {
   useEffect(() => {
     if (!source$) return;
 
-    const sub = source$.subscribe((value) => {
+    const sub = source$.pipe(delayInBetween(1250)).subscribe((value) => {
       updateActivity();
       // Initial ball ppsition
       const position = ref.current

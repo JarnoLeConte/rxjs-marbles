@@ -55,7 +55,7 @@ export function Bucket({
           anchorX="center"
           anchorY="middle"
           position={[0, -1.3, 1]}
-          fontSize={0.6}
+          fontSize={0.5}
         >
           {content}
         </Text>

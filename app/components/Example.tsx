@@ -24,7 +24,7 @@ export enum ExampleEnum {
   Test = "test",
 }
 
-export const defaultExample = ExampleEnum.CombineLatest;
+export const defaultExample = ExampleEnum.Test;
 
 export function Example({ example }: { example: ExampleEnum }) {
   switch (example) {
