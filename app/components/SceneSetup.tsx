@@ -6,11 +6,11 @@ import {
 } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { Physics } from "@react-three/rapier";
-import { Leva, useControls } from "leva";
+import { useControls } from "leva";
 import { Suspense } from "react";
+import type { Example } from "~/examples";
 import { Balls } from "./Balls";
 import { Overlay } from "./Overlay";
-import type { Example } from "~/examples";
 
 export function SceneSetup({
   example,
@@ -25,7 +25,6 @@ export function SceneSetup({
 
   return (
     <>
-      <Leva />
       <Canvas shadows>
         <Suspense>
           <Environment path="/" files="lebombo_1k.hdr" />
