@@ -5,7 +5,7 @@ import type { Track } from "~/components/track/parts";
 import { Part } from "~/components/track/parts";
 import type { Value } from "~/types";
 
-export function Test() {
+export function FromEvent() {
   const source$ = useMemo(
     () => fromEvent(document, "click").pipe(map(() => "{click}")),
     []

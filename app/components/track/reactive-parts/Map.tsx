@@ -2,6 +2,7 @@ import type { BallDetectionHandler } from "~/components/BallDetector";
 import { useStore } from "~/store";
 import type { Value } from "~/types";
 import { Tunnel } from "../parts/Tunnel";
+import { useState } from "react";
 
 /*
   ⚠️ Current implementation differs from rxjs, in that:
@@ -12,15 +13,20 @@ import { Tunnel } from "../parts/Tunnel";
 */
 
 type Props = JSX.IntrinsicElements["group"] & {
-  project: (value: Value) => Value;
+  project: (value: Value, index: number) => Value;
   displayText?: string;
 };
 
 export function Map({ project, displayText, ...props }: Props) {
   const updateBall = useStore((state) => state.updateBall);
+  const [index, setIndex] = useState(0);
 
   const onBallDetection: BallDetectionHandler = ({ id }) => {
-    updateBall(id, (ball) => ({ ...ball, value: project(ball.value) }));
+    updateBall(id, (ball) => ({
+      ...ball,
+      value: project(ball.value, index),
+    }));
+    setIndex((count) => count + 1);
   };
 
   return (

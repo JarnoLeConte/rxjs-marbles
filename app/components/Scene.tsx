@@ -9,6 +9,7 @@ import { Merge } from "~/components/track/scenes/Merge";
 import { MergeAll } from "~/components/track/scenes/MergeAll";
 import { SwitchAll } from "~/components/track/scenes/SwitchAll";
 import { Test } from "~/components/track/scenes/Test";
+import { FromEvent } from "./track/scenes/FromEvent";
 
 export enum ExampleEnum {
   None = "-",
@@ -21,6 +22,7 @@ export enum ExampleEnum {
   Merge = "merge",
   Concat = "concat",
   CombineLatest = "combineLatest",
+  FromEvent = "fromEvent",
   Test = "test",
 }
 
@@ -48,6 +50,8 @@ export function Scene({ example }: { example: ExampleEnum }) {
       return <Concat />;
     case "combineLatest":
       return <CombineLatest />;
+    case "fromEvent":
+      return <FromEvent />;
     case "test":
       return <Test />;
   }

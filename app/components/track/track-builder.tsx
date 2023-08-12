@@ -21,6 +21,7 @@ import { Part } from "./parts";
 import { DownHill } from "./parts/DownHill";
 import { Ramp } from "./parts/Ramp";
 import { Straight } from "./parts/Straight";
+import { CombineLatest } from "./reactive-parts/CombineLatest";
 import { Concat } from "./reactive-parts/Concat";
 import { ConcatAll } from "./reactive-parts/ConcatAll";
 import { Map } from "./reactive-parts/Map";
@@ -29,7 +30,6 @@ import { MergeAll } from "./reactive-parts/MergeAll";
 import { Producer } from "./reactive-parts/Producer";
 import { Subscriber } from "./reactive-parts/Subscriber";
 import { SwitchAll } from "./reactive-parts/SwitchAll";
-import { CombineLatest } from "./reactive-parts/CombineLatest";
 
 type Result = {
   observable: Observable<Value>;

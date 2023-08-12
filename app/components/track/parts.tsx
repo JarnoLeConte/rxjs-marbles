@@ -76,7 +76,7 @@ export type TrackTail =
   | {
       part: Part.Map;
       props: {
-        project: (value: Value) => Value;
+        project: (value: Value, index: number) => Value;
         displayText: string;
       };
       tail: TrackTail;

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef } from "react";
-import { delayWhen, filter, map, tap, type Observable } from "rxjs";
+import { delayWhen, map, mergeMap, of, tap, type Observable } from "rxjs";
 import { Vector3 } from "three";
 import { delayInBetween } from "~/observables/delayInBetween";
 import { frame$ } from "~/observables/frame$";
@@ -32,24 +32,21 @@ export function Producer({
 }: Props) {
   const addBall = useStore((state) => state.addBall);
   const updateBall = useStore((state) => state.updateBall);
-  const updateActivity = useStore((state) => state.updateActivity);
   const ref = useRef<THREE.Group>(null!);
 
   const newBall = useCallback(
     (value: Value) => {
-      updateActivity();
-
       // Initial ball position
       const position = ref.current
         .localToWorld(new Vector3(1, 1.5, 0)) // start from inside the wall to give the ball a push
         .toArray();
 
       // Create the ball
-      const id = addBall({ value, position, ghost: waitForFrame });
+      const id = addBall({ value, position, ghost: true });
 
       return id;
     },
-    [updateActivity, addBall, waitForFrame]
+    [addBall]
   );
 
   // Every tick, check if a ball needs to be created by the producer
@@ -58,10 +55,10 @@ export function Producer({
 
     const sub = source$
       .pipe(
-        delayInBetween(1250),
         map((value) => newBall(value)),
-        filter((val) => !!waitForFrame), // execute rest of the pipe only if waitForFrame is true
-        delayWhen(() => frame$),
+        mergeMap((id) =>
+          waitForFrame ? of(id).pipe(delayWhen(() => frame$)) : of(id)
+        ),
         delayInBetween(1250),
         tap((id) => updateBall(id, (ball) => ({ ...ball, ghost: false })))
       )

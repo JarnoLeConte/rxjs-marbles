@@ -26,6 +26,7 @@ interface Store {
 export const useStore = create<Store>((set, get) => ({
   balls: [],
   addBall: ({ value, position, color, ghost }) => {
+    get().updateActivity();
     const id = nextId++;
     set((state) => ({
       balls: [
@@ -42,10 +43,12 @@ export const useStore = create<Store>((set, get) => ({
     return id;
   },
   getBall: (id: number) => get().balls.find((ball) => ball.id === id),
-  updateBall: (id, setter) =>
+  updateBall: (id, setter) => {
+    get().updateActivity();
     set((state) => ({
       balls: state.balls.map((ball) => (ball.id === id ? setter(ball) : ball)),
-    })),
+    }));
+  },
   removeBall: (id: number) =>
     set((state) => ({ balls: state.balls.filter((ball) => ball.id !== id) })),
   lastActivity: Date.now(),
