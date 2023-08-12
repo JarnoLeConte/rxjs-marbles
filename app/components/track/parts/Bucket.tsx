@@ -1,7 +1,7 @@
 import { Text } from "@react-three/drei";
 import type { BallDetectionHandler } from "../../BallDetector";
 import { BallDetector } from "../../BallDetector";
-import { Base } from "../elements/Base";
+import { Element } from "../elements/Element";
 
 type Props = JSX.IntrinsicElements["group"] & {
   onBallDetection?: BallDetectionHandler;
@@ -20,9 +20,9 @@ export function Bucket({
   return (
     <group {...props}>
       <group position={[1, 0, 0]}>
-        <Base element="Cube703" rotation={[0, Math.PI, 0]} />
-        <Base
-          element="Cube061"
+        <Element name="Cube703" rotation={[0, Math.PI, 0]} />
+        <Element
+          name="Cube061"
           position={[0, -2, 0]}
           rotation={[0, Math.PI / 2, 0]}
         />
