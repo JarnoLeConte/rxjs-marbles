@@ -35,7 +35,7 @@ export function Plumbob({
   }, [materials]);
 
   return (
-    <group {...props} dispose={null}>
+    <group {...props}>
       <group name="Sketchfab_Scene" scale={0.002}>
         <group
           name="RootNode"
@@ -49,6 +49,7 @@ export function Plumbob({
               material={customMaterials}
               material-opacity={status === "active" ? 1 : 0.2}
               material-transparent
+              dispose={null}
             />
           </group>
         </group>

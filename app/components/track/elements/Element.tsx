@@ -13,12 +13,13 @@ export function Element({
   const { nodes, materials } = useModel();
 
   return (
-    <group {...props} dispose={null}>
+    <group {...props}>
       <RigidBody type="fixed" colliders={support ? "cuboid" : "trimesh"}>
         <mesh
           geometry={nodes[name].geometry}
           material={materials.Wood_Dark}
           scale={10}
+          dispose={null}
         />
       </RigidBody>
     </group>
