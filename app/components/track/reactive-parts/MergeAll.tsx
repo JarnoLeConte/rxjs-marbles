@@ -42,7 +42,7 @@ export function MergeAll({ displayText, ...props }: Props) {
     <group {...props}>
       <Tunnel
         onBallDetection={onBallDetection}
-        displayText={displayText}
+        displayText={displayText ?? "mergeAll(),"}
         exitClosed
       />
       {observables.map(({ observable$, label }, index) => (

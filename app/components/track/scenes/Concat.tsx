@@ -13,7 +13,7 @@ export function Concat() {
       part: Part.Producer,
       props: {
         source$: A$,
-        displayText: "A",
+        displayText: "A (1, 2, 3)",
       },
       tail: {
         part: Part.Ramp,
@@ -28,7 +28,7 @@ export function Concat() {
       part: Part.Producer,
       props: {
         source$: B$,
-        displayText: "B",
+        displayText: "B (1, 2, 3)",
       },
       tail: {
         part: Part.Ramp,

@@ -11,7 +11,7 @@ export function Merge() {
     part: Part.Producer,
     props: {
       source$: A$,
-      displayText: "A",
+      displayText: `A (1, 2, 3, ...)`,
     },
     tail: {
       part: Part.Ramp,
@@ -23,7 +23,7 @@ export function Merge() {
     part: Part.Producer,
     props: {
       source$: B$,
-      displayText: "B",
+      displayText: "B (10, 11, 12, ...)",
     },
     tail: {
       part: Part.Ramp,
