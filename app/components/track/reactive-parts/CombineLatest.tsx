@@ -6,6 +6,7 @@ import type { Value } from "~/types";
 import { renderValue } from "~/utils";
 import { Bucket } from "../parts/Bucket";
 import { Producer } from "./Producer";
+import { Base } from "../elements/Base";
 
 type Props = JSX.IntrinsicElements["group"] & {
   displayText?: string;
@@ -43,12 +44,14 @@ export function CombineLatest({ displayText, ...props }: Props) {
         contentLabel="memory"
         onBallDetection={handleA}
       />
+      <Base position={[0, -3, 0]} />
       <Bucket
         position={[2, 0, -2]}
         content={valueB !== undefined ? renderValue(valueB) : "?"}
         contentLabel="memory"
         onBallDetection={handleB}
       />
+      <Base position={[2, -3, -2]} />
       <Producer
         position={[2, -3, 0]}
         source$={subject$}
