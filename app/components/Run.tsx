@@ -7,11 +7,17 @@ import { build } from "./track/track-builder";
 import { frame$ } from "~/observables/frame$";
 
 export function Run({ track }: { track: Track }) {
+  const reset = useStore((state) => state.reset);
   const lastActivity = useStore((state) => state.lastActivity);
   const nextFrame = useStore((state) => state.nextFrame);
 
   // Build track
   const { observable, content } = useMemo(() => build(track), [track]);
+
+  // Reset previous runners
+  useEffect(() => {
+    reset();
+  }, [reset]);
 
   // Run observable
   useEffect(() => {

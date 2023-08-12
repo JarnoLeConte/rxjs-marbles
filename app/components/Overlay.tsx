@@ -1,4 +1,5 @@
 import { useStore } from "~/store";
+import { Menu } from "./Menu";
 
 export function Overlay() {
   const frame = useStore((state) => state.frame);
@@ -13,10 +14,20 @@ export function Overlay() {
         height: "100vh",
         pointerEvents: "none",
         display: "flex",
-        alignItems: "flex-end",
+        flexDirection: "column",
       }}
     >
-      <div style={{ pointerEvents: "auto", padding: 5 }}>frame: {frame}</div>
+      <div
+        style={{
+          flexGrow: 1,
+          padding: 5,
+        }}
+      >
+        <Menu />
+      </div>
+      <div style={{ flexGrow: 0, padding: 5 }}>
+        <span style={{ pointerEvents: "auto" }}>frame: {frame}</span>
+      </div>
     </div>
   );
 }
