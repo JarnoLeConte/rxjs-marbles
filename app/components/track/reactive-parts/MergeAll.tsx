@@ -17,8 +17,6 @@ import { Producer } from "./Producer";
   Values that are emitted within the same frame are delayed
   to make them appear one after the other. Though, we do preserve the order
   in which producers emit.
-
-  There is 1 frame delay between a producer being subscribed and starting to emit balls.
 */
 
 type Props = JSX.IntrinsicElements["group"] & {

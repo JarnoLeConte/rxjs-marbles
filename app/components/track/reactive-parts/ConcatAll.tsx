@@ -13,8 +13,6 @@ import { Producer } from "./Producer";
   Virtual time is used to perform animations.
   Therefore processing a single frame takes an unknown amount of time,
   it depends on the amount of incoming balls and balls being produced.
-
-  There is 1 frame delay between a producer being subscribed and starting to emit balls.
 */
 
 type Props = JSX.IntrinsicElements["group"] & {
