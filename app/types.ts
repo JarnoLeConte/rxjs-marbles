@@ -17,3 +17,5 @@ export type Ball = {
 };
 
 export type { Track } from "~/components/track/parts";
+
+export type Status = "waiting" | "active" | "complete" | "error";

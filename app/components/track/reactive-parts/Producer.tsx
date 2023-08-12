@@ -1,11 +1,12 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { delayWhen, map, mergeMap, of, tap, type Observable } from "rxjs";
 import { Vector3 } from "three";
 import { delayInBetween } from "~/observables/delayInBetween";
 import { frame$ } from "~/observables/frame$";
 import { useStore } from "~/store";
-import type { Value } from "~/types";
+import type { Status, Value } from "~/types";
 import { Begin } from "../parts/Begin";
+import { Plumbob } from "../elements/Plumbob";
 
 /*
   ⚠️ Current implementation differs from rxjs, in that:
@@ -18,14 +19,22 @@ import { Begin } from "../parts/Begin";
   to make them appear one after the other.
 */
 
+export type ProducerNotification = Notification;
+
+type Notification = {
+  type: Status;
+};
+
 type Props = JSX.IntrinsicElements["group"] & {
   source$?: Observable<Value>;
+  notifier$?: Observable<Notification>;
   displayText?: string;
   waitForFrame?: boolean;
 };
 
 export function Producer({
   source$,
+  notifier$,
   displayText,
   waitForFrame,
   ...props
@@ -33,6 +42,7 @@ export function Producer({
   const addBall = useStore((state) => state.addBall);
   const updateBall = useStore((state) => state.updateBall);
   const ref = useRef<THREE.Group>(null!);
+  const [status, setStatus] = useState<Status>("waiting");
 
   const newBall = useCallback(
     (value: Value) => {
@@ -67,9 +77,29 @@ export function Producer({
     return () => sub.unsubscribe();
   }, [source$, newBall, updateBall, waitForFrame]);
 
+  useEffect(() => {
+    if (!notifier$) return;
+
+    const sub = notifier$.subscribe((notification) => {
+      switch (notification.type) {
+        case "waiting":
+        case "active":
+        case "complete":
+        case "error":
+          setStatus(notification.type);
+          break;
+        default:
+          console.error("unknown notification type", notification);
+      }
+    });
+
+    return () => sub.unsubscribe();
+  }, [notifier$]);
+
   return (
     <group ref={ref} {...props}>
       <Begin displayText={displayText ?? `source$.pipe(`} />
+      {notifier$ && <Plumbob position={[1, 2.7, 0]} status={status} />}
     </group>
   );
 }

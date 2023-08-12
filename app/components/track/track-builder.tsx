@@ -6,6 +6,8 @@ import {
   combineLatest,
   concat,
   concatAll,
+  defer,
+  finalize,
   map,
   merge,
   mergeAll,
@@ -27,7 +29,7 @@ import { ConcatAll } from "./reactive-parts/ConcatAll";
 import { Map } from "./reactive-parts/Map";
 import { Merge } from "./reactive-parts/Merge";
 import { MergeAll } from "./reactive-parts/MergeAll";
-import { Producer } from "./reactive-parts/Producer";
+import { Producer, type ProducerNotification } from "./reactive-parts/Producer";
 import { Subscriber } from "./reactive-parts/Subscriber";
 import { SwitchAll } from "./reactive-parts/SwitchAll";
 
@@ -49,18 +51,27 @@ export function build(track: Track): Result {
       const { source$: provided$ } = track.props;
       const { operator, children } = buildTail(track.tail);
       const source$ = new Subject<Value>();
+      const notifier$ = new Subject<ProducerNotification>();
       return {
         // Don't use the provided source$ directly in the Producer component,
         // because it will be subscribed to immediatly, while we want to wait
         // for the subscription to the actual observable we build here.
         // Therefore tap values from the actual observable and pass them on.
-        observable: provided$.pipe(
-          tap((val) => source$.next(val)),
-          operator
-        ),
+        observable: defer(() => {
+          notifier$.next({ type: "active" });
+          return provided$.pipe(
+            tap((val) => source$.next(val)),
+            operator,
+            finalize(() => notifier$.next({ type: "complete" }))
+          );
+        }),
         content: (
           <group>
-            <Producer {...track.props} source$={source$} />
+            <Producer
+              {...track.props}
+              source$={source$}
+              notifier$={notifier$}
+            />
             <group position={[2, 0, 0]}>{children}</group>
           </group>
         ),
