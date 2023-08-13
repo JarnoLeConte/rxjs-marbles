@@ -25,8 +25,28 @@ export function Overlay() {
       >
         <Menu />
       </div>
-      <div style={{ flexGrow: 0, padding: 5 }}>
+      <div
+        style={{
+          flexGrow: 0,
+          padding: 5,
+          display: "flex",
+          alignItems: "flex-end",
+          justifyContent: "space-between",
+        }}
+      >
         <span style={{ pointerEvents: "auto" }}>frame: {frame}</span>
+        <a
+          href="https://github.com/JarnoLeConte/rxjs-marbles"
+          style={{ pointerEvents: "auto" }}
+          className="hoverable"
+        >
+          <img
+            src="/github-mark-white.svg"
+            alt="View on GitHub"
+            width={30}
+            height={30}
+          />
+        </a>
       </div>
     </div>
   );
