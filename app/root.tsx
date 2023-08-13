@@ -1,4 +1,4 @@
-import type { LinksFunction } from "@remix-run/node";
+import type { LinksFunction, V2_MetaFunction } from "@remix-run/cloudflare";
 import {
   Links,
   LiveReload,
@@ -14,6 +14,16 @@ export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesHref },
 ];
 
+export const meta: V2_MetaFunction = () => {
+  return [
+    { title: "RxJS Marbles 3D" },
+    {
+      name: "description",
+      content: "Reactive programming in RxJS visualized with 3D marbles.",
+    },
+  ];
+};
+
 export default function App() {
   return (
     <html lang="en">
@@ -28,6 +38,13 @@ export default function App() {
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
+        {process.env.NODE_ENV === "production" && (
+          <script
+            defer
+            src="https://static.cloudflareinsights.com/beacon.min.js"
+            data-cf-beacon='{"token": "c2eaae5e19d24f42a41a9d19b3f25e9f"}'
+          />
+        )}
       </body>
     </html>
   );
