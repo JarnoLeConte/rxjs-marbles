@@ -1,4 +1,4 @@
-import { type V2_MetaFunction } from "@remix-run/node";
+import { type V2_MetaFunction } from "@remix-run/cloudflare";
 import { useParams } from "@remix-run/react";
 import examples from "~/examples";
 

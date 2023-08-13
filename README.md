@@ -2,31 +2,24 @@
 
 Reactive programming in RxJS visualized with 3D marbles.
 
-⚠️ **NOTE**:
+**NOTE**:
 
-🚧 WORK IN PROGRESS / PERSONAL PROJECT 🚧
+🚧 WORK IN PROGRESS
 
 ## Development
 
-From your terminal:
+Start development server:
 
 ```sh
+# start the remix dev server and wrangler
 npm run dev
 ```
 
-This starts your app in development mode, rebuilding assets on file changes.
-
-## Deployment
-
-First, build your app for production:
-
-```sh
-npm run build
-```
+Open up [http://127.0.0.1:8788](http://127.0.0.1:8788) and you should be ready to go!
 
 ## Models
 
-Export models from Blender as follow:
+When making changes to the model in Blender, export it as follow:
 
 - General: format gltf embedded
 - Include: **selected** objects

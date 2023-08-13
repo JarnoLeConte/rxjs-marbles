@@ -1,8 +1,11 @@
+.DS_Store
 node_modules
 
 /.cache
-/build
+/functions/\[\[path\]\].js
+/functions/\[\[path\]\].js.map
+/functions/metafile.*.json
 /public/build
-.env
+.dev.vars
 
 /resources

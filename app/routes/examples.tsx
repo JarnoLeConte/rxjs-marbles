@@ -1,4 +1,4 @@
-import type { V2_MetaFunction } from "@remix-run/node";
+import type { V2_MetaFunction } from "@remix-run/cloudflare";
 import { Outlet, useParams } from "@remix-run/react";
 import { SceneSetup } from "~/components/SceneSetup";
 import type { Example } from "~/examples";
