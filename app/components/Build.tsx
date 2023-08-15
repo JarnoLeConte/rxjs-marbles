@@ -1,16 +1,19 @@
-import { forwardRef } from "react";
-import type { Observable, OperatorFunction } from "rxjs";
-import type { Value } from "~/types";
+import type { ForwardedRef } from "react";
+import { forwardRef, useImperativeHandle } from "react";
+import type { ObservableBuilder, OperatorBuilder } from "~/types";
 import type { TrackHead, TrackTail } from "./track/parts";
 import { Part } from "./track/parts";
-import { Map } from "./track/track-parts/Map";
-import { Producer } from "./track/track-parts/Producer";
-import { Ramp } from "./track/track-parts/Ramp";
+import { Map } from "./track/reactive-track/Map";
+import { Producer } from "./track/reactive-track/Producer";
+import { Ramp } from "./track/reactive-track/Ramp";
+import { EMPTY, pipe } from "rxjs";
 
 export const Build = forwardRef(function Build(
   { track }: { track: TrackHead },
-  ref: React.ForwardedRef<Observable<Value>>
+  ref: ForwardedRef<ObservableBuilder>
 ) {
+  useImperativeHandle(ref, () => ({ build: () => EMPTY }), []);
+
   if (!track) return null;
 
   switch (track.part) {
@@ -23,8 +26,10 @@ export const Build = forwardRef(function Build(
 
 export const BuildTail = forwardRef(function BuildTail(
   { track }: { track: TrackTail },
-  ref: React.ForwardedRef<OperatorFunction<Value, Value>>
+  ref: ForwardedRef<OperatorBuilder>
 ) {
+  useImperativeHandle(ref, () => ({ build: () => pipe() }), []);
+
   if (!track) return null;
 
   switch (track.part) {

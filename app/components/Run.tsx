@@ -1,9 +1,9 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { concatWith } from "rxjs";
-import { useTrack } from "~/hooks/useTrack";
 import { frame$ } from "~/observables/frame$";
 import { wait } from "~/observables/wait";
 import { useStore } from "~/store";
+import type { ObservableBuilder } from "~/types";
 import { Build } from "./Build";
 import type { Track } from "./track/parts";
 
@@ -38,14 +38,14 @@ export function Run({ track }: { track: Track }) {
     return () => clearInterval(timer);
   }, [lastActivity, nextFrame]);
 
-  const [observable, ref] = useTrack();
+  const ref = useRef<ObservableBuilder>(null!);
 
   useEffect(() => {
     const subscription = wait(0) // wait scene to setup
-      .pipe(concatWith(observable))
+      .pipe(concatWith(ref.current.build()))
       .subscribe(console.debug);
     return () => subscription.unsubscribe();
-  }, [observable]);
+  }, [track]);
 
   return <Build ref={ref} track={track} />;
 }

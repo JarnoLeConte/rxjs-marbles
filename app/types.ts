@@ -18,8 +18,9 @@ export type Ball = {
 
 export type { Track } from "~/components/track/parts";
 
-export type Builder<
-  T extends Observable<Value> | OperatorFunction<Value, Value>
-> = React.ForwardedRef<T>;
+export type OperatorBuilder = {
+  build: () => OperatorFunction<Value, Value>;
+};
+export type ObservableBuilder = { build: () => Observable<Value> };
 
 export type Status = "waiting" | "active" | "complete" | "error";

@@ -1,12 +1,10 @@
+import type { ForwardedRef } from "react";
 import { forwardRef } from "react";
-import type { OperatorFunction } from "rxjs";
 import { BuildTail } from "~/components/Build";
-import type { Builder, Value } from "~/types";
+import type { OperatorBuilder } from "~/types";
 import { BallDetector } from "../../BallDetector";
 import { Element } from "../elements/Element";
 import type { Part, TrackPart } from "../parts";
-import { useBuilder } from "~/hooks/useBuilder";
-import { useTail } from "~/hooks/useTail";
 
 type Props = {
   track: TrackPart & { part: Part.Ramp };
@@ -14,10 +12,8 @@ type Props = {
 
 export const Ramp = forwardRef(function Ramp(
   { track }: Props,
-  builder: Builder<OperatorFunction<Value, Value>>
+  ref: ForwardedRef<OperatorBuilder>
 ) {
-  const [operator, ref] = useTail();
-  useBuilder(builder, () => operator);
   return (
     <group>
       <group position={[1, 0, 0]}>

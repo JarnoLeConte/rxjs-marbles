@@ -1,9 +1,7 @@
-import { forwardRef } from "react";
-import type { Observable } from "rxjs";
+import type { ForwardedRef } from "react";
+import { forwardRef, useImperativeHandle, useRef } from "react";
 import { BuildTail } from "~/components/Build";
-import { useBuilder } from "~/hooks/useBuilder";
-import { useTail } from "~/hooks/useTail";
-import type { Builder, Value } from "~/types";
+import type { ObservableBuilder, OperatorBuilder } from "~/types";
 import type { Part, TrackPart } from "../parts";
 import { Begin } from "../parts/Begin";
 
@@ -24,17 +22,25 @@ type Props = {
 
 export const Producer = forwardRef(function Producer(
   { track }: Props,
-  builder: Builder<Observable<Value>>
+  ref: ForwardedRef<ObservableBuilder>
 ) {
-  const tail = useTail();
+  const tailRef = useRef<OperatorBuilder>(null!);
 
-  useBuilder(builder, () => track.props.source$.pipe(tail.get()));
+  useImperativeHandle(
+    ref,
+    () => ({
+      build() {
+        return track.props.source$.pipe(tailRef.current.build());
+      },
+    }),
+    [track]
+  );
 
   return (
     <group>
       <Begin displayText={track.props.displayText ?? `source$.pipe(`} />
       <group position={[2, 0, 0]}>
-        <BuildTail ref={tail.ref} track={track.tail} />
+        <BuildTail ref={tailRef} track={track.tail} />
       </group>
     </group>
   );
