@@ -1,5 +1,5 @@
 import type { Color } from "@react-three/fiber";
-import type { Observable } from "rxjs";
+import type { Observable, OperatorFunction } from "rxjs";
 
 export type TaggedObservable = {
   label: string;
@@ -17,5 +17,9 @@ export type Ball = {
 };
 
 export type { Track } from "~/components/track/parts";
+
+export type Builder<
+  T extends Observable<Value> | OperatorFunction<Value, Value>
+> = React.ForwardedRef<T>;
 
 export type Status = "waiting" | "active" | "complete" | "error";

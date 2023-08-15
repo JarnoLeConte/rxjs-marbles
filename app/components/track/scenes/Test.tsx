@@ -1,61 +1,39 @@
-import { useMemo } from "react";
-import { fromEvent, map } from "rxjs";
+import { take } from "rxjs";
 import { Run } from "~/components/Run";
 import type { Track } from "~/components/track/parts";
 import { Part } from "~/components/track/parts";
+import { useNumberProducer } from "~/hooks/useNumberProducer";
+import { frameTimer } from "~/observables/frameTimer";
 import type { Value } from "~/types";
+import { numberToChar, tag } from "~/utils";
 
 export function Test() {
-  const click$ = useMemo(
-    () => fromEvent<MouseEvent>(document, "click").pipe(map(() => "{click}")),
-    []
-  );
+  const source$ = useNumberProducer(0, 3);
 
-  const keyboard$ = useMemo(
-    () =>
-      fromEvent<KeyboardEvent>(window, "keyup").pipe(map((event) => event.key)),
-    []
-  );
-
-  const trackA: Track = {
+  const track: Track = {
     part: Part.Producer,
     props: {
-      source$: click$,
-      displayText: "click$.pipe(",
+      source$,
     },
     tail: {
       part: Part.Ramp,
       tail: {
         part: Part.Map,
         props: {
-          project: (value: Value, index: number) => index,
-          displayText: `map((x, i) => i),`,
+          project: (value: Value) =>
+            tag(numberToChar(Number(value)), frameTimer(0, 1).pipe(take(3))),
+          displayText: "map((x) => ...),",
         },
-        tail: null,
+        tail: {
+          part: Part.DownHill,
+          tail: {
+            part: Part.ConcatAll,
+            tail: {
+              part: Part.Subscriber,
+            },
+          },
+        },
       },
-    },
-  };
-
-  const trackB: Track = {
-    part: Part.Producer,
-    props: {
-      source$: keyboard$,
-      displayText: "keyboard$.pipe(",
-    },
-    tail: {
-      part: Part.Ramp,
-      tail: {
-        part: Part.DownHill,
-        tail: null,
-      },
-    },
-  };
-
-  const track: Track = {
-    part: Part.Merge,
-    incoming: [trackA, trackB],
-    tail: {
-      part: Part.Subscriber,
     },
   };
 
