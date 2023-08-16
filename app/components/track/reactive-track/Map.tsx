@@ -7,12 +7,12 @@ import {
   useState,
 } from "react";
 import { Subject, delayWhen, map, pipe } from "rxjs";
+import type { BallDetectionHandler } from "~/components/BallDetector";
 import { BuildTail } from "~/components/Build";
+import { useStore } from "~/store";
 import type { Ball, OperatorBuilder, Value } from "~/types";
 import type { Part, TrackPart } from "../parts";
 import { Tunnel } from "../parts/Tunnel";
-import { useStore } from "~/store";
-import { BallDetectionHandler } from "~/components/BallDetector";
 
 /*
   ⚠️ Current implementation differs from rxjs, in that:

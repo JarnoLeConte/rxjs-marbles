@@ -11,6 +11,8 @@ import { Ramp } from "./track/reactive-track/Ramp";
 import { Concat } from "./track/reactive-track/Concat";
 import { Straight } from "./track/reactive-track/Straight";
 import { Observer } from "./track/reactive-track/Observer";
+import { CombineLatest } from "./track/reactive-track/CombineLatest";
+import { DownHill } from "./track/reactive-track/DownHill";
 
 export const Build = forwardRef(function Build(
   { track }: { track: TrackHead },
@@ -21,6 +23,8 @@ export const Build = forwardRef(function Build(
       return <Producer ref={ref} track={track} />;
     case Part.Concat:
       return <Concat ref={ref} track={track} />;
+    case Part.CombineLatest:
+      return <CombineLatest ref={ref} track={track} />;
     default:
       return <Empty ref={ref} />;
   }
@@ -37,6 +41,8 @@ export const BuildTail = forwardRef(function BuildTail(
       return <Straight ref={ref} track={track} />;
     case Part.Ramp:
       return <Ramp ref={ref} track={track} />;
+    case Part.DownHill:
+      return <DownHill ref={ref} track={track} />;
     case Part.Map:
       return <Map ref={ref} track={track} />;
     default:
