@@ -3,20 +3,20 @@ import { forwardRef } from "react";
 import { BuildTail } from "~/components/Build";
 import type { OperatorBuilder } from "~/types";
 import type { Part, TrackPart } from "../parts";
-import { Ramp as RampPart } from "../parts/Ramp";
+import { Straight as StraightPart } from "../parts/Straight";
 
 type Props = {
-  track: TrackPart<Part.Ramp>;
+  track: TrackPart<Part.Straight>;
 };
 
-export const Ramp = forwardRef(function Ramp(
+export const Straight = forwardRef(function Straight(
   { track }: Props,
   ref: ForwardedRef<OperatorBuilder>
 ) {
   return (
     <group>
-      <RampPart />
-      <group position={[2, -1, 0]}>
+      <StraightPart />
+      <group position={[2, 0, 0]}>
         <BuildTail ref={ref} track={track.tail} />
       </group>
     </group>

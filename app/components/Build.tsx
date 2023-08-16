@@ -8,6 +8,9 @@ import { Identity } from "./track/reactive-track/Identity";
 import { Map } from "./track/reactive-track/Map";
 import { Producer } from "./track/reactive-track/Producer";
 import { Ramp } from "./track/reactive-track/Ramp";
+import { Concat } from "./track/reactive-track/Concat";
+import { Straight } from "./track/reactive-track/Straight";
+import { Observer } from "./track/reactive-track/Observer";
 
 export const Build = forwardRef(function Build(
   { track }: { track: TrackHead },
@@ -16,6 +19,8 @@ export const Build = forwardRef(function Build(
   switch (track.part) {
     case Part.Producer:
       return <Producer ref={ref} track={track} />;
+    case Part.Concat:
+      return <Concat ref={ref} track={track} />;
     default:
       return <Empty ref={ref} />;
   }
@@ -26,6 +31,10 @@ export const BuildTail = forwardRef(function BuildTail(
   ref: ForwardedRef<OperatorBuilder>
 ) {
   switch (track?.part) {
+    case Part.Subscriber:
+      return <Observer ref={ref} track={track} />;
+    case Part.Straight:
+      return <Straight ref={ref} track={track} />;
     case Part.Ramp:
       return <Ramp ref={ref} track={track} />;
     case Part.Map:

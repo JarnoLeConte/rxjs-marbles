@@ -1,12 +1,18 @@
 import type { ForwardedRef } from "react";
-import { forwardRef, useImperativeHandle, useRef, useState } from "react";
-import { map, pipe } from "rxjs";
-import type { BallDetectionHandler } from "~/components/BallDetector";
+import {
+  forwardRef,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { Subject, delayWhen, map, pipe } from "rxjs";
 import { BuildTail } from "~/components/Build";
-import { useStore } from "~/store";
-import type { OperatorBuilder, Value } from "~/types";
+import type { Ball, OperatorBuilder, Value } from "~/types";
 import type { Part, TrackPart } from "../parts";
 import { Tunnel } from "../parts/Tunnel";
+import { useStore } from "~/store";
+import { BallDetectionHandler } from "~/components/BallDetector";
 
 /*
   ⚠️ Current implementation differs from rxjs, in that:
@@ -17,49 +23,49 @@ import { Tunnel } from "../parts/Tunnel";
 */
 
 type Props = {
-  track: TrackPart & { part: Part.Map };
+  track: TrackPart<Part.Map>;
 };
 
 export const Map = forwardRef(function Map(
   { track }: Props,
   ref: ForwardedRef<OperatorBuilder>
 ) {
+  const { project, displayText } = track.props;
+
+  const tail = useRef<OperatorBuilder>(null!);
   const updateBall = useStore((state) => state.updateBall);
   const [index, setIndex] = useState(0);
+  const detector$ = useMemo(() => new Subject<Ball>(), []);
 
-  const onBallDetection: BallDetectionHandler = ({ id }) => {
+  const onBallDetection: BallDetectionHandler = (ball) => {
+    const { id } = ball;
     updateBall(id, (ball) => ({
       ...ball,
-      value: track.props.project(ball.value, index),
+      value: project(ball.value, index),
     }));
     setIndex((count) => count + 1);
+    detector$.next(ball);
   };
-
-  const tailRef = useRef<OperatorBuilder>(null!);
 
   useImperativeHandle(
     ref,
     () => ({
       build() {
         return pipe(
-          map((value: Value, index: number) =>
-            track.props.project(value, index)
-          ),
-          tailRef.current.build()
+          delayWhen(() => detector$),
+          map((value: Value, index: number) => project(value, index)),
+          tail.current.build()
         );
       },
     }),
-    [track]
+    [project, detector$]
   );
 
   return (
     <group>
-      <Tunnel
-        onBallDetection={onBallDetection}
-        displayText={track.props.displayText}
-      />
+      <Tunnel onBallDetection={onBallDetection} displayText={displayText} />
       <group position={[2, 0, 0]}>
-        <BuildTail ref={tailRef} track={track.tail} />
+        <BuildTail ref={tail} track={track.tail} />
       </group>
     </group>
   );

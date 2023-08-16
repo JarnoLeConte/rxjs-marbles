@@ -94,6 +94,8 @@ export type TrackTail =
       tail: TrackTail;
     };
 
-export type TrackPart = TrackHead | TrackTail;
+export type TrackPart<P = Part> = {
+  part: P;
+} & (TrackHead | TrackTail);
 
 export type Track = TrackHead;
