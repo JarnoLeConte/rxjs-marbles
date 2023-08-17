@@ -1,8 +1,8 @@
 import { Text } from "@react-three/drei";
-import type { BallDetectionHandler } from "../../BallDetector";
-import { BallDetector } from "../../BallDetector";
-import { Element } from "../elements/Element";
-import { Stopper } from "../elements/Stopper";
+import type { BallDetectionHandler } from "../BallDetector";
+import { BallDetector } from "../BallDetector";
+import { Element } from "./Element";
+import { Stopper } from "./Stopper";
 
 type Props = JSX.IntrinsicElements["group"] & {
   onBallDetection?: BallDetectionHandler;

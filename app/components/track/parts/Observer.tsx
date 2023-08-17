@@ -5,7 +5,7 @@ import { useStore } from "~/store";
 import type { OperatorBuilder, Value } from "~/types";
 import { renderValue } from "~/utils";
 import type { Part, TrackPart } from "../parts";
-import { Bucket } from "../parts/Bucket";
+import { Bucket } from "../../elements/Bucket";
 import { Identity } from "./Identity";
 
 /*
@@ -25,9 +25,9 @@ export const Observer = forwardRef(function Observer(
   ref: ForwardedRef<OperatorBuilder>
 ) {
   const { displayText } = track.props ?? {};
+  const removeBall = useStore((state) => state.removeBall);
 
   const [value, setValue] = useState<Value>();
-  const removeBall = useStore((state) => state.removeBall);
 
   const onBallDetection: BallDetectionHandler = (ball) => {
     setValue(ball.value);

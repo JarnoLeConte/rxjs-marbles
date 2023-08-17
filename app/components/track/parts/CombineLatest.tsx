@@ -13,10 +13,10 @@ import { Build, BuildTail } from "~/components/Build";
 import { useStore } from "~/store";
 import type { ObservableBuilder, OperatorBuilder, Value } from "~/types";
 import { renderValue } from "~/utils";
-import { Base } from "../elements/Base";
+import { Base } from "../../elements/Base";
 import type { TrackPart } from "../parts";
 import { Part } from "../parts";
-import { Bucket } from "../parts/Bucket";
+import { Bucket } from "../../elements/Bucket";
 import { Producer } from "./Producer";
 
 /*
@@ -40,6 +40,7 @@ export const CombineLatest = forwardRef(function CombineLatest(
   ref: ForwardedRef<ObservableBuilder>
 ) {
   const { displayText } = track.props ?? {};
+  const removeBall = useStore((state) => state.removeBall);
 
   const tail = useRef<OperatorBuilder>(null!);
   const a = useRef<ObservableBuilder>(null!);
@@ -49,7 +50,6 @@ export const CombineLatest = forwardRef(function CombineLatest(
   const [valueA, setValueA] = useState<Value>();
   const [valueB, setValueB] = useState<Value>();
 
-  const removeBall = useStore((state) => state.removeBall);
   const subject$ = useMemo(() => new Subject<Value>(), []);
 
   const handleA: BallDetectionHandler = (ball) => {
@@ -86,7 +86,7 @@ export const CombineLatest = forwardRef(function CombineLatest(
   );
 
   return (
-    <group position={[0, 0, 0]}>
+    <group>
       <group>
         <Bucket
           position={[0, 0, 0]}

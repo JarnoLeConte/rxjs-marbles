@@ -1,14 +1,14 @@
-import { CombineLatest } from "./components/track/scenes/CombineLatest";
-import { Concat } from "./components/track/scenes/Concat";
-import { ConcatAll } from "./components/track/scenes/ConcatAll";
-import { ConcatMap } from "./components/track/scenes/ConcatMap";
-import { FromEvent } from "./components/track/scenes/FromEvent";
-import { Interval } from "./components/track/scenes/Interval";
-import { Map } from "./components/track/scenes/Map";
-import { Merge } from "./components/track/scenes/Merge";
-import { MergeAll } from "./components/track/scenes/MergeAll";
-import { SwitchAll } from "./components/track/scenes/SwitchAll";
-import { Test } from "./components/track/scenes/Test";
+import { CombineLatest } from "./components/scenes/CombineLatest";
+import { Concat } from "./components/scenes/Concat";
+import { ConcatAll } from "./components/scenes/ConcatAll";
+import { ConcatMap } from "./components/scenes/ConcatMap";
+import { FromEvent } from "./components/scenes/FromEvent";
+import { Interval } from "./components/scenes/Interval";
+import { Map } from "./components/scenes/Map";
+import { Merge } from "./components/scenes/Merge";
+import { MergeAll } from "./components/scenes/MergeAll";
+import { SwitchAll } from "./components/scenes/SwitchAll";
+import { Test } from "./components/scenes/Test";
 
 export type Example = (typeof examples)[number]["name"];
 

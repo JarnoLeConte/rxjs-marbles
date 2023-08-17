@@ -83,14 +83,23 @@ export type TrackTail =
     }
   | {
       part: Part.SwitchAll;
+      props?: {
+        displayText?: string;
+      };
       tail: TrackTail;
     }
   | {
       part: Part.ConcatAll;
+      props?: {
+        displayText?: string;
+      };
       tail: TrackTail;
     }
   | {
       part: Part.MergeAll;
+      props?: {
+        displayText?: string;
+      };
       tail: TrackTail;
     };
 

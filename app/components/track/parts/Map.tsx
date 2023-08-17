@@ -12,7 +12,7 @@ import { BuildTail } from "~/components/Build";
 import { useStore } from "~/store";
 import type { Ball, OperatorBuilder, Value } from "~/types";
 import type { Part, TrackPart } from "../parts";
-import { Tunnel } from "../parts/Tunnel";
+import { Tunnel } from "../../elements/Tunnel";
 
 /*
   ⚠️ Current implementation differs from rxjs, in that:
@@ -31,10 +31,12 @@ export const Map = forwardRef(function Map(
   ref: ForwardedRef<OperatorBuilder>
 ) {
   const { project, displayText } = track.props;
+  const updateBall = useStore((state) => state.updateBall);
 
   const tail = useRef<OperatorBuilder>(null!);
-  const updateBall = useStore((state) => state.updateBall);
+
   const [index, setIndex] = useState(0);
+
   const detector$ = useMemo(() => new Subject<Ball>(), []);
 
   const onBallDetection: BallDetectionHandler = (ball) => {

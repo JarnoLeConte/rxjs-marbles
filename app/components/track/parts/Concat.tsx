@@ -5,7 +5,7 @@ import { concat } from "rxjs";
 import { Build, BuildTail } from "~/components/Build";
 import type { ObservableBuilder, OperatorBuilder } from "~/types";
 import type { Part, TrackPart } from "../parts";
-import { RightJoin } from "../parts/RightJoin";
+import { RightJoin } from "../../elements/RightJoin";
 
 /*
   ⚠️ Current implementation differs from rxjs, in that:

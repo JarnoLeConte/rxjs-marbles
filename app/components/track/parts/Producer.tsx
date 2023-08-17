@@ -1,13 +1,28 @@
 import type { ForwardedRef } from "react";
-import { forwardRef, useCallback, useImperativeHandle, useRef } from "react";
-import { map, tap } from "rxjs";
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import type { Observable } from "rxjs";
+import { BehaviorSubject, defer, finalize, map, switchMap, tap } from "rxjs";
 import { Vector3 } from "three";
 import { BuildTail } from "~/components/Build";
 import { delayInBetween } from "~/observables/delayInBetween";
 import { useStore } from "~/store";
-import type { ObservableBuilder, OperatorBuilder, Value } from "~/types";
+import type {
+  ObservableBuilder,
+  OperatorBuilder,
+  Status,
+  Value,
+} from "~/types";
+import { Plumbob } from "../../elements/Plumbob";
 import type { Part, TrackPart } from "../parts";
-import { Begin } from "../parts/Begin";
+import { Begin } from "../../elements/Begin";
 
 /*
   ⚠️ Current implementation differs from rxjs, in that:
@@ -29,11 +44,26 @@ export const Producer = forwardRef(function Producer(
   ref: ForwardedRef<ObservableBuilder>
 ) {
   const { displayText, source$ } = track.props;
+  const addBall = useStore((state) => state.addBall);
+  const updateBall = useStore((state) => state.updateBall);
 
   const tail = useRef<OperatorBuilder>(null!);
   const root = useRef<THREE.Group>(null!);
-  const addBall = useStore((state) => state.addBall);
-  const updateBall = useStore((state) => state.updateBall);
+
+  const [status, setStatus] = useState<Status>("waiting");
+
+  const sourceProvider$ = useMemo(
+    () => new BehaviorSubject<Observable<Value>>(source$),
+    [] // eslint-disable-line react-hooks/exhaustive-deps
+  );
+
+  // Listen to source$ changes
+  // and pass the new source to the provider
+  useEffect(() => {
+    if (sourceProvider$.value !== source$) {
+      sourceProvider$.next(source$);
+    }
+  }, [source$, sourceProvider$]);
 
   const newBall = useCallback(
     (value: Value) => {
@@ -54,7 +84,13 @@ export const Producer = forwardRef(function Producer(
     ref,
     () => ({
       build() {
-        return source$.pipe(
+        return sourceProvider$.pipe(
+          switchMap((source$) =>
+            defer(() => {
+              setStatus("active");
+              return source$.pipe(finalize(() => setStatus("complete")));
+            })
+          ),
           map((value) => ({ value, id: newBall(value) })),
           delayInBetween(1250),
           tap(({ id }) =>
@@ -65,12 +101,13 @@ export const Producer = forwardRef(function Producer(
         );
       },
     }),
-    [source$, newBall, updateBall]
+    [sourceProvider$, newBall, updateBall]
   );
 
   return (
     <group ref={root}>
       <Begin displayText={displayText ?? `source$.pipe(`} />
+      <Plumbob position={[1, 2.7, 0]} status={status} />
       <group position={[2, 0, 0]}>
         <BuildTail ref={tail} track={track.tail} />
       </group>

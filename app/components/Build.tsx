@@ -3,30 +3,42 @@ import { forwardRef } from "react";
 import type { ObservableBuilder, OperatorBuilder } from "~/types";
 import type { TrackHead, TrackTail } from "./track/parts";
 import { Part } from "./track/parts";
-import { Empty } from "./track/reactive-track/Empty";
-import { Identity } from "./track/reactive-track/Identity";
-import { Map } from "./track/reactive-track/Map";
-import { Producer } from "./track/reactive-track/Producer";
-import { Ramp } from "./track/reactive-track/Ramp";
-import { Concat } from "./track/reactive-track/Concat";
-import { Straight } from "./track/reactive-track/Straight";
-import { Observer } from "./track/reactive-track/Observer";
-import { CombineLatest } from "./track/reactive-track/CombineLatest";
-import { DownHill } from "./track/reactive-track/DownHill";
+import { Empty } from "./track/parts/Empty";
+import { Identity } from "./track/parts/Identity";
+import { Map } from "./track/parts/Map";
+import { Producer } from "./track/parts/Producer";
+import { Ramp } from "./track/parts/Ramp";
+import { Concat } from "./track/parts/Concat";
+import { Straight } from "./track/parts/Straight";
+import { Observer } from "./track/parts/Observer";
+import { CombineLatest } from "./track/parts/CombineLatest";
+import { DownHill } from "./track/parts/DownHill";
+import { Merge } from "./track/parts/Merge";
+import { MergeAll } from "./track/parts/MergeAll";
+import { SwitchAll } from "./track/parts/SwitchAll";
+import { ConcatAll } from "./track/parts/ConcatAll";
 
 export const Build = forwardRef(function Build(
   { track }: { track: TrackHead },
   ref: ForwardedRef<ObservableBuilder>
 ) {
+  if (!track) {
+    return <Empty ref={ref} />;
+  }
+
   switch (track.part) {
     case Part.Producer:
       return <Producer ref={ref} track={track} />;
     case Part.Concat:
       return <Concat ref={ref} track={track} />;
+    case Part.Merge:
+      return <Merge ref={ref} track={track} />;
     case Part.CombineLatest:
       return <CombineLatest ref={ref} track={track} />;
     default:
-      return <Empty ref={ref} />;
+      throw new Error(
+        `Unknown how to construct observable from track part ${track}`
+      );
   }
 });
 
@@ -34,7 +46,11 @@ export const BuildTail = forwardRef(function BuildTail(
   { track }: { track: TrackTail },
   ref: ForwardedRef<OperatorBuilder>
 ) {
-  switch (track?.part) {
+  if (!track) {
+    return <Identity ref={ref} />;
+  }
+
+  switch (track.part) {
     case Part.Subscriber:
       return <Observer ref={ref} track={track} />;
     case Part.Straight:
@@ -45,7 +61,15 @@ export const BuildTail = forwardRef(function BuildTail(
       return <DownHill ref={ref} track={track} />;
     case Part.Map:
       return <Map ref={ref} track={track} />;
+    case Part.MergeAll:
+      return <MergeAll ref={ref} track={track} />;
+    case Part.SwitchAll:
+      return <SwitchAll ref={ref} track={track} />;
+    case Part.ConcatAll:
+      return <ConcatAll ref={ref} track={track} />;
     default:
-      return <Identity ref={ref} />;
+      throw new Error(
+        `Unknown how to construct pipe operator from track ${track}`
+      );
   }
 });

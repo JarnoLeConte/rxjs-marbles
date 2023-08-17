@@ -1,15 +1,24 @@
-import { BallDetector } from "../../BallDetector";
-import { Element } from "../elements/Element";
+import type { ForwardedRef } from "react";
+import { forwardRef } from "react";
+import { BuildTail } from "~/components/Build";
+import type { OperatorBuilder } from "~/types";
+import type { Part, TrackPart } from "../parts";
+import { Straight as StraightPart } from "../../elements/Straight";
 
-type Props = JSX.IntrinsicElements["group"];
+type Props = {
+  track: TrackPart<Part.Straight>;
+};
 
-export function Straight({ ...props }: Props) {
+export const Straight = forwardRef(function Straight(
+  { track }: Props,
+  ref: ForwardedRef<OperatorBuilder>
+) {
   return (
-    <group {...props}>
-      <group position={[1, 0, 0]}>
-        <Element name="Cube052" />
-        <BallDetector position={[0, 1, 0]} />
+    <group>
+      <StraightPart />
+      <group position={[2, 0, 0]}>
+        <BuildTail ref={ref} track={track.tail} />
       </group>
     </group>
   );
-}
+});

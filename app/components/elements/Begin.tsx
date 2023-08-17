@@ -1,6 +1,6 @@
 import { Text } from "@react-three/drei";
-import { BallDetector } from "../../BallDetector";
-import { Element } from "../elements/Element";
+import { BallDetector } from "../BallDetector";
+import { Element } from "./Element";
 
 type Props = JSX.IntrinsicElements["group"] & {
   displayText?: string;
