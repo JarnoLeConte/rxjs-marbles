@@ -12,21 +12,10 @@ export function Run({ track }: { track: Track }) {
   const lastActivity = useStore((state) => state.lastActivity);
   const nextFrame = useStore((state) => state.nextFrame);
 
-  // Build track
-  // const { observable, content } = useMemo(() => build(track), [track]);
-
   // Reset previous runners
   useEffect(() => {
     reset();
   }, [reset]);
-
-  // Run observable
-  // useEffect(() => {
-  //   const subscription = wait(0) // wait scene to setup
-  //     .pipe(concatWith(observable))
-  //     .subscribe(console.debug);
-  //   return () => subscription.unsubscribe();
-  // }, [observable]);
 
   // Run frame timer
   useEffect(() => {

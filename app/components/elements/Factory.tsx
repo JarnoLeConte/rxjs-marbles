@@ -6,7 +6,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { finalize, map, pipe, tap } from "rxjs";
+import { EMPTY, defer, finalize, map, mergeWith, pipe, tap } from "rxjs";
 import { Vector3 } from "three";
 import { delayInBetween } from "~/observables/delayInBetween";
 import { useStore } from "~/store";
@@ -52,7 +52,12 @@ export const Factory = forwardRef(function Factory(
     () => ({
       build() {
         return pipe(
-          tap(() => setStatus("active")),
+          mergeWith(
+            defer(() => {
+              setStatus("active");
+              return EMPTY;
+            })
+          ),
           finalize(() => setStatus("complete")),
           map((value) => ({ value, id: newBall(value) })),
           delayInBetween(1250),
