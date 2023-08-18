@@ -1,26 +1,21 @@
 import type { ForwardedRef } from "react";
-import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import {
-  EMPTY,
-  concatAll,
-  finalize,
-  ignoreElements,
-  mergeWith,
-  pipe,
-} from "rxjs";
+  forwardRef,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { Subject, concatMap, finalize, pipe } from "rxjs";
 import type { BallDetectionHandler } from "~/components/BallDetector";
 import { BuildTail } from "~/components/Build";
+import { Factory } from "~/components/elements/Factory";
+import { when } from "~/observables/when";
 import { useStore } from "~/store";
-import type {
-  ObservableBuilder,
-  OperatorBuilder,
-  TaggedObservable,
-} from "~/types";
-import { assertObservable, isTaggedObservable } from "~/utils";
-import type { TrackPart } from "../parts";
-import { Part } from "../parts";
+import { type OperatorBuilder } from "~/types";
+import { assertTaggedObservable } from "~/utils";
 import { Tunnel } from "../../elements/Tunnel";
-import { Producer } from "./Producer";
+import type { Part, TrackPart } from "../parts";
 
 /*
   ⚠️ Current implementation differs from rxjs, in that:
@@ -40,61 +35,46 @@ export const ConcatAll = forwardRef(function ConcatAll(
 ) {
   const { displayText } = track.props ?? {};
   const removeBall = useStore((state) => state.removeBall);
+  const detection$ = useMemo(() => new Subject<void>(), []);
+  const [isClosed, setIsClosed] = useState(false);
+  const [label, setLabel] = useState("");
 
-  const tail = useRef<OperatorBuilder>(null!);
-  const producer = useRef<ObservableBuilder>(null!);
-
-  // Keep track of the active producers which are currently emitting balls
-  // and being merged
-  const [observables, setObservables] = useState<TaggedObservable[]>([]);
-
-  const addObservable = (observable: TaggedObservable) => {
-    setObservables((observables) => [...observables, observable]);
-  };
-
-  const removeObservable = (observable: TaggedObservable) => {
-    setObservables((observables) =>
-      observables.filter((o) => o !== observable)
-    );
-  };
+  /* Handlers */
 
   const onBallDetection: BallDetectionHandler = (ball) => {
-    if (!isTaggedObservable(ball.value)) {
-      console.error(`Expected a tagged observable, but got ${ball.value}.`);
-      return;
-    }
-    const { observable$, label } = ball.value;
-
-    // Modify the ticks inside the producer to start counting from the current tick
-    const observable: TaggedObservable = {
-      label,
-      observable$: observable$.pipe(
-        finalize(() => setTimeout(() => removeObservable(observable), 1000))
-      ),
-    };
-
-    // Add the producer to the list of blocks
-    addObservable(observable);
-
-    // Remove icoming ball
+    detection$.next();
     removeBall(ball.id);
   };
+
+  /* Builder */
+
+  const factory = useRef<OperatorBuilder>(null!);
+  const tail = useRef<OperatorBuilder>(null!);
 
   useImperativeHandle(
     ref,
     () => ({
       build() {
-        const tailOperator = tail.current.build();
-        const producer$ = producer.current.build();
         return pipe(
-          mergeWith(producer$.pipe(ignoreElements())),
-          assertObservable(),
-          concatAll(),
-          tailOperator
+          assertTaggedObservable(),
+          concatMap(({ observable$, label }) =>
+            when(detection$, () => {
+              setIsClosed(true);
+              setLabel(label);
+              return observable$.pipe(
+                factory.current.build(),
+                finalize(() => {
+                  setIsClosed(false);
+                  setLabel("");
+                })
+              );
+            })
+          ),
+          tail.current.build()
         );
       },
     }),
-    []
+    [detection$]
   );
 
   return (
@@ -103,21 +83,11 @@ export const ConcatAll = forwardRef(function ConcatAll(
         <Tunnel
           onBallDetection={onBallDetection}
           displayText={displayText ?? "concatAll(),"}
-          entryClosed={observables.length > 0}
+          entryClosed={isClosed}
           exitClosed
         />
         <group position={[0, 2, 0]}>
-          <Producer
-            ref={producer}
-            track={{
-              part: Part.Producer,
-              props: {
-                source$: observables[0]?.observable$ ?? EMPTY,
-                displayText: observables[0]?.label ?? "",
-              },
-              tail: null,
-            }}
-          />
+          <Factory ref={factory} displayText={label} />
         </group>
       </group>
       <group position={[2, 0, 0]}>

@@ -21,8 +21,8 @@ export enum Part {
 export type TrackHead =
   | {
       part: Part.Producer;
-      props: {
-        source$: Observable<Value>;
+      props?: {
+        source$?: Observable<Value>;
         displayText?: string;
         waitForFrame?: boolean;
       };

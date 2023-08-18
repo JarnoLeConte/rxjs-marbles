@@ -7,17 +7,16 @@ import {
   useRef,
   useState,
 } from "react";
-import { Subject, combineLatest, ignoreElements, mergeWith } from "rxjs";
+import { Subject, combineLatest, delayWhen } from "rxjs";
 import type { BallDetectionHandler } from "~/components/BallDetector";
 import { Build, BuildTail } from "~/components/Build";
+import { Factory } from "~/components/elements/Factory";
 import { useStore } from "~/store";
 import type { ObservableBuilder, OperatorBuilder, Value } from "~/types";
 import { renderValue } from "~/utils";
 import { Base } from "../../elements/Base";
-import type { TrackPart } from "../parts";
-import { Part } from "../parts";
 import { Bucket } from "../../elements/Bucket";
-import { Producer } from "./Producer";
+import type { Part, TrackPart } from "../parts";
 
 /*
   ⚠️ Current implementation differs from rxjs, in that:
@@ -41,44 +40,41 @@ export const CombineLatest = forwardRef(function CombineLatest(
 ) {
   const { displayText } = track.props ?? {};
   const removeBall = useStore((state) => state.removeBall);
-
-  const tail = useRef<OperatorBuilder>(null!);
-  const a = useRef<ObservableBuilder>(null!);
-  const b = useRef<ObservableBuilder>(null!);
-  const producer = useRef<ObservableBuilder>(null!);
-
+  const detectionA$ = useMemo(() => new Subject<void>(), []);
+  const detectionB$ = useMemo(() => new Subject<void>(), []);
   const [valueA, setValueA] = useState<Value>();
   const [valueB, setValueB] = useState<Value>();
 
-  const subject$ = useMemo(() => new Subject<Value>(), []);
+  /* Handlers */
 
   const handleA: BallDetectionHandler = (ball) => {
     setValueA(ball.value);
     removeBall(ball.id);
-    if (valueB !== undefined) {
-      subject$.next([ball.value, valueB]);
-    }
+    detectionA$.next();
   };
 
   const handleB: BallDetectionHandler = (ball) => {
     setValueB(ball.value);
     removeBall(ball.id);
-    if (valueA !== undefined) {
-      subject$.next([valueA, ball.value]);
-    }
+    detectionB$.next();
   };
+
+  /* Builder */
+
+  const a = useRef<ObservableBuilder>(null!);
+  const b = useRef<ObservableBuilder>(null!);
+  const factory = useRef<OperatorBuilder>(null!);
+  const tail = useRef<OperatorBuilder>(null!);
 
   useImperativeHandle(
     ref,
     () => ({
       build() {
-        const A$ = a.current.build();
-        const B$ = b.current.build();
-        const tailOperator = tail.current.build();
-        const producer$ = producer.current.build();
+        const A$ = a.current.build().pipe(delayWhen(() => detectionA$));
+        const B$ = b.current.build().pipe(delayWhen(() => detectionB$));
         return combineLatest([A$, B$]).pipe(
-          mergeWith(producer$.pipe(ignoreElements())),
-          tailOperator
+          factory.current.build(),
+          tail.current.build()
         );
       },
     }),
@@ -103,16 +99,9 @@ export const CombineLatest = forwardRef(function CombineLatest(
         />
         <Base position={[2, -3, -2]} />
         <group position={[2, -3, 0]}>
-          <Producer
-            ref={producer}
-            track={{
-              part: Part.Producer,
-              props: {
-                source$: subject$,
-                displayText: displayText ?? "combineLatest(A, B)",
-              },
-              tail: null,
-            }}
+          <Factory
+            ref={factory}
+            displayText={displayText ?? "combineLatest(A, B)"}
           />
         </group>
       </group>

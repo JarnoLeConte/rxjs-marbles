@@ -29,6 +29,8 @@ export const Merge = forwardRef(function Merge(
 ) {
   const { displayText } = track.props ?? {};
 
+  /* Builder */
+
   const tail = useRef<OperatorBuilder>(null!);
   const a = useRef<ObservableBuilder>(null!);
   const b = useRef<ObservableBuilder>(null!);

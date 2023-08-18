@@ -1,19 +1,20 @@
 import type { ForwardedRef } from "react";
-import { forwardRef, useImperativeHandle, useRef, useState } from "react";
-import { EMPTY, ignoreElements, mergeWith, pipe, switchAll } from "rxjs";
+import {
+  forwardRef,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { Subject, delayWhen, finalize, pipe, switchMap } from "rxjs";
 import type { BallDetectionHandler } from "~/components/BallDetector";
 import { BuildTail } from "~/components/Build";
+import { Factory } from "~/components/elements/Factory";
 import { useStore } from "~/store";
-import type {
-  ObservableBuilder,
-  OperatorBuilder,
-  TaggedObservable,
-} from "~/types";
-import { assertObservable, isTaggedObservable } from "~/utils";
-import type { TrackPart } from "../parts";
-import { Part } from "../parts";
+import type { OperatorBuilder } from "~/types";
+import { assertTaggedObservable } from "~/utils";
 import { Tunnel } from "../../elements/Tunnel";
-import { Producer } from "./Producer";
+import type { TrackPart, Part } from "../parts";
 
 /*
   ⚠️ Current implementation differs from rxjs, in that:
@@ -33,36 +34,40 @@ export const SwitchAll = forwardRef(function SwitchAll(
 ) {
   const { displayText } = track.props ?? {};
   const removeBall = useStore((state) => state.removeBall);
+  const detection$ = useMemo(() => new Subject<void>(), []);
+  const [label, setLabel] = useState("");
 
-  const tail = useRef<OperatorBuilder>(null!);
-  const producer = useRef<ObservableBuilder>(null!);
-
-  const [observable, setObservable] = useState<TaggedObservable | null>(null);
+  /* Handlers */
 
   const onBallDetection: BallDetectionHandler = (ball) => {
-    if (!isTaggedObservable(ball.value)) {
-      console.warn(`Expected a tagged observable, but got ${ball.value}.`);
-      return;
-    }
-    setObservable(ball.value);
+    detection$.next();
     removeBall(ball.id);
   };
+
+  /* Builder */
+
+  const factory = useRef<OperatorBuilder>(null!);
+  const tail = useRef<OperatorBuilder>(null!);
 
   useImperativeHandle(
     ref,
     () => ({
       build() {
-        const tailOperator = tail.current.build();
-        const producer$ = producer.current.build();
         return pipe(
-          mergeWith(producer$.pipe(ignoreElements())),
-          assertObservable(),
-          switchAll(),
-          tailOperator
+          delayWhen(() => detection$),
+          assertTaggedObservable(),
+          switchMap(({ observable$, label }) => {
+            setLabel(label);
+            return observable$.pipe(
+              factory.current.build(),
+              finalize(() => setLabel("")),
+              tail.current.build()
+            );
+          })
         );
       },
     }),
-    []
+    [detection$]
   );
 
   return (
@@ -74,17 +79,7 @@ export const SwitchAll = forwardRef(function SwitchAll(
           exitClosed
         />
         <group position={[0, 2, 0]}>
-          <Producer
-            ref={producer}
-            track={{
-              part: Part.Producer,
-              props: {
-                source$: observable?.observable$ ?? EMPTY,
-                displayText: observable?.label ?? "",
-              },
-              tail: null,
-            }}
-          />
+          <Factory ref={factory} displayText={label} />
         </group>
       </group>
       <group position={[2, 0, 0]}>

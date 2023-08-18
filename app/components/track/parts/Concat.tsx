@@ -25,6 +25,8 @@ export const Concat = forwardRef(function Concat(
 ) {
   const { displayText } = track.props ?? {};
 
+  /* Builder */
+
   const tail = useRef<OperatorBuilder>(null!);
   const a = useRef<ObservableBuilder>(null!);
   const b = useRef<ObservableBuilder>(null!);

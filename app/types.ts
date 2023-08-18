@@ -21,6 +21,8 @@ export type { Track } from "~/components/track/parts";
 export type OperatorBuilder = {
   build: () => OperatorFunction<Value, Value>;
 };
-export type ObservableBuilder = { build: () => Observable<Value> };
+export type ObservableBuilder = {
+  build: () => Observable<Value>;
+};
 
 export type Status = "waiting" | "active" | "complete" | "error";

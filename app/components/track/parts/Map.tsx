@@ -32,12 +32,10 @@ export const Map = forwardRef(function Map(
 ) {
   const { project, displayText } = track.props;
   const updateBall = useStore((state) => state.updateBall);
-
-  const tail = useRef<OperatorBuilder>(null!);
-
+  const detection$ = useMemo(() => new Subject<Ball>(), []);
   const [index, setIndex] = useState(0);
 
-  const detector$ = useMemo(() => new Subject<Ball>(), []);
+  /* Handlers */
 
   const onBallDetection: BallDetectionHandler = (ball) => {
     const { id } = ball;
@@ -46,21 +44,25 @@ export const Map = forwardRef(function Map(
       value: project(ball.value, index),
     }));
     setIndex((count) => count + 1);
-    detector$.next(ball);
+    detection$.next(ball);
   };
+
+  /* Builder */
+
+  const tail = useRef<OperatorBuilder>(null!);
 
   useImperativeHandle(
     ref,
     () => ({
       build() {
         return pipe(
-          delayWhen(() => detector$),
+          delayWhen(() => detection$),
           map((value: Value, index: number) => project(value, index)),
           tail.current.build()
         );
       },
     }),
-    [project, detector$]
+    [project, detection$]
   );
 
   return (

@@ -8,29 +8,15 @@ import {
   useRef,
   useState,
 } from "react";
-import {
-  NEVER,
-  Subject,
-  delay,
-  ignoreElements,
-  mergeAll,
-  mergeMap,
-  mergeWith,
-  pipe,
-} from "rxjs";
+import { Subject, delay, delayWhen, mergeMap, pipe, throwError } from "rxjs";
 import type { BallDetectionHandler } from "~/components/BallDetector";
 import { BuildTail } from "~/components/Build";
+import { Factory } from "~/components/elements/Factory";
 import { useStore } from "~/store";
-import type {
-  ObservableBuilder,
-  OperatorBuilder,
-  TaggedObservable,
-} from "~/types";
-import { assertObservable, isTaggedObservable } from "~/utils";
-import type { TrackPart } from "../parts";
-import { Part } from "../parts";
+import type { OperatorBuilder, TaggedObservable } from "~/types";
+import { assertTaggedObservable, isTaggedObservable } from "~/utils";
 import { Tunnel } from "../../elements/Tunnel";
-import { Producer } from "./Producer";
+import type { Part, TrackPart } from "../parts";
 
 /*
   ⚠️ Current implementation differs from rxjs, in that:
@@ -54,62 +40,65 @@ export const MergeAll = forwardRef(function MergeAll(
 ) {
   const { displayText } = track.props ?? {};
   const removeBall = useStore((state) => state.removeBall);
-
-  const tail = useRef<OperatorBuilder>(null!);
-  const producers = useRef<RefObject<ObservableBuilder>[]>([]);
-  const sourceAdded$ = useMemo(() => new Subject<void>(), []);
+  const detection$ = useMemo(() => new Subject<void>(), []);
 
   // Keep track of the active producers which are currently emitting balls
   // and being merged
   const [observables, setObservables] = useState<TaggedObservable[]>([]);
 
   useEffect(() => {
-    sourceAdded$.next();
-  }, [observables.length, sourceAdded$]);
+    if (observables.length > 0) {
+      detection$.next();
+    }
+  }, [observables, detection$]);
+
+  /* Handlers */
 
   const onBallDetection: BallDetectionHandler = (ball) => {
     if (!isTaggedObservable(ball.value)) {
       console.error(`Expected a tagged observable, but got ${ball.value}.`);
       return;
     }
-    const { observable$, label } = ball.value;
-
-    // Modify the ticks inside the producer to start counting from the current tick
-    const observable: TaggedObservable = {
-      label,
-      observable$: observable$.pipe(delay(observables.length * 750)),
-    };
 
     // Add the producer to the list of blocks
-    producers.current.push(createRef<ObservableBuilder>());
-    setObservables((observables) => [...observables, observable]);
+    const taggedObservable = ball.value;
+    factories.current.push(createRef<OperatorBuilder>());
+    setObservables((observables) => [...observables, taggedObservable]);
 
     // Remove icoming ball
     removeBall(ball.id);
   };
 
+  /* Builder */
+
+  const tail = useRef<OperatorBuilder>(null!);
+  const factories = useRef<RefObject<OperatorBuilder>[]>([]);
+
   useImperativeHandle(
     ref,
     () => ({
       build() {
-        const tailOperator = tail.current.build();
         return pipe(
-          mergeWith(
-            sourceAdded$.pipe(
-              mergeMap(
-                (_, index) =>
-                  producers.current[index]?.current?.build() ?? NEVER
-              ),
-              ignoreElements()
-            )
-          ),
-          assertObservable(),
-          mergeAll(),
-          tailOperator
+          delayWhen(() => detection$),
+          assertTaggedObservable(),
+          mergeMap(({ observable$ }, index) => {
+            const factory = factories.current[index];
+            const factoryOperator = factory.current?.build();
+            if (!factoryOperator) {
+              return throwError(
+                () => new Error(`Factory operator is not defined.`)
+              );
+            }
+            return observable$.pipe(
+              delay(index * 750),
+              factoryOperator,
+              tail.current.build()
+            );
+          })
         );
       },
     }),
-    [sourceAdded$]
+    [detection$]
   );
 
   return (
@@ -120,19 +109,9 @@ export const MergeAll = forwardRef(function MergeAll(
           displayText={displayText ?? "mergeAll(),"}
           exitClosed
         />
-        {observables.map(({ observable$, label }, index) => (
+        {observables.map(({ label }, index) => (
           <group key={index} position={[0, 2 + index * 2, 0]}>
-            <Producer
-              ref={producers.current[index]}
-              track={{
-                part: Part.Producer,
-                props: {
-                  source$: observable$,
-                  displayText: label,
-                },
-                tail: null,
-              }}
-            />
+            <Factory ref={factories.current[index]} displayText={label} />
           </group>
         ))}
       </group>
