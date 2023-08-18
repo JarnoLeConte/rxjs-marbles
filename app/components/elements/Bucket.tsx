@@ -1,6 +1,6 @@
-import { Text } from "@react-three/drei";
 import type { BallDetectionHandler } from "../BallDetector";
 import { BallDetector } from "../BallDetector";
+import { Txt } from "../Txt";
 import { Element } from "./Element";
 
 type Props = JSX.IntrinsicElements["group"] & {
@@ -28,37 +28,15 @@ export function Bucket({
         />
         <BallDetector position={[0, 1, 0]} />
         <BallDetector position={[0, -1, 0]} onDetection={onBallDetection} />
-        <Text
-          color="black"
-          anchorX="center"
-          anchorY="middle"
-          textAlign="center"
-          position={[0, 0.5, 1]}
-          fontSize={0.18}
-          maxWidth={1.3}
-        >
+        <Txt position={[0, 0.5, 1]} maxWidth={1.3}>
           {displayText}
-        </Text>
-        <Text
-          color="black"
-          anchorX="center"
-          anchorY="middle"
-          textAlign="center"
-          position={[0, -0.6, 1]}
-          fontSize={0.2}
-          maxWidth={1.3}
-        >
+        </Txt>
+        <Txt position={[0, -0.6, 1]} maxWidth={1.3}>
           {contentLabel}
-        </Text>
-        <Text
-          color="black"
-          anchorX="center"
-          anchorY="middle"
-          position={[0, -1.3, 1]}
-          fontSize={0.5}
-        >
+        </Txt>
+        <Txt position={[0, -1.3, 1]} fontSize={0.5}>
           {content}
-        </Text>
+        </Txt>
       </group>
     </group>
   );

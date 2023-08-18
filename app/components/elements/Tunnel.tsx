@@ -1,6 +1,6 @@
-import { Text } from "@react-three/drei";
 import type { BallDetectionHandler } from "../BallDetector";
 import { BallDetector } from "../BallDetector";
+import { Txt } from "../Txt";
 import { Element } from "./Element";
 import { Stopper } from "./Stopper";
 
@@ -26,16 +26,9 @@ export function Tunnel({
         {entryClosed && <Stopper position={[-0.99, 0, 0]} />}
         {exitClosed && <Stopper position={[0.99, 0, 0]} />}
         {displayText && (
-          <Text
-            color="black"
-            anchorX="center"
-            anchorY="middle"
-            position={[0, -0.5, 1]}
-            fontSize={0.2}
-            maxWidth={1.7}
-          >
+          <Txt position={[0, -0.5, 1]} maxWidth={1.7}>
             {displayText}
-          </Text>
+          </Txt>
         )}
       </group>
     </group>
