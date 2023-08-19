@@ -3,7 +3,7 @@ import type { Color } from "@react-three/fiber";
 import { BallCollider, RigidBody } from "@react-three/rapier";
 import type { Value } from "~/types";
 import { renderValue } from "~/utils";
-import { Txt } from "./Txt";
+import { Text2D } from "./Text2D";
 
 type BallProps = StaticBallProps & {
   id: number;
@@ -36,9 +36,9 @@ export function Ball({ id, value, color, ghost, ...props }: BallProps) {
 function StaticBall({ value, color, ghost, ...props }: StaticBallProps) {
   return (
     <group {...props}>
-      <Txt opacity={ghost ? 0.3 : 1} fontSize={0.25}>
+      <Text2D opacity={ghost ? 0.3 : 1} fontSize={0.25}>
         {renderValue(value)}
-      </Txt>
+      </Text2D>
       <Sphere args={[RADIUS]}>
         <meshStandardMaterial
           color={ghost ? "#ccc" : color}

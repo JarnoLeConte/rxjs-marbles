@@ -1,6 +1,6 @@
 import type { BallDetectionHandler } from "../BallDetector";
 import { BallDetector } from "../BallDetector";
-import { Txt } from "../Txt";
+import { Text2D } from "../Text2D";
 import { Element } from "./Element";
 import { Stopper } from "./Stopper";
 
@@ -26,9 +26,9 @@ export function Tunnel({
         {entryClosed && <Stopper position={[-0.99, 0, 0]} />}
         {exitClosed && <Stopper position={[0.99, 0, 0]} />}
         {displayText && (
-          <Txt position={[0, -0.5, 1]} maxWidth={1.7}>
+          <Text2D position={[0, -0.5, 1]} maxWidth={1.7}>
             {displayText}
-          </Txt>
+          </Text2D>
         )}
       </group>
     </group>

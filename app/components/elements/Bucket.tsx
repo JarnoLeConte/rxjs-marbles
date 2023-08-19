@@ -1,6 +1,6 @@
 import type { BallDetectionHandler } from "../BallDetector";
 import { BallDetector } from "../BallDetector";
-import { Txt } from "../Txt";
+import { Text2D } from "../Text2D";
 import { Element } from "./Element";
 
 type Props = JSX.IntrinsicElements["group"] & {
@@ -28,15 +28,15 @@ export function Bucket({
         />
         <BallDetector position={[0, 1, 0]} />
         <BallDetector position={[0, -1, 0]} onDetection={onBallDetection} />
-        <Txt position={[0, 0.5, 1]} maxWidth={1.3}>
+        <Text2D position={[0, 0.5, 1]} maxWidth={1.3}>
           {displayText}
-        </Txt>
-        <Txt position={[0, -0.6, 1]} maxWidth={1.3}>
+        </Text2D>
+        <Text2D position={[0, -0.6, 1]} maxWidth={1.3}>
           {contentLabel}
-        </Txt>
-        <Txt position={[0, -1.3, 1]} fontSize={0.5}>
+        </Text2D>
+        <Text2D position={[0, -1.3, 1]} fontSize={0.5}>
           {content}
-        </Txt>
+        </Text2D>
       </group>
     </group>
   );

@@ -1,7 +1,7 @@
 import { Text } from "@react-three/drei";
 import type { Vector3 } from "@react-three/fiber";
 
-export function Txt({
+export function Text2D({
   children,
   position,
   opacity,

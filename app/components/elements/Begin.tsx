@@ -1,5 +1,5 @@
 import { BallDetector } from "../BallDetector";
-import { Txt } from "../Txt";
+import { Text2D } from "../Text2D";
 import { Element } from "./Element";
 
 type Props = JSX.IntrinsicElements["group"] & {
@@ -12,9 +12,9 @@ export function Begin({ displayText, ...props }: Props) {
       <group position={[1, 0, 0]}>
         <Element name="Cube023" />
         <BallDetector position={[0.5, 1, 0]} />
-        <Txt position={[0, 0.5, 1]} maxWidth={1.7}>
+        <Text2D position={[0, 0.5, 1]} maxWidth={1.7}>
           {displayText}
-        </Txt>
+        </Text2D>
       </group>
     </group>
   );
