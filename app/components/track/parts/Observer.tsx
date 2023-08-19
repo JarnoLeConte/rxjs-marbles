@@ -1,9 +1,12 @@
-import { useState } from "react";
+import type { ForwardedRef } from "react";
+import { forwardRef, useState } from "react";
 import type { BallDetectionHandler } from "~/components/BallDetector";
 import { useStore } from "~/store";
-import type { Value } from "~/types";
+import type { OperatorBuilder, Value } from "~/types";
 import { renderValue } from "~/utils";
-import { Bucket } from "../parts/Bucket";
+import type { Part, TrackPart } from "../parts";
+import { Bucket } from "../../elements/Bucket";
+import { Identity } from "./Identity";
 
 /*
   ⚠️ Current implementation differs from rxjs, in that:
@@ -13,14 +16,18 @@ import { Bucket } from "../parts/Bucket";
   that is currently handled by the runtime.
 */
 
-type Props = JSX.IntrinsicElements["group"] & {
-  displayText?: string;
+type Props = {
+  track: TrackPart<Part.Subscriber>;
 };
 
-export function Subscriber({ displayText, ...props }: Props) {
-  const [value, setValue] = useState<Value>();
-
+export const Observer = forwardRef(function Observer(
+  { track }: Props,
+  ref: ForwardedRef<OperatorBuilder>
+) {
+  const { displayText } = track.props ?? {};
   const removeBall = useStore((state) => state.removeBall);
+
+  const [value, setValue] = useState<Value>();
 
   const onBallDetection: BallDetectionHandler = (ball) => {
     setValue(ball.value);
@@ -28,13 +35,14 @@ export function Subscriber({ displayText, ...props }: Props) {
   };
 
   return (
-    <group {...props}>
+    <group>
       <Bucket
         onBallDetection={onBallDetection}
         displayText={displayText ?? `).subscribe(...)`}
         contentLabel={`console.log`}
         content={renderValue(value)}
       />
+      <Identity ref={ref} />
     </group>
   );
-}
+});

@@ -1,6 +1,6 @@
-import { Text } from "@react-three/drei";
-import { BallDetector } from "../../BallDetector";
-import { Element } from "../elements/Element";
+import { BallDetector } from "../BallDetector";
+import { Text2D } from "../Text2D";
+import { Element } from "./Element";
 
 type Props = JSX.IntrinsicElements["group"] & {
   displayText?: string;
@@ -12,16 +12,9 @@ export function Begin({ displayText, ...props }: Props) {
       <group position={[1, 0, 0]}>
         <Element name="Cube023" />
         <BallDetector position={[0.5, 1, 0]} />
-        <Text
-          color="black"
-          anchorX="center"
-          anchorY="middle"
-          position={[0, 0.5, 1]}
-          fontSize={0.18}
-          maxWidth={1.7}
-        >
+        <Text2D position={[0, 0.5, 1]} maxWidth={1.7}>
           {displayText}
-        </Text>
+        </Text2D>
       </group>
     </group>
   );

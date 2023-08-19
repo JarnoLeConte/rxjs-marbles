@@ -1,31 +1,21 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useRef } from "react";
 import { concatWith } from "rxjs";
+import { frame$ } from "~/observables/frame$";
 import { wait } from "~/observables/wait";
 import { useStore } from "~/store";
+import type { ObservableBuilder } from "~/types";
+import { Build } from "./Build";
 import type { Track } from "./track/parts";
-import { build } from "./track/track-builder";
-import { frame$ } from "~/observables/frame$";
 
 export function Run({ track }: { track: Track }) {
   const reset = useStore((state) => state.reset);
   const lastActivity = useStore((state) => state.lastActivity);
   const nextFrame = useStore((state) => state.nextFrame);
 
-  // Build track
-  const { observable, content } = useMemo(() => build(track), [track]);
-
   // Reset previous runners
   useEffect(() => {
     reset();
   }, [reset]);
-
-  // Run observable
-  useEffect(() => {
-    const subscription = wait(0) // wait scene to setup
-      .pipe(concatWith(observable))
-      .subscribe(console.debug);
-    return () => subscription.unsubscribe();
-  }, [observable]);
 
   // Run frame timer
   useEffect(() => {
@@ -37,5 +27,14 @@ export function Run({ track }: { track: Track }) {
     return () => clearInterval(timer);
   }, [lastActivity, nextFrame]);
 
-  return content;
+  const ref = useRef<ObservableBuilder>(null!);
+
+  useEffect(() => {
+    const subscription = wait(0) // wait scene to setup
+      .pipe(concatWith(ref.current.build()))
+      .subscribe(console.debug);
+    return () => subscription.unsubscribe();
+  }, [track]);
+
+  return <Build ref={ref} track={track} />;
 }

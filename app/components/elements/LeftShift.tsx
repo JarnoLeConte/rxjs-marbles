@@ -1,5 +1,5 @@
-import { BallDetector } from "../../BallDetector";
-import { Element } from "../elements/Element";
+import { BallDetector } from "../BallDetector";
+import { Element } from "./Element";
 
 type Props = JSX.IntrinsicElements["group"];
 

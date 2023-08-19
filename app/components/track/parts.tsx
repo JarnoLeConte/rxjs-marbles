@@ -21,8 +21,8 @@ export enum Part {
 export type TrackHead =
   | {
       part: Part.Producer;
-      props: {
-        source$: Observable<Value>;
+      props?: {
+        source$?: Observable<Value>;
         displayText?: string;
         waitForFrame?: boolean;
       };
@@ -83,17 +83,28 @@ export type TrackTail =
     }
   | {
       part: Part.SwitchAll;
+      props?: {
+        displayText?: string;
+      };
       tail: TrackTail;
     }
   | {
       part: Part.ConcatAll;
+      props?: {
+        displayText?: string;
+      };
       tail: TrackTail;
     }
   | {
       part: Part.MergeAll;
+      props?: {
+        displayText?: string;
+      };
       tail: TrackTail;
     };
 
-export type TrackPart = TrackHead | TrackTail;
+export type TrackPart<P = Part> = {
+  part: P;
+} & (TrackHead | TrackTail);
 
 export type Track = TrackHead;

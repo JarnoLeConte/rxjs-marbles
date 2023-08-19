@@ -1,17 +1,24 @@
-import { BallDetector } from "../../BallDetector";
-import { Element } from "../elements/Element";
+import type { ForwardedRef } from "react";
+import { forwardRef } from "react";
+import { BuildTail } from "~/components/Build";
+import type { OperatorBuilder } from "~/types";
+import type { Part, TrackPart } from "../parts";
+import { DownHill as DownHillPart } from "../../elements/DownHill";
 
-type Props = JSX.IntrinsicElements["group"];
+type Props = {
+  track: TrackPart<Part.DownHill>;
+};
 
-export function DownHill({ ...props }: Props) {
+export const DownHill = forwardRef(function DownHill(
+  { track }: Props,
+  ref: ForwardedRef<OperatorBuilder>
+) {
   return (
-    <group {...props}>
-      <group position={[1, -1, 0]}>
-        <Element name="Cube547" rotation={[0, Math.PI / 2, 0]} />
-        <Element name="Cube546" rotation={[0, Math.PI / 2, 0]} />
-        <BallDetector position={[0, 2, 0]} />
-        <BallDetector position={[2, 1, 0]} />
+    <group>
+      <DownHillPart />
+      <group position={[4, -1, 0]}>
+        <BuildTail ref={ref} track={track.tail} />
       </group>
     </group>
   );
-}
+});

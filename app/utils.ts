@@ -1,4 +1,11 @@
-import type { Observable } from "rxjs";
+import {
+  map,
+  throwError,
+  type Observable,
+  type OperatorFunction,
+  mergeMap,
+  of,
+} from "rxjs";
 import type { TaggedObservable, Value } from "./types";
 
 export function randomColor() {
@@ -41,4 +48,17 @@ export function tag(
   observable$: Observable<Value>
 ): TaggedObservable {
   return { observable$, label };
+}
+
+export function assertTaggedObservable(): OperatorFunction<
+  Value,
+  TaggedObservable
+> {
+  return mergeMap((value) =>
+    isTaggedObservable(value)
+      ? of(value)
+      : throwError(
+          () => new Error(`Expected an observable value, but got: ${value}`)
+        )
+  );
 }
