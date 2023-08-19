@@ -1,32 +1,49 @@
 import { Sphere } from "@react-three/drei";
 import type { Color } from "@react-three/fiber";
-import { BallCollider, RigidBody } from "@react-three/rapier";
+import type { RapierRigidBody } from "@react-three/rapier";
+import {
+  BallCollider,
+  RigidBody,
+  interactionGroups,
+} from "@react-three/rapier";
+import { useRef } from "react";
 import type { Value } from "~/types";
 import { renderValue } from "~/utils";
 import { Text2D } from "./Text2D";
 
 type BallProps = StaticBallProps & {
   id: number;
-  ghost?: boolean;
+  ghost?: boolean; // When ball is 'ghost' it will not take part in physics simulation
 };
 
 type StaticBallProps = JSX.IntrinsicElements["group"] & {
   value: Value;
   color?: Color;
-  ghost?: boolean;
+  ghost?: boolean; // When ball is 'ghost' it is rendered grayed out
 };
 
 const RADIUS = 0.57;
 
 export function Ball({ id, value, color, ghost, ...props }: BallProps) {
-  // Ghost ball doesn't take part in the physics simulation.
-  if (ghost) {
-    return <StaticBall value={value} color={color} ghost={ghost} {...props} />;
-  }
+  const rigidBody = useRef<RapierRigidBody>(null);
+
   return (
     <group {...props}>
-      <RigidBody name="ball" colliders={false} userData={{ id }}>
-        <BallCollider args={[RADIUS]} />
+      <RigidBody
+        ref={rigidBody}
+        name="ball"
+        colliders={false}
+        userData={{ id }}
+        type={ghost ? "fixed" : "dynamic"}
+      >
+        <BallCollider
+          args={[RADIUS]}
+          collisionGroups={
+            ghost
+              ? interactionGroups(1, []) // part of balls, no colissions
+              : interactionGroups(1, [0, 1]) // part of balls, collide with track and balls
+          }
+        />
         <StaticBall value={value} color={color} ghost={ghost} />
       </RigidBody>
     </group>
