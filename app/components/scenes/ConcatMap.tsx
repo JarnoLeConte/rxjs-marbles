@@ -3,9 +3,9 @@ import { Run } from "~/components/Run";
 import type { Track } from "~/components/track/parts";
 import { Part } from "~/components/track/parts";
 import { useNumberProducer } from "~/hooks/useNumberProducer";
+import { boxed } from "~/observables/boxed";
 import { frameTimer } from "~/observables/frameTimer";
-import type { Value } from "~/types";
-import { numberToChar, tag } from "~/utils";
+import { box, numberToChar } from "~/utils";
 
 export function ConcatMap() {
   const source$ = useNumberProducer(0, 3);
@@ -20,8 +20,11 @@ export function ConcatMap() {
       tail: {
         part: Part.Map,
         props: {
-          project: (value: Value) =>
-            tag(numberToChar(Number(value)), frameTimer(0, 1).pipe(take(3))),
+          project: (value) =>
+            box(
+              frameTimer(0, 1).pipe(take(3), boxed()),
+              numberToChar(Number(value))
+            ),
           displayText: "map((x) => ...),",
         },
         tail: {

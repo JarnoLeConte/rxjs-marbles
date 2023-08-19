@@ -6,15 +6,14 @@ import {
   useRef,
   useState,
 } from "react";
-import { Subject, delayWhen, finalize, pipe, switchMap } from "rxjs";
-import type { BallDetectionHandler } from "~/components/BallDetector";
+import { Subject, delayWhen, finalize, pipe, switchMap, tap } from "rxjs";
 import { BuildTail } from "~/components/Build";
 import { Factory } from "~/components/elements/Factory";
 import { useStore } from "~/store";
-import type { OperatorBuilder } from "~/types";
-import { assertTaggedObservable } from "~/utils";
+import type { Ball, OperatorBuilder } from "~/types";
+import { assertBoxedObservable } from "~/utils";
 import { Tunnel } from "../../elements/Tunnel";
-import type { TrackPart, Part } from "../parts";
+import type { Part, TrackPart } from "../parts";
 
 /*
   ⚠️ Current implementation differs from rxjs, in that:
@@ -34,15 +33,8 @@ export const SwitchAll = forwardRef(function SwitchAll(
 ) {
   const { displayText } = track.props ?? {};
   const removeBall = useStore((state) => state.removeBall);
-  const detection$ = useMemo(() => new Subject<void>(), []);
-  const [label, setLabel] = useState("");
-
-  /* Handlers */
-
-  const onBallDetection: BallDetectionHandler = (ball) => {
-    detection$.next();
-    removeBall(ball.id);
-  };
+  const detection$ = useMemo(() => new Subject<Ball>(), []);
+  const [label, setLabel] = useState<string | undefined>();
 
   /* Builder */
 
@@ -54,27 +46,27 @@ export const SwitchAll = forwardRef(function SwitchAll(
     () => ({
       build() {
         return pipe(
-          delayWhen(() => detection$),
-          assertTaggedObservable(),
-          switchMap(({ observable$, label }) => {
+          delayWhen(() => detection$.pipe(tap((ball) => removeBall(ball.id)))),
+          assertBoxedObservable(),
+          switchMap(({ value: source$, label }) => {
             setLabel(label);
-            return observable$.pipe(
+            return source$.pipe(
               factory.current.build(),
-              finalize(() => setLabel("")),
+              finalize(() => setLabel(undefined)),
               tail.current.build()
             );
           })
         );
       },
     }),
-    [detection$]
+    [detection$, removeBall]
   );
 
   return (
     <group>
       <group>
         <Tunnel
-          onBallDetection={onBallDetection}
+          onBallDetection={(ball) => detection$.next(ball)}
           displayText={displayText ?? "switchAll(),"}
           exitClosed
         />

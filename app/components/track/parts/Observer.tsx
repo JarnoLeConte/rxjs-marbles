@@ -2,10 +2,9 @@ import type { ForwardedRef } from "react";
 import { forwardRef, useState } from "react";
 import type { BallDetectionHandler } from "~/components/BallDetector";
 import { useStore } from "~/store";
-import type { OperatorBuilder, Value } from "~/types";
-import { renderValue } from "~/utils";
-import type { Part, TrackPart } from "../parts";
+import type { OperatorBuilder } from "~/types";
 import { Bucket } from "../../elements/Bucket";
+import type { Part, TrackPart } from "../parts";
 import { Identity } from "./Identity";
 
 /*
@@ -27,10 +26,10 @@ export const Observer = forwardRef(function Observer(
   const { displayText } = track.props ?? {};
   const removeBall = useStore((state) => state.removeBall);
 
-  const [value, setValue] = useState<Value>();
+  const [label, setLabel] = useState<string>();
 
   const onBallDetection: BallDetectionHandler = (ball) => {
-    setValue(ball.value);
+    setLabel(ball.label);
     removeBall(ball.id);
   };
 
@@ -40,7 +39,7 @@ export const Observer = forwardRef(function Observer(
         onBallDetection={onBallDetection}
         displayText={displayText ?? `).subscribe(...)`}
         contentLabel={`console.log`}
-        content={renderValue(value)}
+        content={label}
       />
       <Identity ref={ref} />
     </group>

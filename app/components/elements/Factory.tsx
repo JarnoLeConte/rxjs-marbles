@@ -10,7 +10,7 @@ import { EMPTY, defer, finalize, map, mergeWith, pipe, tap } from "rxjs";
 import { Vector3 } from "three";
 import { delayInBetween } from "~/observables/delayInBetween";
 import { useStore } from "~/store";
-import type { OperatorBuilder, Status, Value } from "~/types";
+import type { OperatorBuilder, Status } from "~/types";
 import { Begin } from "./Begin";
 import { Plumbob } from "./Plumbob";
 
@@ -31,14 +31,14 @@ export const Factory = forwardRef(function Factory(
   const root = useRef<THREE.Group>(null!);
 
   const newBall = useCallback(
-    (value: Value) => {
+    (label: string) => {
       // Initial ball position
       const position = root.current
         .localToWorld(new Vector3(1, 1.5, 0)) // start from inside the wall to give the ball a push
         .toArray();
 
       // Create the ball
-      const id = addBall({ value, position, ghost: true });
+      const id = addBall({ label, position, ghost: true });
 
       return id;
     },
@@ -59,12 +59,14 @@ export const Factory = forwardRef(function Factory(
             })
           ),
           finalize(() => setStatus("complete")),
-          map((value) => ({ value, id: newBall(value) })),
+          map((boxedValue) => ({
+            ...boxedValue,
+            ballId: newBall(boxedValue.label),
+          })),
           delayInBetween(1250),
-          tap(({ id }) =>
-            updateBall(id, (ball) => ({ ...ball, ghost: false }))
-          ),
-          map(({ value }) => value)
+          tap(({ ballId }) =>
+            updateBall(ballId, (ball) => ({ ...ball, ghost: false }))
+          )
         );
       },
     }),

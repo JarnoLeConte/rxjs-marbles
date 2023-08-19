@@ -10,7 +10,7 @@ export function Balls() {
         <Ball
           key={ball.id}
           id={ball.id}
-          value={ball.value}
+          label={ball.label}
           color={ball.color}
           position={ball.defaultPosition}
           ghost={ball.ghost}

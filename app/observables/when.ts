@@ -1,9 +1,14 @@
 import type { Observable } from "rxjs";
-import { concatWith, defer, ignoreElements, take } from "rxjs";
+import { mergeMap, take } from "rxjs";
 
-export function when<T>(
-  signal: Observable<any>,
-  deffered: () => Observable<T>
+export function when<T, S>(
+  signal: Observable<S>,
+  deffered: (value: S) => Observable<T>
 ) {
-  return signal.pipe(take(1), ignoreElements(), concatWith(defer(deffered)));
+  return signal.pipe(
+    take(1),
+    mergeMap((value) => {
+      return deffered(value);
+    })
+  );
 }

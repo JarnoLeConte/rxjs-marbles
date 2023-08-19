@@ -1,5 +1,5 @@
 import type { Observable } from "rxjs";
-import type { Value } from "~/types";
+import type { Boxed, Value } from "~/types";
 
 export enum Part {
   Straight = "Straight",
@@ -22,7 +22,7 @@ export type TrackHead =
   | {
       part: Part.Producer;
       props?: {
-        source$?: Observable<Value>;
+        source$?: Observable<Boxed<Value>>;
         displayText?: string;
         waitForFrame?: boolean;
       };
@@ -76,7 +76,7 @@ export type TrackTail =
   | {
       part: Part.Map;
       props: {
-        project: (value: Value, index: number) => Value;
+        project: (value: Value, index: number) => Boxed<Value>;
         displayText: string;
       };
       tail: TrackTail;

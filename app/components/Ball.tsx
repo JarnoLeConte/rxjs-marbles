@@ -7,8 +7,6 @@ import {
   interactionGroups,
 } from "@react-three/rapier";
 import { useRef } from "react";
-import type { Value } from "~/types";
-import { renderValue } from "~/utils";
 import { Text2D } from "./Text2D";
 
 type BallProps = StaticBallProps & {
@@ -17,14 +15,14 @@ type BallProps = StaticBallProps & {
 };
 
 type StaticBallProps = JSX.IntrinsicElements["group"] & {
-  value: Value;
+  label: string;
   color?: Color;
   ghost?: boolean; // When ball is 'ghost' it is rendered grayed out
 };
 
 const RADIUS = 0.57;
 
-export function Ball({ id, value, color, ghost, ...props }: BallProps) {
+export function Ball({ id, label, color, ghost, ...props }: BallProps) {
   const rigidBody = useRef<RapierRigidBody>(null);
 
   return (
@@ -44,17 +42,17 @@ export function Ball({ id, value, color, ghost, ...props }: BallProps) {
               : interactionGroups(1, [0, 1]) // part of balls, collide with track and balls
           }
         />
-        <StaticBall value={value} color={color} ghost={ghost} />
+        <StaticBall label={label} color={color} ghost={ghost} />
       </RigidBody>
     </group>
   );
 }
 
-function StaticBall({ value, color, ghost, ...props }: StaticBallProps) {
+function StaticBall({ label, color, ghost, ...props }: StaticBallProps) {
   return (
     <group {...props}>
       <Text2D opacity={ghost ? 0.3 : 1} fontSize={0.25}>
-        {renderValue(value)}
+        {label}
       </Text2D>
       <Sphere args={[RADIUS]}>
         <meshStandardMaterial

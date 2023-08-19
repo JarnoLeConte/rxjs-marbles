@@ -1,12 +1,12 @@
 import {
-  map,
+  isObservable,
+  mergeMap,
+  of,
   throwError,
   type Observable,
   type OperatorFunction,
-  mergeMap,
-  of,
 } from "rxjs";
-import type { TaggedObservable, Value } from "./types";
+import type { Boxed, Value } from "./types";
 
 export function randomColor() {
   const colors = ["red", "blue", "green", "yellow", "orange", "purple"];
@@ -18,8 +18,12 @@ export function numberToChar(index: number, startChar = "A") {
   return String.fromCharCode(startCharCode + index);
 }
 
-export function isTaggedObservable(value: Value): value is TaggedObservable {
-  return typeof value === "object" && "observable$" in value;
+export function box(value: Value, label?: string): Boxed<Value> {
+  return { value, label: label ?? renderValue(value) };
+}
+
+export function renderBoxedValue(boxedValue: Boxed<Value>): string {
+  return boxedValue.label ?? renderValue(boxedValue.value);
 }
 
 export function renderValue(value?: Value): string {
@@ -33,32 +37,29 @@ export function renderValue(value?: Value): string {
       return value ? "true" : "false";
     case "object":
       if (Array.isArray(value)) {
-        return `[${value.map(renderValue).join(", ")}]`;
-      }
-      if (isTaggedObservable(value)) {
-        return value.label;
+        return `[${value.map(renderBoxedValue).join(", ")}]`;
       }
     default:
       throw new Error(`Unknown value type ${value}`);
   }
 }
 
-export function tag(
-  label: string,
-  observable$: Observable<Value>
-): TaggedObservable {
-  return { observable$, label };
+export function isBoxedObservable(
+  boxedValue: Boxed<Value>
+): boxedValue is Boxed<Observable<Boxed<Value>>> {
+  return isObservable(boxedValue.value);
 }
 
-export function assertTaggedObservable(): OperatorFunction<
-  Value,
-  TaggedObservable
+export function assertBoxedObservable(): OperatorFunction<
+  Boxed<Value>,
+  Boxed<Observable<Boxed<Value>>>
 > {
-  return mergeMap((value) =>
-    isTaggedObservable(value)
-      ? of(value)
+  return mergeMap((boxedValue) =>
+    isBoxedObservable(boxedValue)
+      ? of(boxedValue)
       : throwError(
-          () => new Error(`Expected an observable value, but got: ${value}`)
+          () =>
+            new Error(`Expected an observable value, but got: ${boxedValue}`)
         )
   );
 }

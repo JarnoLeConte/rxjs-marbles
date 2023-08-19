@@ -1,18 +1,11 @@
 import type { ForwardedRef } from "react";
-import {
-  forwardRef,
-  useImperativeHandle,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import { Subject, delayWhen, map, pipe } from "rxjs";
-import type { BallDetectionHandler } from "~/components/BallDetector";
+import { forwardRef, useImperativeHandle, useMemo, useRef } from "react";
+import { Subject, delayWhen, map, pipe, tap } from "rxjs";
 import { BuildTail } from "~/components/Build";
 import { useStore } from "~/store";
-import type { Ball, OperatorBuilder, Value } from "~/types";
-import type { Part, TrackPart } from "../parts";
+import type { Ball, OperatorBuilder } from "~/types";
 import { Tunnel } from "../../elements/Tunnel";
+import type { Part, TrackPart } from "../parts";
 
 /*
   ⚠️ Current implementation differs from rxjs, in that:
@@ -33,19 +26,6 @@ export const Map = forwardRef(function Map(
   const { project, displayText } = track.props;
   const updateBall = useStore((state) => state.updateBall);
   const detection$ = useMemo(() => new Subject<Ball>(), []);
-  const [index, setIndex] = useState(0);
-
-  /* Handlers */
-
-  const onBallDetection: BallDetectionHandler = (ball) => {
-    const { id } = ball;
-    updateBall(id, (ball) => ({
-      ...ball,
-      value: project(ball.value, index),
-    }));
-    setIndex((count) => count + 1);
-    detection$.next(ball);
-  };
 
   /* Builder */
 
@@ -57,17 +37,29 @@ export const Map = forwardRef(function Map(
       build() {
         return pipe(
           delayWhen(() => detection$),
-          map((value: Value, index: number) => project(value, index)),
+          map((boxedValue, index: number) => {
+            return { ...boxedValue, ...project(boxedValue.value, index) };
+          }),
+          tap((boxedValue) => {
+            const { ballId, label } = boxedValue;
+            if (!ballId) {
+              return console.error("Ball id is missing");
+            }
+            updateBall(ballId, (ball) => ({ ...ball, label }));
+          }),
           tail.current.build()
         );
       },
     }),
-    [project, detection$]
+    [project, detection$, updateBall]
   );
 
   return (
     <group>
-      <Tunnel onBallDetection={onBallDetection} displayText={displayText} />
+      <Tunnel
+        onBallDetection={(ball) => detection$.next(ball)}
+        displayText={displayText}
+      />
       <group position={[2, 0, 0]}>
         <BuildTail ref={tail} track={track.tail} />
       </group>

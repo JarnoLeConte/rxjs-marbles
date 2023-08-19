@@ -7,13 +7,12 @@ import {
   useState,
 } from "react";
 import { Subject, concatMap, finalize, pipe } from "rxjs";
-import type { BallDetectionHandler } from "~/components/BallDetector";
 import { BuildTail } from "~/components/Build";
 import { Factory } from "~/components/elements/Factory";
 import { when } from "~/observables/when";
 import { useStore } from "~/store";
-import { type OperatorBuilder } from "~/types";
-import { assertTaggedObservable } from "~/utils";
+import type { Ball, OperatorBuilder } from "~/types";
+import { assertBoxedObservable } from "~/utils";
 import { Tunnel } from "../../elements/Tunnel";
 import type { Part, TrackPart } from "../parts";
 
@@ -35,16 +34,9 @@ export const ConcatAll = forwardRef(function ConcatAll(
 ) {
   const { displayText } = track.props ?? {};
   const removeBall = useStore((state) => state.removeBall);
-  const detection$ = useMemo(() => new Subject<void>(), []);
+  const detection$ = useMemo(() => new Subject<Ball>(), []);
   const [isClosed, setIsClosed] = useState(false);
-  const [label, setLabel] = useState("");
-
-  /* Handlers */
-
-  const onBallDetection: BallDetectionHandler = (ball) => {
-    detection$.next();
-    removeBall(ball.id);
-  };
+  const [label, setLabel] = useState<string | undefined>();
 
   /* Builder */
 
@@ -56,16 +48,17 @@ export const ConcatAll = forwardRef(function ConcatAll(
     () => ({
       build() {
         return pipe(
-          assertTaggedObservable(),
-          concatMap(({ observable$, label }) =>
-            when(detection$, () => {
+          assertBoxedObservable(),
+          concatMap(({ value: source$, label }) =>
+            when(detection$, ({ id }) => {
               setIsClosed(true);
               setLabel(label);
-              return observable$.pipe(
+              removeBall(id);
+              return source$.pipe(
                 factory.current.build(),
                 finalize(() => {
                   setIsClosed(false);
-                  setLabel("");
+                  setLabel(undefined);
                 })
               );
             })
@@ -74,14 +67,14 @@ export const ConcatAll = forwardRef(function ConcatAll(
         );
       },
     }),
-    [detection$]
+    [detection$, removeBall]
   );
 
   return (
     <group>
       <group>
         <Tunnel
-          onBallDetection={onBallDetection}
+          onBallDetection={(ball) => detection$.next(ball)}
           displayText={displayText ?? "concatAll(),"}
           entryClosed={isClosed}
           exitClosed

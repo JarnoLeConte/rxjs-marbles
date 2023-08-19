@@ -2,19 +2,26 @@ import type { ForwardedRef, RefObject } from "react";
 import {
   createRef,
   forwardRef,
-  useEffect,
   useImperativeHandle,
   useMemo,
   useRef,
   useState,
 } from "react";
-import { Subject, delay, delayWhen, mergeMap, pipe, throwError } from "rxjs";
-import type { BallDetectionHandler } from "~/components/BallDetector";
+import type { Observable } from "rxjs";
+import {
+  Subject,
+  delay,
+  delayWhen,
+  mergeMap,
+  pipe,
+  tap,
+  throwError,
+} from "rxjs";
 import { BuildTail } from "~/components/Build";
 import { Factory } from "~/components/elements/Factory";
 import { useStore } from "~/store";
-import type { OperatorBuilder, TaggedObservable } from "~/types";
-import { assertTaggedObservable, isTaggedObservable } from "~/utils";
+import type { Ball, Boxed, OperatorBuilder, Value } from "~/types";
+import { assertBoxedObservable } from "~/utils";
 import { Tunnel } from "../../elements/Tunnel";
 import type { Part, TrackPart } from "../parts";
 
@@ -40,34 +47,13 @@ export const MergeAll = forwardRef(function MergeAll(
 ) {
   const { displayText } = track.props ?? {};
   const removeBall = useStore((state) => state.removeBall);
-  const detection$ = useMemo(() => new Subject<void>(), []);
+  const detection$ = useMemo(() => new Subject<Ball>(), []);
 
   // Keep track of the active producers which are currently emitting balls
   // and being merged
-  const [observables, setObservables] = useState<TaggedObservable[]>([]);
-
-  useEffect(() => {
-    if (observables.length > 0) {
-      detection$.next();
-    }
-  }, [observables, detection$]);
-
-  /* Handlers */
-
-  const onBallDetection: BallDetectionHandler = (ball) => {
-    if (!isTaggedObservable(ball.value)) {
-      console.error(`Expected a tagged observable, but got ${ball.value}.`);
-      return;
-    }
-
-    // Add the producer to the list of blocks
-    const taggedObservable = ball.value;
-    factories.current.push(createRef<OperatorBuilder>());
-    setObservables((observables) => [...observables, taggedObservable]);
-
-    // Remove icoming ball
-    removeBall(ball.id);
-  };
+  const [observables, setObservables] = useState<
+    Boxed<Observable<Boxed<Value>>>[]
+  >([]);
 
   /* Builder */
 
@@ -79,9 +65,21 @@ export const MergeAll = forwardRef(function MergeAll(
     () => ({
       build() {
         return pipe(
-          delayWhen(() => detection$),
-          assertTaggedObservable(),
-          mergeMap(({ observable$ }, index) => {
+          assertBoxedObservable(),
+          delayWhen((boxedObservable) =>
+            detection$.pipe(
+              tap((ball) => {
+                factories.current.push(createRef<OperatorBuilder>());
+                setObservables((observables) => [
+                  ...observables,
+                  boxedObservable,
+                ]);
+                removeBall(ball.id);
+              }),
+              delay(0)
+            )
+          ),
+          mergeMap(({ value: source$ }, index) => {
             const factory = factories.current[index];
             const factoryOperator = factory.current?.build();
             if (!factoryOperator) {
@@ -89,7 +87,7 @@ export const MergeAll = forwardRef(function MergeAll(
                 () => new Error(`Factory operator is not defined.`)
               );
             }
-            return observable$.pipe(
+            return source$.pipe(
               delay(index * 750),
               factoryOperator,
               tail.current.build()
@@ -98,14 +96,14 @@ export const MergeAll = forwardRef(function MergeAll(
         );
       },
     }),
-    [detection$]
+    [detection$, removeBall]
   );
 
   return (
     <group>
       <group>
         <Tunnel
-          onBallDetection={onBallDetection}
+          onBallDetection={(ball) => detection$.next(ball)}
           displayText={displayText ?? "mergeAll(),"}
           exitClosed
         />

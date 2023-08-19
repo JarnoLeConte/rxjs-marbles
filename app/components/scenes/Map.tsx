@@ -1,7 +1,8 @@
 import { Run } from "~/components/Run";
 import { Part } from "~/components/track/parts";
 import { useNumberProducer } from "~/hooks/useNumberProducer";
-import type { Track, Value } from "~/types";
+import type { Track } from "~/types";
+import { box } from "~/utils";
 
 export function Map() {
   const source$ = useNumberProducer();
@@ -16,7 +17,7 @@ export function Map() {
       tail: {
         part: Part.Map,
         props: {
-          project: (value: Value) => Number(value) * 2,
+          project: (value) => box(Number(value) * 2),
           displayText: "map((x) => x * 2),",
         },
         tail: {

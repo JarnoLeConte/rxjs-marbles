@@ -7,16 +7,15 @@ import {
   useRef,
   useState,
 } from "react";
-import { Subject, combineLatest, delayWhen } from "rxjs";
-import type { BallDetectionHandler } from "~/components/BallDetector";
+import { Subject, combineLatest, delayWhen, map, tap } from "rxjs";
 import { Build, BuildTail } from "~/components/Build";
 import { Factory } from "~/components/elements/Factory";
 import { useStore } from "~/store";
-import type { ObservableBuilder, OperatorBuilder, Value } from "~/types";
-import { renderValue } from "~/utils";
+import type { Ball, ObservableBuilder, OperatorBuilder } from "~/types";
 import { Base } from "../../elements/Base";
 import { Bucket } from "../../elements/Bucket";
 import type { Part, TrackPart } from "../parts";
+import { renderValue } from "~/utils";
 
 /*
   ⚠️ Current implementation differs from rxjs, in that:
@@ -40,24 +39,10 @@ export const CombineLatest = forwardRef(function CombineLatest(
 ) {
   const { displayText } = track.props ?? {};
   const removeBall = useStore((state) => state.removeBall);
-  const detectionA$ = useMemo(() => new Subject<void>(), []);
-  const detectionB$ = useMemo(() => new Subject<void>(), []);
-  const [valueA, setValueA] = useState<Value>();
-  const [valueB, setValueB] = useState<Value>();
-
-  /* Handlers */
-
-  const handleA: BallDetectionHandler = (ball) => {
-    setValueA(ball.value);
-    removeBall(ball.id);
-    detectionA$.next();
-  };
-
-  const handleB: BallDetectionHandler = (ball) => {
-    setValueB(ball.value);
-    removeBall(ball.id);
-    detectionB$.next();
-  };
+  const detectionA$ = useMemo(() => new Subject<Ball>(), []);
+  const detectionB$ = useMemo(() => new Subject<Ball>(), []);
+  const [labelA, setLabelA] = useState<string>("?");
+  const [labelB, setLabelB] = useState<string>("?");
 
   /* Builder */
 
@@ -70,15 +55,37 @@ export const CombineLatest = forwardRef(function CombineLatest(
     ref,
     () => ({
       build() {
-        const A$ = a.current.build().pipe(delayWhen(() => detectionA$));
-        const B$ = b.current.build().pipe(delayWhen(() => detectionB$));
+        const A$ = a.current.build().pipe(
+          delayWhen(({ label }) =>
+            detectionA$.pipe(
+              tap(({ id }) => {
+                setLabelA(label);
+                removeBall(id);
+              })
+            )
+          )
+        );
+        const B$ = b.current.build().pipe(
+          delayWhen(({ label }) =>
+            detectionB$.pipe(
+              tap(({ id }) => {
+                setLabelB(label);
+                removeBall(id);
+              })
+            )
+          )
+        );
         return combineLatest([A$, B$]).pipe(
+          map(([boxedA, boxedB]) => ({
+            value: [boxedA, boxedB],
+            label: renderValue([boxedA, boxedB]),
+          })),
           factory.current.build(),
           tail.current.build()
         );
       },
     }),
-    []
+    [detectionA$, detectionB$, removeBall]
   );
 
   return (
@@ -86,16 +93,16 @@ export const CombineLatest = forwardRef(function CombineLatest(
       <group>
         <Bucket
           position={[0, 0, 0]}
-          content={valueA !== undefined ? renderValue(valueA) : "?"}
+          content={labelA}
           contentLabel="memory"
-          onBallDetection={handleA}
+          onBallDetection={(ball) => detectionA$.next(ball)}
         />
         <Base position={[0, -3, 0]} />
         <Bucket
           position={[2, 0, -2]}
-          content={valueB !== undefined ? renderValue(valueB) : "?"}
+          content={labelB}
           contentLabel="memory"
-          onBallDetection={handleB}
+          onBallDetection={(ball) => detectionB$.next(ball)}
         />
         <Base position={[2, -3, -2]} />
         <group position={[2, -3, 0]}>

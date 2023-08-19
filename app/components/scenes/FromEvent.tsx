@@ -3,17 +3,20 @@ import { fromEvent, map } from "rxjs";
 import { Run } from "~/components/Run";
 import type { Track } from "~/components/track/parts";
 import { Part } from "~/components/track/parts";
-import type { Value } from "~/types";
+import { box } from "~/utils";
 
 export function FromEvent() {
   const click$ = useMemo(
-    () => fromEvent<MouseEvent>(document, "click").pipe(map(() => "{click}")),
+    () =>
+      fromEvent<MouseEvent>(document, "click").pipe(map(() => box("{click}"))),
     []
   );
 
   const keyboard$ = useMemo(
     () =>
-      fromEvent<KeyboardEvent>(window, "keyup").pipe(map((event) => event.key)),
+      fromEvent<KeyboardEvent>(window, "keyup").pipe(
+        map((event) => box(event.key))
+      ),
     []
   );
 
@@ -28,7 +31,7 @@ export function FromEvent() {
       tail: {
         part: Part.Map,
         props: {
-          project: (value: Value, index: number) => index,
+          project: (boxedValue, index) => box(index),
           displayText: `map((x, i) => i),`,
         },
         tail: null,

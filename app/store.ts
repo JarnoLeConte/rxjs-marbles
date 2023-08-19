@@ -1,6 +1,6 @@
 import type { Color } from "@react-three/fiber";
 import { create } from "zustand";
-import type { Ball, Value } from "./types";
+import type { Ball } from "./types";
 import { randomColor } from "./utils";
 
 let nextId = 1;
@@ -8,7 +8,7 @@ let nextId = 1;
 interface Store {
   balls: Ball[];
   addBall: (options: {
-    value: Value;
+    label: string;
     position: [number, number, number];
     color?: Color;
     ghost?: boolean;
@@ -25,7 +25,7 @@ interface Store {
 
 export const useStore = create<Store>((set, get) => ({
   balls: [],
-  addBall: ({ value, position, color, ghost }) => {
+  addBall: ({ label, position, color, ghost }) => {
     get().updateActivity();
     const id = nextId++;
     set((state) => ({
@@ -33,7 +33,7 @@ export const useStore = create<Store>((set, get) => ({
         ...state.balls,
         {
           id,
-          value,
+          label,
           defaultPosition: position,
           color: color || randomColor(),
           ghost,
