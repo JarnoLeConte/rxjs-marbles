@@ -22,7 +22,7 @@ export function Tunnel({
     <group {...props}>
       <group position={[1, 1, 0]}>
         <Element name="Cube062" rotation={[0, Math.PI / 2, 0]} />
-        <BallDetector position={[0, 0, 0]} onDetection={onBallDetection} />
+        <BallDetector position={[0.2, 0, 0]} onEnter={onBallDetection} />
         {entryClosed && <Stopper position={[-0.99, 0, 0]} />}
         {exitClosed && <Stopper position={[0.99, 0, 0]} />}
         {displayText && (

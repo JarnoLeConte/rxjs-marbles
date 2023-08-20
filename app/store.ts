@@ -1,5 +1,5 @@
 import type { Color } from "@react-three/fiber";
-import { create } from "zustand";
+import { createStore, useStore as useVanillaStore } from "zustand";
 import type { Ball } from "./types";
 import { randomColor } from "./utils";
 
@@ -23,7 +23,7 @@ interface Store {
   reset: () => void;
 }
 
-export const useStore = create<Store>((set, get) => ({
+export const store = createStore<Store>()((set, get) => ({
   balls: [],
   addBall: ({ label, position, color, ghost }) => {
     get().updateActivity();
@@ -57,3 +57,6 @@ export const useStore = create<Store>((set, get) => ({
   nextFrame: () => set((state) => ({ frame: state.frame + 1 })),
   reset: () => set({ balls: [], lastActivity: Date.now(), frame: 0 }),
 }));
+
+export const useStore = <T>(selector: (state: Store) => T) =>
+  useVanillaStore(store, selector);

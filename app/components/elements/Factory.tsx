@@ -1,3 +1,4 @@
+import { useObservableCallback } from "observable-hooks";
 import type { ForwardedRef } from "react";
 import {
   forwardRef,
@@ -6,11 +7,11 @@ import {
   useRef,
   useState,
 } from "react";
-import { EMPTY, defer, finalize, map, mergeWith, pipe, tap } from "rxjs";
+import { EMPTY, defer, finalize, map, mergeWith, pipe } from "rxjs";
 import { Vector3 } from "three";
-import { delayInBetween } from "~/observables/delayInBetween";
+import { blockBrake } from "~/observables/blockBrake";
 import { useStore } from "~/store";
-import type { OperatorBuilder, Status } from "~/types";
+import type { Ball, OperatorBuilder, Status } from "~/types";
 import { Begin } from "./Begin";
 import { Plumbob } from "./Plumbob";
 
@@ -23,8 +24,9 @@ export const Factory = forwardRef(function Factory(
   ref: ForwardedRef<OperatorBuilder>
 ) {
   const addBall = useStore((state) => state.addBall);
-  const updateBall = useStore((state) => state.updateBall);
   const [status, setStatus] = useState<Status>("waiting");
+  const [onEnter, enter$] = useObservableCallback<Ball>();
+  const [onExit, exit$] = useObservableCallback<Ball>();
 
   /* Handlers */
 
@@ -38,7 +40,7 @@ export const Factory = forwardRef(function Factory(
         .toArray();
 
       // Create the ball
-      const id = addBall({ label, position, ghost: true });
+      const id = addBall({ label, position });
 
       return id;
     },
@@ -63,19 +65,20 @@ export const Factory = forwardRef(function Factory(
             ...boxedValue,
             ballId: newBall(boxedValue.label),
           })),
-          delayInBetween(1250),
-          tap(({ ballId }) =>
-            updateBall(ballId, (ball) => ({ ...ball, ghost: false }))
-          )
+          blockBrake(enter$, exit$)
         );
       },
     }),
-    [newBall, updateBall]
+    [newBall, enter$, exit$]
   );
 
   return (
     <group ref={root}>
-      <Begin displayText={displayText ?? `source$.pipe(`} />
+      <Begin
+        displayText={displayText ?? `source$.pipe(`}
+        onEnter={onEnter}
+        onExit={onExit}
+      />
       <Plumbob position={[1, 2.7, 0]} status={status} />
     </group>
   );

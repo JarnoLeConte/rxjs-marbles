@@ -8,7 +8,7 @@ import { frameTimer } from "~/observables/frameTimer";
 import { box, numberToChar } from "~/utils";
 
 export function ConcatMap() {
-  const source$ = useNumberProducer(0, 3);
+  const source$ = useNumberProducer(0, 5);
 
   const track: Track = {
     part: Part.Producer,
@@ -28,12 +28,9 @@ export function ConcatMap() {
           displayText: "map((x) => ...),",
         },
         tail: {
-          part: Part.DownHill,
+          part: Part.ConcatAll,
           tail: {
-            part: Part.ConcatAll,
-            tail: {
-              part: Part.Subscriber,
-            },
+            part: Part.Subscriber,
           },
         },
       },

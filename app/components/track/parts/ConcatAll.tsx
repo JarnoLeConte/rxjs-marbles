@@ -1,13 +1,9 @@
+import { useObservableCallback } from "observable-hooks";
 import type { ForwardedRef } from "react";
-import {
-  forwardRef,
-  useImperativeHandle,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import { Subject, concatMap, finalize, pipe } from "rxjs";
+import { forwardRef, useImperativeHandle, useRef, useState } from "react";
+import { concatMap, defer, delayWhen, filter, finalize, pipe, tap } from "rxjs";
 import { BuildTail } from "~/components/Build";
+import { DownHill } from "~/components/elements/DownHill";
 import { Factory } from "~/components/elements/Factory";
 import { when } from "~/observables/when";
 import { useStore } from "~/store";
@@ -34,7 +30,9 @@ export const ConcatAll = forwardRef(function ConcatAll(
 ) {
   const { displayText } = track.props ?? {};
   const removeBall = useStore((state) => state.removeBall);
-  const detection$ = useMemo(() => new Subject<Ball>(), []);
+  const updateBall = useStore((state) => state.updateBall);
+  const [onEnter, enter$] = useObservableCallback<Ball>();
+  const [onBeforeEnter, beforeEnter$] = useObservableCallback<Ball>();
   const [isClosed, setIsClosed] = useState(false);
   const [label, setLabel] = useState<string | undefined>();
 
@@ -48,33 +46,43 @@ export const ConcatAll = forwardRef(function ConcatAll(
     () => ({
       build() {
         return pipe(
+          delayWhen(({ ballId }) =>
+            beforeEnter$.pipe(filter(({ id }) => id === ballId))
+          ),
           assertBoxedObservable(),
-          concatMap(({ value: source$, label }) =>
-            when(detection$, ({ id }) => {
-              setIsClosed(true);
-              setLabel(label);
-              removeBall(id);
-              return source$.pipe(
-                factory.current.build(),
-                finalize(() => {
-                  setIsClosed(false);
-                  setLabel(undefined);
-                })
-              );
+          tap(({ ballId }) =>
+            updateBall(ballId!, (ball) => ({ ...ball, ghost: true }))
+          ),
+          concatMap(({ ballId, value: source$, label }) =>
+            defer(() => {
+              updateBall(ballId!, (ball) => ({ ...ball, ghost: false }));
+              return when(enter$, ({ id }) => {
+                setIsClosed(true);
+                setLabel(label);
+                removeBall(id);
+                return source$.pipe(
+                  factory.current.build(),
+                  finalize(() => {
+                    setIsClosed(false);
+                    setLabel(undefined);
+                  })
+                );
+              });
             })
           ),
           tail.current.build()
         );
       },
     }),
-    [detection$, removeBall]
+    [enter$, beforeEnter$, removeBall, updateBall]
   );
 
   return (
     <group>
-      <group>
+      <DownHill onBeforeExit={onBeforeEnter} />
+      <group position={[4, -1, 0]}>
         <Tunnel
-          onBallDetection={(ball) => detection$.next(ball)}
+          onBallDetection={onEnter}
           displayText={displayText ?? "concatAll(),"}
           entryClosed={isClosed}
           exitClosed
@@ -82,9 +90,9 @@ export const ConcatAll = forwardRef(function ConcatAll(
         <group position={[0, 2, 0]}>
           <Factory ref={factory} displayText={label} />
         </group>
-      </group>
-      <group position={[2, 0, 0]}>
-        <BuildTail ref={tail} track={track.tail} />
+        <group position={[2, 0, 0]}>
+          <BuildTail ref={tail} track={track.tail} />
+        </group>
       </group>
     </group>
   );

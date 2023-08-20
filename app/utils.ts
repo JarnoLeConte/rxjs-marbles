@@ -8,6 +8,12 @@ import {
 } from "rxjs";
 import type { Boxed, Value } from "./types";
 
+export enum CollisionGroup {
+  Track = 0,
+  Ball = 1,
+  Detector = 2,
+}
+
 export function randomColor() {
   const colors = ["red", "blue", "green", "yellow", "orange", "purple"];
   return colors[Math.floor(Math.random() * colors.length)];

@@ -7,6 +7,7 @@ import {
   interactionGroups,
 } from "@react-three/rapier";
 import { useRef } from "react";
+import { CollisionGroup } from "~/utils";
 import { Text2D } from "./Text2D";
 
 type BallProps = StaticBallProps & {
@@ -36,11 +37,10 @@ export function Ball({ id, label, color, ghost, ...props }: BallProps) {
       >
         <BallCollider
           args={[RADIUS]}
-          collisionGroups={
-            ghost
-              ? interactionGroups(1, []) // part of balls, no colissions
-              : interactionGroups(1, [0, 1]) // part of balls, collide with track and balls
-          }
+          collisionGroups={interactionGroups(CollisionGroup.Ball, [
+            CollisionGroup.Track,
+            CollisionGroup.Detector,
+          ])}
         />
         <StaticBall label={label} color={color} ghost={ghost} />
       </RigidBody>

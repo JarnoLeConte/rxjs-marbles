@@ -1,38 +1,56 @@
-import type { IntersectionEnterHandler } from "@react-three/rapier";
-import { BallCollider, RigidBody } from "@react-three/rapier";
-import { useRef } from "react";
+import type {
+  IntersectionEnterHandler,
+  IntersectionExitHandler,
+} from "@react-three/rapier";
+import {
+  BallCollider,
+  RigidBody,
+  interactionGroups,
+} from "@react-three/rapier";
 import { useStore } from "~/store";
 import type { Ball } from "~/types";
+import { CollisionGroup } from "~/utils";
 
 export type BallDetectionHandler = (ball: Ball) => void;
 
 export function BallDetector({
-  onDetection,
+  onEnter,
+  onExit,
   ...props
-}: { onDetection?: BallDetectionHandler } & JSX.IntrinsicElements["group"]) {
+}: {
+  onEnter?: BallDetectionHandler;
+  onExit?: BallDetectionHandler;
+} & JSX.IntrinsicElements["group"]) {
   const updateActivity = useStore((state) => state.updateActivity);
   const getBall = useStore((state) => state.getBall);
-  const detection = useRef(null); // store the id of the ball that was detected
 
-  const onIntersectionEnter: IntersectionEnterHandler = ({ other }) => {
-    if (other.rigidBodyObject?.name !== "ball") return;
+  const handler =
+    (
+      handle?: BallDetectionHandler
+    ): IntersectionEnterHandler | IntersectionExitHandler =>
+    ({ other }) => {
+      if (other.rigidBodyObject?.name !== "ball") return;
+      const ballId = other.rigidBodyObject.userData.id;
+      const ball = getBall(ballId); // get the latest ball state
+      if (!ball) return;
 
-    const ballId = other.rigidBodyObject.userData.id;
-    if (ballId === detection.current) return; // don't detect the same ball twice
+      handle?.(ball);
 
-    const ball = getBall(ballId); // get the latest ball state
-    if (!ball) return;
-
-    detection.current = ballId;
-    onDetection?.(ball);
-
-    updateActivity();
-  };
+      updateActivity();
+    };
 
   return (
     <group {...props}>
       <RigidBody type="fixed" colliders={false} sensor>
-        <BallCollider args={[0.05]} onIntersectionEnter={onIntersectionEnter} />
+        <BallCollider
+          sensor
+          args={[0.05]}
+          collisionGroups={interactionGroups(CollisionGroup.Detector, [
+            CollisionGroup.Ball,
+          ])}
+          onIntersectionEnter={handler(onEnter)}
+          onIntersectionExit={handler(onExit)}
+        />
       </RigidBody>
     </group>
   );

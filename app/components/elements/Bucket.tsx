@@ -27,7 +27,7 @@ export function Bucket({
           rotation={[0, Math.PI / 2, 0]}
         />
         <BallDetector position={[0, 1, 0]} />
-        <BallDetector position={[0, -1, 0]} onDetection={onBallDetection} />
+        <BallDetector position={[0, -1, 0]} onEnter={onBallDetection} />
         <Text2D position={[0, 0.5, 1]} maxWidth={1.3}>
           {displayText}
         </Text2D>

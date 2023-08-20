@@ -12,14 +12,11 @@ export function ConcatAll() {
       source$,
     },
     tail: {
-      part: Part.Ramp,
+      part: Part.ConcatAll,
       tail: {
-        part: Part.ConcatAll,
+        part: Part.DownHill,
         tail: {
-          part: Part.DownHill,
-          tail: {
-            part: Part.Subscriber,
-          },
+          part: Part.Subscriber,
         },
       },
     },
