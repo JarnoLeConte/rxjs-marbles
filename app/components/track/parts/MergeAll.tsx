@@ -88,7 +88,7 @@ export const MergeAll = forwardRef(function MergeAll(
               );
             }
             return source$.pipe(
-              delay(index * 750),
+              delay(index * 120),
               factoryOperator,
               tail.current.build()
             );
