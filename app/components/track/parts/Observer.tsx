@@ -39,7 +39,7 @@ export const Observer = forwardRef(function Observer(
         onBallDetection={onBallDetection}
         displayText={displayText ?? `).subscribe(...)`}
         contentLabel={`console.log`}
-        content={label}
+        content={label ?? "-"}
       />
       <Identity ref={ref} />
     </group>

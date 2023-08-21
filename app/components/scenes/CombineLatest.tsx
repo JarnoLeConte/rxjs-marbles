@@ -1,21 +1,22 @@
-import { useMemo } from "react";
-import { from, map, switchMap } from "rxjs";
+import { useObservable } from "observable-hooks";
+import { from, map, switchMap, timer } from "rxjs";
 import { Run } from "~/components/Run";
 import { Part } from "~/components/track/parts";
-import { useNumberProducer } from "~/hooks/useNumberProducer";
 import { boxed } from "~/observables/boxed";
-import { frameTimer } from "~/observables/frameTimer";
-import type { Track } from "~/types";
+import type { Boxed, Track, Value } from "~/types";
 
 export function CombineLatest() {
-  const A$ = useNumberProducer(10);
-  const B$ = useMemo(
-    () =>
-      frameTimer(0, 1).pipe(
-        map((x) => x * 2 + 1),
-        switchMap((x) => from([x, x + 1]).pipe(boxed()))
-      ),
-    []
+  const A$ = useObservable<Boxed<Value>>(() =>
+    timer(0, 9000).pipe(
+      map((x) => x + 10),
+      boxed()
+    )
+  );
+  const B$ = useObservable<Boxed<Value>>(() =>
+    timer(0, 9000).pipe(
+      map((x) => x * 2 + 1),
+      switchMap((x) => from([x, x + 1]).pipe(boxed()))
+    )
   );
 
   const trackA: Track = {

@@ -17,10 +17,11 @@ import { Plumbob } from "./Plumbob";
 
 type Props = {
   displayText?: string;
+  hidePlumbob?: boolean;
 };
 
 export const Factory = forwardRef(function Factory(
-  { displayText }: Props,
+  { displayText, hidePlumbob }: Props,
   ref: ForwardedRef<OperatorBuilder>
 ) {
   const addBall = useStore((state) => state.addBall);
@@ -60,12 +61,12 @@ export const Factory = forwardRef(function Factory(
               return EMPTY;
             })
           ),
-          finalize(() => setStatus("complete")),
           map((boxedValue) => ({
             ...boxedValue,
             ballId: newBall(boxedValue.label),
           })),
-          blockBrake(enter$, exit$)
+          blockBrake(enter$, exit$),
+          finalize(() => setStatus("complete"))
         );
       },
     }),
@@ -74,12 +75,8 @@ export const Factory = forwardRef(function Factory(
 
   return (
     <group ref={root}>
-      <Begin
-        displayText={displayText ?? `source$.pipe(`}
-        onEnter={onEnter}
-        onExit={onExit}
-      />
-      <Plumbob position={[1, 2.7, 0]} status={status} />
+      <Begin displayText={displayText} onEnter={onEnter} onExit={onExit} />
+      <Plumbob position={[1, 2.7, 0]} status={status} visible={!hidePlumbob} />
     </group>
   );
 });

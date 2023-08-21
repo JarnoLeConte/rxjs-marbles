@@ -109,6 +109,7 @@ export const CombineLatest = forwardRef(function CombineLatest(
           <Factory
             ref={factory}
             displayText={displayText ?? "combineLatest(A, B)"}
+            hidePlumbob
           />
         </group>
       </group>

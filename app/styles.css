@@ -29,6 +29,10 @@ a.menu-item:hover {
   color: #999;
   background-color: rgba(22, 22, 22, 0.75);
 }
+a.menu-item.active {
+  color: #ccc;
+  background-color: rgba(55, 55, 55, 0.95);
+}
 
 .hoverable {
   opacity: 0.5;

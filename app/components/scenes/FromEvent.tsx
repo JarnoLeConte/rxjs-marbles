@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useObservable } from "observable-hooks";
 import { fromEvent, map } from "rxjs";
 import { Run } from "~/components/Run";
 import type { Track } from "~/components/track/parts";
@@ -6,18 +6,14 @@ import { Part } from "~/components/track/parts";
 import { box } from "~/utils";
 
 export function FromEvent() {
-  const click$ = useMemo(
-    () =>
-      fromEvent<MouseEvent>(document, "click").pipe(map(() => box("{click}"))),
-    []
+  const click$ = useObservable(() =>
+    fromEvent<MouseEvent>(document, "click").pipe(map(() => box("{click}")))
   );
 
-  const keyboard$ = useMemo(
-    () =>
-      fromEvent<KeyboardEvent>(window, "keyup").pipe(
-        map((event) => box(event.key))
-      ),
-    []
+  const keyboard$ = useObservable(() =>
+    fromEvent<KeyboardEvent>(window, "keyup").pipe(
+      map((event) => box(event.key))
+    )
   );
 
   const trackA: Track = {

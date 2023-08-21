@@ -70,8 +70,8 @@ export const SwitchAll = forwardRef(function SwitchAll(
           displayText={displayText ?? "switchAll(),"}
           exitClosed
         />
-        <group position={[0, 2, 0]}>
-          <Factory ref={factory} displayText={label} />
+        <group position={[0, 2, 0]} visible={!!label}>
+          <Factory ref={factory} displayText={label} hidePlumbob />
         </group>
       </group>
       <group position={[2, 0, 0]}>

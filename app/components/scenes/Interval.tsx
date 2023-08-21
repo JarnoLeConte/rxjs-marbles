@@ -1,16 +1,20 @@
+import { useObservable } from "observable-hooks";
+import { interval } from "rxjs";
 import { Run } from "~/components/Run";
 import { Part } from "~/components/track/parts";
-import { useNumberProducer } from "~/hooks/useNumberProducer";
-import type { Track } from "~/types";
+import { boxed } from "~/observables/boxed";
+import type { Boxed, Track, Value } from "~/types";
 
 export function Interval() {
-  const source$ = useNumberProducer();
+  const source$ = useObservable<Boxed<Value>>(() =>
+    interval(2000).pipe(boxed())
+  );
 
   const track: Track = {
     part: Part.Producer,
     props: {
       source$,
-      displayText: "interval()",
+      displayText: "interval(2000)",
     },
     tail: {
       part: Part.DownHill,

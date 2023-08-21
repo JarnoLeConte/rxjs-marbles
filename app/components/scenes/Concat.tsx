@@ -1,12 +1,14 @@
+import { useObservable } from "observable-hooks";
 import { useMemo } from "react";
+import { range } from "rxjs";
 import { Run } from "~/components/Run";
 import { Part } from "~/components/track/parts";
-import { useNumberProducer } from "~/hooks/useNumberProducer";
-import type { Track } from "~/types";
+import { boxed } from "~/observables/boxed";
+import type { Boxed, Track, Value } from "~/types";
 
 export function Concat() {
-  const A$ = useNumberProducer(1, 3);
-  const B$ = useNumberProducer(1, 3);
+  const A$ = useObservable<Boxed<Value>>(() => range(1, 3).pipe(boxed()));
+  const B$ = useObservable<Boxed<Value>>(() => range(1, 3).pipe(boxed()));
 
   const trackA: Track = useMemo(
     () => ({

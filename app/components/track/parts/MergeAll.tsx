@@ -12,6 +12,7 @@ import {
   Subject,
   delay,
   delayWhen,
+  finalize,
   mergeMap,
   pipe,
   tap,
@@ -51,8 +52,8 @@ export const MergeAll = forwardRef(function MergeAll(
 
   // Keep track of the active producers which are currently emitting balls
   // and being merged
-  const [observables, setObservables] = useState<
-    Boxed<Observable<Boxed<Value>>>[]
+  const [items, setItems] = useState<
+    { boxedObservable: Boxed<Observable<Boxed<Value>>>; active: boolean }[]
   >([]);
 
   /* Builder */
@@ -70,9 +71,9 @@ export const MergeAll = forwardRef(function MergeAll(
             detection$.pipe(
               tap((ball) => {
                 factories.current.push(createRef<OperatorBuilder>());
-                setObservables((observables) => [
-                  ...observables,
-                  boxedObservable,
+                setItems((items) => [
+                  ...items,
+                  { boxedObservable, active: true },
                 ]);
                 removeBall(ball.id);
               }),
@@ -90,6 +91,15 @@ export const MergeAll = forwardRef(function MergeAll(
             return source$.pipe(
               delay(index * 120),
               factoryOperator,
+              finalize(() =>
+                setItems((items) =>
+                  items.map((item) =>
+                    item.boxedObservable.value === source$
+                      ? { ...item, active: false }
+                      : item
+                  )
+                )
+              ),
               tail.current.build()
             );
           })
@@ -107,9 +117,13 @@ export const MergeAll = forwardRef(function MergeAll(
           displayText={displayText ?? "mergeAll(),"}
           exitClosed
         />
-        {observables.map(({ label }, index) => (
-          <group key={index} position={[0, 2 + index * 2, 0]}>
-            <Factory ref={factories.current[index]} displayText={label} />
+        {items.map(({ boxedObservable: { label }, active }, index) => (
+          <group key={index} position={[0, 2 + index * 2, 0]} visible={active}>
+            <Factory
+              ref={factories.current[index]}
+              displayText={label}
+              hidePlumbob
+            />
           </group>
         ))}
       </group>

@@ -1,8 +1,6 @@
-import { useStore } from "~/store";
 import { Menu } from "./Menu";
 
 export function Overlay() {
-  const frame = useStore((state) => state.frame);
   return (
     <div
       id="overlay"
@@ -34,7 +32,7 @@ export function Overlay() {
           justifyContent: "space-between",
         }}
       >
-        <span style={{ pointerEvents: "auto" }}>frame: {frame}</span>
+        <span style={{ pointerEvents: "auto" }}></span>
         <a
           href="https://github.com/JarnoLeConte/rxjs-marbles"
           style={{ pointerEvents: "auto" }}

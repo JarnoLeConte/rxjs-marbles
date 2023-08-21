@@ -1,14 +1,17 @@
-import { take } from "rxjs";
+import { useObservable } from "observable-hooks";
+import { range } from "rxjs";
 import { Run } from "~/components/Run";
 import type { Track } from "~/components/track/parts";
 import { Part } from "~/components/track/parts";
-import { useNumberProducer } from "~/hooks/useNumberProducer";
 import { boxed } from "~/observables/boxed";
-import { frameTimer } from "~/observables/frameTimer";
+import { delayInBetween } from "~/observables/delayInBetween";
+import type { Boxed, Value } from "~/types";
 import { box, numberToChar } from "~/utils";
 
 export function ConcatMap() {
-  const source$ = useNumberProducer(0, 5);
+  const source$ = useObservable<Boxed<Value>>(() =>
+    range(0, 4).pipe(delayInBetween(3000), boxed())
+  );
 
   const track: Track = {
     part: Part.Producer,
@@ -21,10 +24,7 @@ export function ConcatMap() {
         part: Part.Map,
         props: {
           project: (value) =>
-            box(
-              frameTimer(0, 1).pipe(take(3), boxed()),
-              numberToChar(Number(value))
-            ),
+            box(range(1, 3).pipe(boxed()), numberToChar(Number(value))),
           displayText: "map((x) => ...),",
         },
         tail: {

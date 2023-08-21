@@ -20,7 +20,7 @@ export function SceneSetup({
   children: React.ReactNode;
 }) {
   const { debug } = useControls("Debug", {
-    debug: true,
+    debug: false,
   });
 
   return (

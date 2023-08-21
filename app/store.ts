@@ -18,8 +18,6 @@ interface Store {
   removeBall: (id: number) => void;
   lastActivity: number;
   updateActivity: () => void;
-  frame: number;
-  nextFrame: () => void;
   reset: () => void;
 }
 
@@ -53,9 +51,7 @@ export const store = createStore<Store>()((set, get) => ({
     set((state) => ({ balls: state.balls.filter((ball) => ball.id !== id) })),
   lastActivity: Date.now(),
   updateActivity: () => set({ lastActivity: Date.now() }),
-  frame: 0,
-  nextFrame: () => set((state) => ({ frame: state.frame + 1 })),
-  reset: () => set({ balls: [], lastActivity: Date.now(), frame: 0 }),
+  reset: () => set({ balls: [], lastActivity: Date.now() }),
 }));
 
 export const useStore = <T>(selector: (state: Store) => T) =>

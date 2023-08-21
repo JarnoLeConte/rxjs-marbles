@@ -18,12 +18,24 @@ const examples = [
     scene: Test,
   },
   {
+    name: "interval" as const,
+    scene: Interval,
+  },
+  {
     name: "map" as const,
     scene: Map,
   },
   {
-    name: "interval" as const,
-    scene: Interval,
+    name: "merge" as const,
+    scene: Merge,
+  },
+  {
+    name: "concat" as const,
+    scene: Concat,
+  },
+  {
+    name: "concatAll" as const,
+    scene: ConcatAll,
   },
   {
     name: "switchAll" as const,
@@ -34,20 +46,8 @@ const examples = [
     scene: MergeAll,
   },
   {
-    name: "concatAll" as const,
-    scene: ConcatAll,
-  },
-  {
     name: "concatMap" as const,
     scene: ConcatMap,
-  },
-  {
-    name: "merge" as const,
-    scene: Merge,
-  },
-  {
-    name: "concat" as const,
-    scene: Concat,
   },
   {
     name: "combineLatest" as const,

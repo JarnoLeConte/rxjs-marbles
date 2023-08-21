@@ -87,8 +87,8 @@ export const ConcatAll = forwardRef(function ConcatAll(
           entryClosed={isClosed}
           exitClosed
         />
-        <group position={[0, 2, 0]}>
-          <Factory ref={factory} displayText={label} />
+        <group position={[0, 2, 0]} visible={!!label}>
+          <Factory ref={factory} displayText={label} hidePlumbob />
         </group>
         <group position={[2, 0, 0]}>
           <BuildTail ref={tail} track={track.tail} />
