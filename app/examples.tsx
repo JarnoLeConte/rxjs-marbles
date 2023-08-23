@@ -7,6 +7,7 @@ import { Interval } from "./components/scenes/Interval";
 import { Map } from "./components/scenes/Map";
 import { Merge } from "./components/scenes/Merge";
 import { MergeAll } from "./components/scenes/MergeAll";
+import { Partition } from "./components/scenes/Partition";
 import { SwitchAll } from "./components/scenes/SwitchAll";
 import { Test } from "./components/scenes/Test";
 
@@ -52,6 +53,10 @@ const examples = [
   {
     name: "combineLatest" as const,
     scene: CombineLatest,
+  },
+  {
+    name: "partition" as const,
+    scene: Partition,
   },
   {
     name: "fromEvent" as const,

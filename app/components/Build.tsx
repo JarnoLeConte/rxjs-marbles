@@ -17,6 +17,7 @@ import { Merge } from "./track/parts/Merge";
 import { MergeAll } from "./track/parts/MergeAll";
 import { SwitchAll } from "./track/parts/SwitchAll";
 import { ConcatAll } from "./track/parts/ConcatAll";
+import { Partition } from "./track/parts/Partition";
 
 export const Build = forwardRef(function Build(
   { track }: { track: TrackHead },
@@ -67,6 +68,8 @@ export const BuildTail = forwardRef(function BuildTail(
       return <SwitchAll ref={ref} track={track} />;
     case Part.ConcatAll:
       return <ConcatAll ref={ref} track={track} />;
+    case Part.Partition:
+      return <Partition ref={ref} track={track} />;
     default:
       throw new Error(
         `Unknown how to construct pipe operator from track ${track}`

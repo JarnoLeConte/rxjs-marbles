@@ -16,6 +16,7 @@ export enum Part {
   Merge = "Merge",
   Concat = "Concat",
   CombineLatest = "CombineLatest",
+  Partition = "Partition",
 }
 
 export type TrackHead =
@@ -100,6 +101,17 @@ export type TrackTail =
         displayText?: string;
       };
       tail: TrackTail;
+    }
+  | {
+      part: Part.Partition;
+      props?: {
+        predicate?: (value: Value, index: number) => boolean;
+        displayText?: string;
+        trueLabel?: string;
+        falseLabel?: string;
+      };
+      trueTail: TrackTail;
+      falseTail: TrackTail;
     };
 
 export type TrackPart<P = Part> = {
