@@ -9,11 +9,11 @@ import type { Boxed, Value } from "~/types";
 
 export function MergeAll() {
   const source$ = useObservable<Boxed<Value>>(() =>
-    of("A", "B", "C").pipe(
+    of("A", "B", "C", "D", "E").pipe(
       delayInBetween(3000),
       map((label) => ({
         label,
-        value: range(1, 3).pipe(delayInBetween(2000), boxed()),
+        value: range(1, 3).pipe(delayInBetween(2300), boxed()),
       }))
     )
   );
@@ -24,14 +24,15 @@ export function MergeAll() {
       source$,
     },
     tail: {
-      part: Part.Ramp,
+      part: Part.MergeAll,
+      props: {
+        concurrent: 2,
+        displayText: "mergeAll(2),",
+      },
       tail: {
-        part: Part.MergeAll,
+        part: Part.DownHill,
         tail: {
-          part: Part.DownHill,
-          tail: {
-            part: Part.Subscriber,
-          },
+          part: Part.Subscriber,
         },
       },
     },

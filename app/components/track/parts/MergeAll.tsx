@@ -1,17 +1,18 @@
+import { useObservableCallback } from "observable-hooks";
 import type { ForwardedRef, RefObject } from "react";
 import {
   createRef,
   forwardRef,
+  useCallback,
   useImperativeHandle,
-  useMemo,
   useRef,
   useState,
 } from "react";
 import type { Observable } from "rxjs";
 import {
-  Subject,
-  delay,
+  defer,
   delayWhen,
+  filter,
   finalize,
   mergeMap,
   pipe,
@@ -19,9 +20,12 @@ import {
   throwError,
 } from "rxjs";
 import { BuildTail } from "~/components/Build";
+import { DownHill } from "~/components/elements/DownHill";
 import { Factory } from "~/components/elements/Factory";
+import { initialize } from "~/observables/initialize";
+import { when } from "~/observables/when";
 import { useStore } from "~/store";
-import type { Ball, Boxed, OperatorBuilder, Value } from "~/types";
+import type { Ball, Boxed, OperatorBuilder, Status, Value } from "~/types";
 import { assertBoxedObservable } from "~/utils";
 import { Tunnel } from "../../elements/Tunnel";
 import type { Part, TrackPart } from "../parts";
@@ -46,15 +50,54 @@ export const MergeAll = forwardRef(function MergeAll(
   { track }: Props,
   ref: ForwardedRef<OperatorBuilder>
 ) {
-  const { displayText } = track.props ?? {};
+  const { displayText, concurrent = Infinity } = track.props ?? {};
   const removeBall = useStore((state) => state.removeBall);
-  const detection$ = useMemo(() => new Subject<Ball>(), []);
+  const updateBall = useStore((state) => state.updateBall);
+  const [onEnter, enter$] = useObservableCallback<Ball>();
+  const [onBeforeEnter, beforeEnter$] = useObservableCallback<Ball>();
 
-  // Keep track of the active producers which are currently emitting balls
-  // and being merged
-  const [items, setItems] = useState<
-    { boxedObservable: Boxed<Observable<Boxed<Value>>>; active: boolean }[]
-  >([]);
+  type Item = {
+    id: number;
+    boxedObservable: Boxed<Observable<Boxed<Value>>>;
+    status: Status;
+  };
+
+  // Keep track of the active producers which are currently emitting balls.
+  // Reuse slots when running in concurrent mode.
+  const [items, setItems] = useState<(Item | null)[]>([]);
+
+  // Add a new producer or reuse an existing one.
+  const register = useCallback((item: Item) => {
+    setItems((items) => {
+      // check if we can reuse an existing slot
+      const index = items.findIndex((item) => item === null);
+      if (index >= 0) {
+        const newItems = [...items];
+        newItems[index] = item;
+        return newItems;
+      } else {
+        return [...items, item];
+      }
+    });
+  }, []);
+
+  // Change status of a producer to active
+  const update = useCallback(
+    (id: number, transform: (item: Item) => Item | null) => {
+      setItems((items) =>
+        items.map((item) => (item?.id === id ? transform(item) : item))
+      );
+    },
+    []
+  );
+
+  // Remove a producer
+  const unregister = useCallback(
+    (id: number) => {
+      update(id, () => null);
+    },
+    [update]
+  );
 
   /* Builder */
 
@@ -67,68 +110,90 @@ export const MergeAll = forwardRef(function MergeAll(
       build() {
         return pipe(
           assertBoxedObservable(),
-          delayWhen((boxedObservable) =>
-            detection$.pipe(
-              tap((ball) => {
-                factories.current.push(createRef<OperatorBuilder>());
-                setItems((items) => [
-                  ...items,
-                  { boxedObservable, active: true },
-                ]);
-                removeBall(ball.id);
-              }),
-              delay(0)
-            )
+          delayWhen(({ ballId }) =>
+            beforeEnter$.pipe(filter(({ id }) => id === ballId))
           ),
-          mergeMap(({ value: source$ }, index) => {
-            const factory = factories.current[index];
-            const factoryOperator = factory.current?.build();
-            if (!factoryOperator) {
-              return throwError(
-                () => new Error(`Factory operator is not defined.`)
+          tap(({ ballId }) =>
+            updateBall(ballId!, (ball) => ({ ...ball, ghost: true }))
+          ),
+          mergeMap((boxedObservable, itemId) => {
+            const { ballId, value: source$ } = boxedObservable;
+
+            return defer(() => {
+              // Create a new reference pointing to the new producer chain on next render
+              factories.current[itemId] = createRef<OperatorBuilder>();
+              register({ id: itemId, boxedObservable, status: "waiting" });
+              updateBall(ballId!, (ball) => ({ ...ball, ghost: false }));
+
+              return when(
+                enter$.pipe(filter((ball) => ball.id === ballId!)),
+                ({ id }) => {
+                  removeBall(id);
+
+                  // Reference will now point to the new producer chain,
+                  // because at least one render has happened.
+                  const factory = factories.current[itemId];
+                  const factoryOperator = factory.current?.build();
+
+                  if (!factoryOperator) {
+                    return throwError(
+                      () => new Error(`Factory operator is not defined.`)
+                    );
+                  }
+
+                  // Show producer now it becomes active
+                  return source$.pipe(
+                    initialize(() =>
+                      update(itemId, (item) => ({ ...item, status: "active" }))
+                    ),
+                    factoryOperator,
+                    finalize(() => unregister(itemId)),
+                    tail.current.build()
+                  );
+                }
               );
-            }
-            return source$.pipe(
-              delay(index * 120),
-              factoryOperator,
-              finalize(() =>
-                setItems((items) =>
-                  items.map((item) =>
-                    item.boxedObservable.value === source$
-                      ? { ...item, active: false }
-                      : item
-                  )
-                )
-              ),
-              tail.current.build()
-            );
-          })
+            });
+          }, concurrent)
         );
       },
     }),
-    [detection$, removeBall]
+    [
+      enter$,
+      beforeEnter$,
+      removeBall,
+      updateBall,
+      register,
+      unregister,
+      update,
+      concurrent,
+    ]
   );
 
   return (
     <group>
-      <group>
+      <DownHill onBeforeExit={onBeforeEnter} />
+      <group position={[4, -1, 0]}>
         <Tunnel
-          onBallDetection={(ball) => detection$.next(ball)}
+          onBallDetection={onEnter}
           displayText={displayText ?? "mergeAll(),"}
           exitClosed
         />
-        {items.map(({ boxedObservable: { label }, active }, index) => (
-          <group key={index} position={[0, 2 + index * 2, 0]} visible={active}>
+        {items.map((item, index) => (
+          <group
+            key={index}
+            position={[0, 2 + index * 2, 0]}
+            visible={item?.status === "active"}
+          >
             <Factory
-              ref={factories.current[index]}
-              displayText={label}
+              ref={item ? factories.current[item.id] : undefined}
+              displayText={item?.boxedObservable.label}
               hidePlumbob
             />
           </group>
         ))}
-      </group>
-      <group position={[2, 0, 0]}>
-        <BuildTail ref={tail} track={track.tail} />
+        <group position={[2, 0, 0]}>
+          <BuildTail ref={tail} track={track.tail} />
+        </group>
       </group>
     </group>
   );

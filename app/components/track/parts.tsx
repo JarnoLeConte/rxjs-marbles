@@ -99,6 +99,7 @@ export type TrackTail =
       part: Part.MergeAll;
       props?: {
         displayText?: string;
+        concurrent?: number;
       };
       tail: TrackTail;
     }
