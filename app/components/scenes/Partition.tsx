@@ -29,13 +29,13 @@ export function Partition() {
           falseLabel: "false",
         },
         trueTail: {
-          part: Part.Ramp,
+          part: Part.DownHill,
           tail: {
             part: Part.Subscriber,
           },
         },
         falseTail: {
-          part: Part.DownHill,
+          part: Part.Ramp,
           tail: {
             part: Part.Subscriber,
           },
