@@ -95,7 +95,7 @@ export const Partition = forwardRef(function Partition(
             <BuildTail ref={trueTail} track={track.trueTail} />
           </group>
         </group>
-        <group position={[0, 0, 2]}>
+        <group position={[0, -1, 0]}>
           <Factory ref={falseFactory} displayText={falseLabel} hidePlumbob />
           <group position={[2, 0, 0]}>
             <BuildTail ref={falseTail} track={track.falseTail} />
