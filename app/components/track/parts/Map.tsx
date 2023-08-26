@@ -34,12 +34,22 @@ export const Map = forwardRef(function Map(
   useImperativeHandle(
     ref,
     () => ({
+      operator() {
+        return pipe(
+          map((boxedValue, index) => ({
+            ...boxedValue,
+            ...project(boxedValue.value, index),
+          })),
+          tail.current.operator()
+        );
+      },
       build() {
         return pipe(
           delayWhen(() => detection$),
-          map((boxedValue, index: number) => {
-            return { ...boxedValue, ...project(boxedValue.value, index) };
-          }),
+          map((boxedValue, index) => ({
+            ...boxedValue,
+            ...project(boxedValue.value, index),
+          })),
           tap((boxedValue) => {
             const { ballId, label } = boxedValue;
             if (!ballId) {

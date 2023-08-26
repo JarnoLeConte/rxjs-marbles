@@ -10,6 +10,9 @@ export const Empty = forwardRef(function Empty(
   useImperativeHandle(
     ref,
     () => ({
+      observable() {
+        return EMPTY;
+      },
       build() {
         return EMPTY;
       },

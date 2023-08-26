@@ -35,6 +35,9 @@ export const Producer = forwardRef(function Producer(
   useImperativeHandle(
     ref,
     () => ({
+      observable() {
+        return source$.pipe(tail.current.operator());
+      },
       build() {
         return source$.pipe(factory.current.build(), tail.current.build());
       },

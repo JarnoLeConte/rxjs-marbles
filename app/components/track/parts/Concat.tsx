@@ -34,6 +34,12 @@ export const Concat = forwardRef(function Concat(
   useImperativeHandle(
     ref,
     () => ({
+      observable() {
+        const A$ = a.current.observable();
+        const B$ = b.current.observable();
+        const tailOperator = tail.current.operator();
+        return concat(A$, B$).pipe(tailOperator);
+      },
       build() {
         const A$ = a.current.build();
         const B$ = b.current.build();

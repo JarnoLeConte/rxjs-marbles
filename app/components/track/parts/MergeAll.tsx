@@ -14,6 +14,8 @@ import {
   delayWhen,
   filter,
   finalize,
+  map,
+  mergeAll,
   mergeMap,
   pipe,
   tap,
@@ -26,7 +28,7 @@ import { initialize } from "~/observables/initialize";
 import { when } from "~/observables/when";
 import { useStore } from "~/store";
 import type { Ball, Boxed, OperatorBuilder, Status, Value } from "~/types";
-import { assertBoxedObservable } from "~/utils";
+import { assertBoxedObservable, unbox } from "~/utils";
 import { Tunnel } from "../../elements/Tunnel";
 import type { Part, TrackPart } from "../parts";
 
@@ -107,6 +109,14 @@ export const MergeAll = forwardRef(function MergeAll(
   useImperativeHandle(
     ref,
     () => ({
+      operator() {
+        return pipe(
+          assertBoxedObservable(),
+          map(unbox),
+          mergeAll(),
+          tail.current.operator()
+        );
+      },
       build() {
         return pipe(
           assertBoxedObservable(),

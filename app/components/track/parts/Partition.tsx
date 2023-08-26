@@ -53,6 +53,19 @@ export const Partition = forwardRef(function Partition(
   useImperativeHandle(
     ref,
     () => ({
+      operator() {
+        // TODO: In reallity `partition` should not be implemented as an operator,
+        return (source$) => {
+          const [true$, false$] = partition(
+            source$.pipe(share()),
+            ({ value }, index) => predicate(value, index)
+          );
+          return merge(
+            true$.pipe(trueTail.current.operator(), ignoreElements()),
+            false$.pipe(falseTail.current.operator(), ignoreElements())
+          );
+        };
+      },
       build() {
         return (source$) => {
           const [true$, false$] = partition(
@@ -65,7 +78,7 @@ export const Partition = forwardRef(function Partition(
               ),
               share()
             ),
-            (boxedValue, index) => predicate(boxedValue.value, index)
+            ({ value }, index) => predicate(value, index)
           );
           return merge(
             true$.pipe(

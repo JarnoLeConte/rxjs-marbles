@@ -1,12 +1,13 @@
 import {
   isObservable,
+  map,
   mergeMap,
   of,
   throwError,
   type Observable,
   type OperatorFunction,
 } from "rxjs";
-import type { Boxed, Value } from "./types";
+import type { Boxed, RealValue, Value } from "./types";
 
 export enum CollisionGroup {
   Track = 0,
@@ -28,8 +29,23 @@ export function box(value: Value, label?: string): Boxed<Value> {
   return { value, label: label ?? renderValue(value) };
 }
 
+export function unbox<V extends Value>(boxedValue: Boxed<V>): V {
+  return boxedValue.value;
+}
+
+export function unboxDeep<V extends Value>(boxedValue: Boxed<V>): RealValue {
+  const value = unbox(boxedValue);
+  if (isObservable(value)) {
+    return value.pipe(map(unboxDeep));
+  }
+  if (Array.isArray(value)) {
+    return value.map(unboxDeep);
+  }
+  return value;
+}
+
 export function renderBoxedValue(boxedValue: Boxed<Value>): string {
-  return boxedValue.label ?? renderValue(boxedValue.value);
+  return boxedValue.label ?? renderValue(unbox(boxedValue));
 }
 
 export function renderValue(value?: Value): string {
@@ -53,7 +69,7 @@ export function renderValue(value?: Value): string {
 export function isBoxedObservable(
   boxedValue: Boxed<Value>
 ): boxedValue is Boxed<Observable<Boxed<Value>>> {
-  return isObservable(boxedValue.value);
+  return isObservable(unbox(boxedValue));
 }
 
 export function assertBoxedObservable(): OperatorFunction<
@@ -65,7 +81,7 @@ export function assertBoxedObservable(): OperatorFunction<
       ? of(boxedValue)
       : throwError(
           () =>
-            new Error(`Expected an observable value, but got: ${boxedValue}`)
+            new Error(`Expected an boxed observable, but got: ${boxedValue}`)
         )
   );
 }

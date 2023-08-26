@@ -10,6 +10,9 @@ export const Identity = forwardRef(function Identity(
   useImperativeHandle(
     ref,
     () => ({
+      operator() {
+        return pipe();
+      },
       build() {
         return pipe();
       },

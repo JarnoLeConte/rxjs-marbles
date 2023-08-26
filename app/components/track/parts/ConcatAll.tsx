@@ -1,14 +1,24 @@
 import { useObservableCallback } from "observable-hooks";
 import type { ForwardedRef } from "react";
 import { forwardRef, useImperativeHandle, useRef, useState } from "react";
-import { concatMap, defer, delayWhen, filter, finalize, pipe, tap } from "rxjs";
+import {
+  concatAll,
+  concatMap,
+  defer,
+  delayWhen,
+  filter,
+  finalize,
+  map,
+  pipe,
+  tap,
+} from "rxjs";
 import { BuildTail } from "~/components/Build";
 import { DownHill } from "~/components/elements/DownHill";
 import { Factory } from "~/components/elements/Factory";
 import { when } from "~/observables/when";
 import { useStore } from "~/store";
 import type { Ball, OperatorBuilder } from "~/types";
-import { assertBoxedObservable } from "~/utils";
+import { assertBoxedObservable, unbox } from "~/utils";
 import { Tunnel } from "../../elements/Tunnel";
 import type { Part, TrackPart } from "../parts";
 
@@ -44,6 +54,14 @@ export const ConcatAll = forwardRef(function ConcatAll(
   useImperativeHandle(
     ref,
     () => ({
+      operator() {
+        return pipe(
+          assertBoxedObservable(),
+          map(unbox),
+          concatAll(),
+          tail.current.operator()
+        );
+      },
       build() {
         return pipe(
           delayWhen(({ ballId }) =>

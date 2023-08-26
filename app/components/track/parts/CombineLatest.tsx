@@ -54,6 +54,18 @@ export const CombineLatest = forwardRef(function CombineLatest(
   useImperativeHandle(
     ref,
     () => ({
+      observable() {
+        const A$ = a.current.observable();
+        const B$ = b.current.observable();
+        const tailOperator = tail.current.operator();
+        return combineLatest([A$, B$]).pipe(
+          map(([boxedA, boxedB]) => ({
+            value: [boxedA, boxedB],
+            label: renderValue([boxedA, boxedB]),
+          })),
+          tailOperator
+        );
+      },
       build() {
         const A$ = a.current.build().pipe(
           delayWhen(({ label }) =>

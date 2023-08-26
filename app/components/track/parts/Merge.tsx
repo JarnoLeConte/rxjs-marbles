@@ -38,6 +38,12 @@ export const Merge = forwardRef(function Merge(
   useImperativeHandle(
     ref,
     () => ({
+      observable() {
+        const A$ = a.current.observable();
+        const B$ = b.current.observable();
+        const tailOperator = tail.current.operator();
+        return merge(A$, B$).pipe(tailOperator);
+      },
       build() {
         const A$ = a.current.build();
         const B$ = b.current.build();

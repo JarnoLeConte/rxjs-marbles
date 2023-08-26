@@ -6,12 +6,21 @@ import {
   useRef,
   useState,
 } from "react";
-import { Subject, delayWhen, finalize, pipe, switchMap, tap } from "rxjs";
+import {
+  Subject,
+  delayWhen,
+  finalize,
+  map,
+  pipe,
+  switchAll,
+  switchMap,
+  tap,
+} from "rxjs";
 import { BuildTail } from "~/components/Build";
 import { Factory } from "~/components/elements/Factory";
 import { useStore } from "~/store";
 import type { Ball, OperatorBuilder } from "~/types";
-import { assertBoxedObservable } from "~/utils";
+import { assertBoxedObservable, unbox } from "~/utils";
 import { Tunnel } from "../../elements/Tunnel";
 import type { Part, TrackPart } from "../parts";
 
@@ -44,6 +53,14 @@ export const SwitchAll = forwardRef(function SwitchAll(
   useImperativeHandle(
     ref,
     () => ({
+      operator() {
+        return pipe(
+          assertBoxedObservable(),
+          map(unbox),
+          switchAll(),
+          tail.current.operator()
+        );
+      },
       build() {
         return pipe(
           delayWhen(() => detection$.pipe(tap((ball) => removeBall(ball.id)))),
