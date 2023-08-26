@@ -1,5 +1,6 @@
 import { type V2_MetaFunction } from "@remix-run/cloudflare";
 import { useParams } from "@remix-run/react";
+import { Runner } from "~/components/Runner";
 import examples from "~/examples";
 
 export const meta: V2_MetaFunction = ({ params }) => {
@@ -8,7 +9,8 @@ export const meta: V2_MetaFunction = ({ params }) => {
 
 export default function Example() {
   const { example } = useParams();
-  const Scene = examples.find(({ name }) => name === example)?.scene;
-  if (!Scene) return null;
-  return <Scene />;
+  const foundExample = examples.find(({ name }) => name === example);
+  if (!foundExample) return null;
+  const { trackRecord } = foundExample;
+  return <Runner trackRecord={trackRecord} />;
 }

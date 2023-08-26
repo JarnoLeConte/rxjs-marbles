@@ -1,5 +1,6 @@
 import type { Color } from "@react-three/fiber";
 import type { Observable, OperatorFunction } from "rxjs";
+import type { Track } from "./types";
 
 export type RealValue =
   | number
@@ -30,6 +31,8 @@ export type Ball = {
 };
 
 export type { Track } from "~/components/track/parts";
+
+export type TrackRecord = Record<string, Track>;
 
 export type OperatorBuilder = {
   operator: () => OperatorFunction<Boxed<Value>, Boxed<Value>>;

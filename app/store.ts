@@ -1,18 +1,29 @@
 import type { Color } from "@react-three/fiber";
+import { createRef } from "react";
 import { createStore, useStore as useVanillaStore } from "zustand";
-import type { Ball } from "./types";
+import type { Ball, ObservableBuilder, Track } from "./types";
 import { randomColor } from "./utils";
 
 let nextId = 1;
 
+type AddBallOptions = {
+  label: string;
+  position: [number, number, number];
+  color?: Color;
+  ghost?: boolean;
+};
+
+type TrackEntry = {
+  ref: React.MutableRefObject<ObservableBuilder | null>;
+  label: string;
+  track: Track;
+};
+
 interface Store {
+  trackMap: Map<string, TrackEntry>;
+  addTrack: (label: string, track: Track) => void;
   balls: Ball[];
-  addBall: (options: {
-    label: string;
-    position: [number, number, number];
-    color?: Color;
-    ghost?: boolean;
-  }) => number;
+  addBall: (options: AddBallOptions) => number;
   getBall: (id: number) => Ball | undefined;
   updateBall: (id: number, setter: (ball: Ball) => Ball) => void;
   removeBall: (id: number) => void;
@@ -22,6 +33,15 @@ interface Store {
 }
 
 export const store = createStore<Store>()((set, get) => ({
+  trackMap: new Map(),
+  addTrack: (label, track) => {
+    set((state) => {
+      const ref = createRef<ObservableBuilder>();
+      const newEntry: TrackEntry = { ref, label, track };
+      const newTrackMap = new Map(state.trackMap).set(label, newEntry);
+      return { trackMap: newTrackMap };
+    });
+  },
   balls: [],
   addBall: ({ label, position, color, ghost }) => {
     get().updateActivity();
