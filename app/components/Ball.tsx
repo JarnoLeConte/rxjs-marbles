@@ -9,6 +9,7 @@ import {
 import { useRef } from "react";
 import { CollisionGroup } from "~/utils";
 import { Text2D } from "./Text2D";
+import { DoubleSide } from "three";
 
 type BallProps = StaticBallProps & {
   id: number;
@@ -56,11 +57,12 @@ function StaticBall({ label, color, ghost, ...props }: StaticBallProps) {
       </Text2D>
       <Sphere args={[RADIUS]}>
         <meshStandardMaterial
-          color={ghost ? "#ccc" : color}
-          metalness={1}
-          roughness={0}
+          color={color}
+          metalness={0.2}
+          roughness={0.0}
           transparent
-          opacity={ghost ? 0.2 : 0.3}
+          opacity={ghost ? 0.15 : 0.5}
+          side={DoubleSide}
         />
       </Sphere>
     </group>

@@ -14,6 +14,7 @@ import { useStore } from "~/store";
 import type { Ball, OperatorBuilder, Status } from "~/types";
 import { Begin } from "./Begin";
 import { Plumbob } from "./Plumbob";
+import type { Color } from "@react-three/fiber";
 
 type Props = {
   displayText?: string;
@@ -34,14 +35,14 @@ export const Factory = forwardRef(function Factory(
   const root = useRef<THREE.Group>(null!);
 
   const newBall = useCallback(
-    (label: string) => {
+    (label: string, color?: Color) => {
       // Initial ball position
       const position = root.current
         .localToWorld(new Vector3(1, 1.5, 0)) // start from inside the wall to give the ball a push
         .toArray();
 
       // Create the ball
-      const id = addBall({ label, position });
+      const id = addBall({ label, position, color });
 
       return id;
     },
@@ -66,7 +67,7 @@ export const Factory = forwardRef(function Factory(
           ),
           map((boxedValue) => ({
             ...boxedValue,
-            ballId: newBall(boxedValue.label),
+            ballId: newBall(boxedValue.label, boxedValue.color),
           })),
           blockBrake(enter$, exit$),
           finalize(() => setStatus("complete"))

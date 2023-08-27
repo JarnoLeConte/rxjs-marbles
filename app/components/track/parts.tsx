@@ -1,3 +1,4 @@
+import type { Color } from "@react-three/fiber";
 import type { Observable } from "rxjs";
 import type { Boxed, Value } from "~/types";
 
@@ -9,6 +10,7 @@ export enum Part {
   /* Reactive parts */
   Producer = "Producer",
   Subscriber = "Subscriber",
+  PreviewObserver = "PreviewObserver",
   Map = "Map",
   SwitchAll = "SwitchAll",
   ConcatAll = "ConcatAll",
@@ -74,6 +76,12 @@ export type TrackTail =
       };
     }
   | {
+      part: Part.PreviewObserver;
+      props?: {
+        displayText?: string;
+      };
+    }
+  | {
       part: Part.Map;
       props: {
         project: (value: Value, index: number) => Boxed<Value>;
@@ -119,4 +127,4 @@ export type TrackPart<P = Part> = {
   part: P;
 } & (TrackHead | TrackTail);
 
-export type Track = TrackHead;
+export type Track = TrackHead & { color?: Color };

@@ -18,7 +18,9 @@ const track: Track = {
       part: Part.Map,
       props: {
         project: (value) =>
-          box(range(1, 3).pipe(boxed()), numberToChar(Number(value))),
+          box(range(1, 3).pipe(boxed()), {
+            label: numberToChar(Number(value)),
+          }),
         displayText: `map
 0→A, 1→B,
 2→C, 3→D`,

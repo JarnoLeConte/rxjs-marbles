@@ -15,6 +15,13 @@ export enum CollisionGroup {
   Detector = 2,
 }
 
+export enum Color {
+  Red = "#dc5d78",
+  Green = "#2bd065",
+  Blue = "#2b7dd0",
+  Cyan = "#4ca9d4",
+}
+
 export function randomColor() {
   const colors = ["red", "blue", "green", "yellow", "orange", "purple"];
   return colors[Math.floor(Math.random() * colors.length)];
@@ -25,8 +32,8 @@ export function numberToChar(index: number, startChar = "A") {
   return String.fromCharCode(startCharCode + index);
 }
 
-export function box(value: Value, label?: string): Boxed<Value> {
-  return { value, label: label ?? renderValue(value) };
+export function box(value: Value, props?: Partial<Boxed<Value>>): Boxed<Value> {
+  return { ...props, value, label: props?.label ?? renderValue(value) };
 }
 
 export function unbox<V extends Value>(boxedValue: Boxed<V>): V {

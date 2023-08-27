@@ -3,17 +3,62 @@ import type { Track } from "~/components/track/parts";
 import { Part } from "~/components/track/parts";
 import { boxed } from "~/observables/boxed";
 import { delayInBetween } from "~/observables/delayInBetween";
+import { store } from "~/store";
+import { Color } from "~/utils";
 
-const source$ = of("A", "A", "A").pipe(
+const source$ = of("A", "B", "C").pipe(
   delayInBetween(3000),
-  map((label) => ({ label, value: range(1, 3).pipe(boxed()) }))
+  map((label) => ({
+    label,
+    value: store.getState().getTrackObservable(label),
+    color: store.getState().getTrackColor(label),
+  }))
 );
+
+const trackA: Track = {
+  color: Color.Red,
+  part: Part.Producer,
+  props: {
+    source$: range(1, 3).pipe(boxed({ color: Color.Red })),
+    displayText: "(1, 2, 3)",
+  },
+  tail: {
+    part: Part.PreviewObserver,
+    props: { displayText: "A" },
+  },
+};
+
+const trackB: Track = {
+  color: Color.Green,
+  part: Part.Producer,
+  props: {
+    source$: range(1, 4).pipe(boxed({ color: Color.Green })),
+    displayText: "(1, 2, 3, 4)",
+  },
+  tail: {
+    part: Part.PreviewObserver,
+    props: { displayText: "B" },
+  },
+};
+
+const trackC: Track = {
+  color: Color.Blue,
+  part: Part.Producer,
+  props: {
+    source$: range(1, 2).pipe(boxed({ color: Color.Blue })),
+    displayText: "(1, 2)",
+  },
+  tail: {
+    part: Part.PreviewObserver,
+    props: { displayText: "C" },
+  },
+};
 
 const track: Track = {
   part: Part.Producer,
   props: {
     source$,
-    displayText: "(A, A, A)",
+    displayText: "(A, B, C)",
   },
   tail: {
     part: Part.ConcatAll,
@@ -28,4 +73,7 @@ const track: Track = {
 
 export default {
   main: track,
+  A: trackA,
+  B: trackB,
+  C: trackC,
 };

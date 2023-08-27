@@ -1,8 +1,9 @@
 import type { Color } from "@react-three/fiber";
 import { createRef } from "react";
+import type { Observable } from "rxjs";
+import { EMPTY } from "rxjs";
 import { createStore, useStore as useVanillaStore } from "zustand";
-import type { Ball, ObservableBuilder, Track } from "./types";
-import { randomColor } from "./utils";
+import type { Ball, Boxed, ObservableBuilder, Track, Value } from "./types";
 
 let nextId = 1;
 
@@ -22,6 +23,8 @@ export type TrackEntry = {
 interface Store {
   trackMap: Map<string, TrackEntry>;
   addTrack: (label: string, track: Track) => void;
+  getTrackObservable: (label: string) => Observable<Boxed<Value>>;
+  getTrackColor: (label: string) => Color | undefined;
   balls: Ball[];
   addBall: (options: AddBallOptions) => number;
   getBall: (id: number) => Ball | undefined;
@@ -42,6 +45,14 @@ export const store = createStore<Store>()((set, get) => ({
       return { trackMap: newTrackMap };
     });
   },
+  getTrackObservable: (label) => {
+    const observable$ = get().trackMap.get(label)?.ref.current?.observable();
+    if (!observable$) {
+      console.warn(`No observable found for track "${label}"`);
+    }
+    return observable$ ?? EMPTY;
+  },
+  getTrackColor: (label) => get().trackMap.get(label)?.track.color,
   balls: [],
   addBall: ({ label, position, color, ghost }) => {
     get().updateActivity();
@@ -53,7 +64,7 @@ export const store = createStore<Store>()((set, get) => ({
           id,
           label,
           defaultPosition: position,
-          color: color || randomColor(),
+          color: color || "#ccc",
           ghost,
         },
       ],

@@ -18,6 +18,7 @@ import { MergeAll } from "./track/parts/MergeAll";
 import { SwitchAll } from "./track/parts/SwitchAll";
 import { ConcatAll } from "./track/parts/ConcatAll";
 import { Partition } from "./track/parts/Partition";
+import { PreviewObserver } from "./track/parts/PreviewObserver";
 
 export const Build = forwardRef(function Build(
   { track }: { track: TrackHead },
@@ -54,6 +55,8 @@ export const BuildTail = forwardRef(function BuildTail(
   switch (track.part) {
     case Part.Subscriber:
       return <Observer ref={ref} track={track} />;
+    case Part.PreviewObserver:
+      return <PreviewObserver ref={ref} track={track} />;
     case Part.Straight:
       return <Straight ref={ref} track={track} />;
     case Part.Ramp:

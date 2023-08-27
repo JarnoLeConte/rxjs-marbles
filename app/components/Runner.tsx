@@ -4,6 +4,7 @@ import { useStore } from "~/store";
 import type { TrackRecord } from "~/types";
 import { Build } from "./Build";
 import { objectId } from "~/utils";
+import { TrackThemeProvider } from "./TrackThemeProvider";
 
 export function Runner({ trackRecord }: { trackRecord: TrackRecord }) {
   const reset = useStore((state) => state.reset);
@@ -55,11 +56,20 @@ export function Runner({ trackRecord }: { trackRecord: TrackRecord }) {
   // Render all tracks from the store
   return (
     <Center key={objectId(mainTrackEntry)}>
-      {Array.from(trackMap).map(([key, { ref, track }], index) => (
-        <group key={key} position={[0, 2 * index, -4 * index]}>
-          <Build ref={ref} track={track} />
-        </group>
-      ))}
+      <TrackThemeProvider value={{ color: mainTrackEntry.track.color }}>
+        <Build ref={mainTrackEntry.ref} track={mainTrackEntry.track} />
+      </TrackThemeProvider>
+      <group position={[0, 2, -4]}>
+        {Array.from(trackMap)
+          .filter(([key]) => key !== "main")
+          .map(([key, { ref, track }], index) => (
+            <group key={key} position={[5 * index, 0, 0]}>
+              <TrackThemeProvider value={{ color: track.color }}>
+                <Build ref={ref} track={track} />
+              </TrackThemeProvider>
+            </group>
+          ))}
+      </group>
     </Center>
   );
 }
