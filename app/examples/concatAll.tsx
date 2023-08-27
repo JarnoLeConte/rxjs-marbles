@@ -4,15 +4,17 @@ import { Part } from "~/components/track/parts";
 import { boxed } from "~/observables/boxed";
 import { delayInBetween } from "~/observables/delayInBetween";
 import { store } from "~/store";
-import { Color } from "~/utils";
+import { Color, box } from "~/utils";
 
 const source$ = of("A", "B", "C").pipe(
   delayInBetween(3000),
-  map((label) => ({
-    label,
-    value: store.getState().getTrackObservable(label), // TODO: distinguish when being used in `build()` or `observable()`
-    color: store.getState().getTrackColor(label),
-  }))
+  map((label) =>
+    box({
+      label,
+      value: store.getState().getTrackObservable(label), // TODO: distinguish when being used in `build()` or `observable()`
+      color: store.getState().getTrackColor(label),
+    })
+  )
 );
 
 const trackA: Track = {

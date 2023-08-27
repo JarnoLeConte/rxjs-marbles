@@ -17,7 +17,7 @@ const track: Track = {
     tail: {
       part: Part.Map,
       props: {
-        project: (value) => box(Number(value) * 2),
+        project: (value) => box({ value: Number(value) * 2 }),
         displayText: "2x",
       },
       tail: {

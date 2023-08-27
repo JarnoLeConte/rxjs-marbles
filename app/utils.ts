@@ -32,8 +32,14 @@ export function numberToChar(index: number, startChar = "A") {
   return String.fromCharCode(startCharCode + index);
 }
 
-export function box(value: Value, props?: Partial<Boxed<Value>>): Boxed<Value> {
-  return { ...props, value, label: props?.label ?? renderValue(value) };
+export function box(
+  props: Required<Pick<Boxed<Value>, "value">> & Partial<Boxed<Value>>
+): Boxed<Value> {
+  return {
+    ...props,
+    color: props.color ?? "white",
+    label: props.label ?? renderValue(props.value),
+  };
 }
 
 export function unbox<V extends Value>(boxedValue: Boxed<V>): V {

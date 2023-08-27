@@ -15,7 +15,7 @@ import type { Ball, ObservableBuilder, OperatorBuilder } from "~/types";
 import { Base } from "../../elements/Base";
 import { Bucket } from "../../elements/Bucket";
 import type { Part, TrackPart } from "../parts";
-import { renderValue } from "~/utils";
+import { box, renderValue } from "~/utils";
 
 /*
   ⚠️ Current implementation differs from rxjs, in that:
@@ -59,10 +59,12 @@ export const CombineLatest = forwardRef(function CombineLatest(
         const B$ = b.current.observable();
         const tailOperator = tail.current.operator();
         return combineLatest([A$, B$]).pipe(
-          map(([boxedA, boxedB]) => ({
-            value: [boxedA, boxedB],
-            label: renderValue([boxedA, boxedB]),
-          })),
+          map(([boxedA, boxedB]) =>
+            box({
+              value: [boxedA, boxedB],
+              label: renderValue([boxedA, boxedB]),
+            })
+          ),
           tailOperator
         );
       },
@@ -88,10 +90,12 @@ export const CombineLatest = forwardRef(function CombineLatest(
           )
         );
         return combineLatest([A$, B$]).pipe(
-          map(([boxedA, boxedB]) => ({
-            value: [boxedA, boxedB],
-            label: renderValue([boxedA, boxedB]),
-          })),
+          map(([boxedA, boxedB]) =>
+            box({
+              value: [boxedA, boxedB],
+              label: renderValue([boxedA, boxedB]),
+            })
+          ),
           factory.current.build(),
           tail.current.build()
         );

@@ -3,13 +3,16 @@ import type { Track } from "~/components/track/parts";
 import { Part } from "~/components/track/parts";
 import { boxed } from "~/observables/boxed";
 import { delayInBetween } from "~/observables/delayInBetween";
+import { box } from "~/utils";
 
 const source$ = of("A", "B", "C").pipe(
   delayInBetween(3200),
-  map((label) => ({
-    label,
-    value: range(0, 4).pipe(delayInBetween(2200), boxed()),
-  }))
+  map((label) =>
+    box({
+      label,
+      value: range(0, 4).pipe(delayInBetween(2200), boxed()),
+    })
+  )
 );
 
 const track: Track = {

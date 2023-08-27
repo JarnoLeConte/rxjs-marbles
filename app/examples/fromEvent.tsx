@@ -4,11 +4,11 @@ import { Part } from "~/components/track/parts";
 import { box } from "~/utils";
 
 const click$ = defer(() => fromEvent<MouseEvent>(document, "click")).pipe(
-  map(() => box("{click}"))
+  map(() => box({ value: "{click}" }))
 );
 
 const keyboard$ = defer(() => fromEvent<KeyboardEvent>(window, "keyup")).pipe(
-  map((event) => box(event.key))
+  map((event) => box({ value: event.key }))
 );
 
 const trackA: Track = {
@@ -22,7 +22,7 @@ const trackA: Track = {
     tail: {
       part: Part.Map,
       props: {
-        project: (boxedValue, index) => box(index),
+        project: (boxedValue, index) => box({ value: index }),
         displayText: `index`,
       },
       tail: null,

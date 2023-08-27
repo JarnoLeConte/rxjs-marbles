@@ -20,7 +20,7 @@ export type Boxed<V extends Value> = {
   value: V;
   label: string;
   ballId?: number;
-  color?: Color;
+  color: Color;
 };
 
 export type Ball = {

@@ -71,7 +71,7 @@ export const ConcatAll = forwardRef(function ConcatAll(
           tap(({ ballId }) =>
             updateBall(ballId!, (ball) => ({ ...ball, ghost: true }))
           ),
-          concatMap(({ ballId, value: source$, label }) =>
+          concatMap(({ ballId, value: source$, label, color }) =>
             defer(() => {
               updateBall(ballId!, (ball) => ({ ...ball, ghost: false }));
               return when(enter$, ({ id }) => {
@@ -79,6 +79,7 @@ export const ConcatAll = forwardRef(function ConcatAll(
                 setLabel(label);
                 removeBall(id);
                 return source$.pipe(
+                  map((boxedValue) => ({ ...boxedValue, color })),
                   factory.current.build(),
                   finalize(() => {
                     setIsClosed(false);

@@ -6,5 +6,5 @@ import { box } from "~/utils";
 export function boxed(
   props?: Partial<Boxed<Value>>
 ): OperatorFunction<Value, Boxed<Value>> {
-  return map((value) => box(value, props));
+  return map((value) => box({ value, ...props }));
 }

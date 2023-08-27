@@ -10,7 +10,7 @@ let nextId = 1;
 type AddBallOptions = {
   label: string;
   position: [number, number, number];
-  color?: Color;
+  color: Color;
   ghost?: boolean;
 };
 
@@ -64,7 +64,7 @@ export const store = createStore<Store>()((set, get) => ({
           id,
           label,
           defaultPosition: position,
-          color: color || "#ccc",
+          color,
           ghost,
         },
       ],

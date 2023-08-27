@@ -1,3 +1,4 @@
+import type { Color } from "@react-three/fiber";
 import { useObservableCallback } from "observable-hooks";
 import type { ForwardedRef } from "react";
 import {
@@ -14,7 +15,6 @@ import { useStore } from "~/store";
 import type { Ball, OperatorBuilder, Status } from "~/types";
 import { Begin } from "./Begin";
 import { Plumbob } from "./Plumbob";
-import type { Color } from "@react-three/fiber";
 
 type Props = {
   displayText?: string;
@@ -35,7 +35,7 @@ export const Factory = forwardRef(function Factory(
   const root = useRef<THREE.Group>(null!);
 
   const newBall = useCallback(
-    (label: string, color?: Color) => {
+    (label: string, color: Color) => {
       // Initial ball position
       const position = root.current
         .localToWorld(new Vector3(1, 1.5, 0)) // start from inside the wall to give the ball a push
