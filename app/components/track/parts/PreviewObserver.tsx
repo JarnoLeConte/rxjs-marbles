@@ -1,8 +1,9 @@
+import { useObservableCallback } from "observable-hooks";
 import type { ForwardedRef } from "react";
-import { forwardRef } from "react";
-import type { BallDetectionHandler } from "~/components/BallDetector";
+import { forwardRef, useImperativeHandle } from "react";
+import { delayWhen, filter, pipe, tap } from "rxjs";
 import { useStore } from "~/store";
-import type { OperatorBuilder } from "~/types";
+import type { Ball, OperatorBuilder } from "~/types";
 import { Bucket } from "../../elements/Bucket";
 import type { Part, TrackPart } from "../parts";
 import { Identity } from "./Identity";
@@ -17,15 +18,30 @@ export const PreviewObserver = forwardRef(function PreviewObserver(
 ) {
   const { displayText } = track.props ?? {};
   const removeBall = useStore((state) => state.removeBall);
+  const [onDetection, detection$] = useObservableCallback<Ball>();
 
-  const onBallDetection: BallDetectionHandler = (ball) => {
-    removeBall(ball.id);
-  };
+  useImperativeHandle(
+    ref,
+    () => ({
+      operator() {
+        return pipe();
+      },
+      build() {
+        return pipe(
+          delayWhen(({ ballId }) =>
+            detection$.pipe(filter((ball) => ball.id === ballId))
+          ),
+          tap(({ ballId }) => removeBall(ballId!))
+        );
+      },
+    }),
+    [detection$, removeBall]
+  );
 
   return (
     <group>
       <Bucket
-        onBallDetection={onBallDetection}
+        onBallDetection={onDetection}
         contentLabel="observable"
         content={displayText}
       />

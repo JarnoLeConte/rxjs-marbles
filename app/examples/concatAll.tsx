@@ -10,7 +10,7 @@ const source$ = of("A", "B", "C").pipe(
   delayInBetween(3000),
   map((label) => ({
     label,
-    value: store.getState().getTrackObservable(label),
+    value: store.getState().getTrackObservable(label), // TODO: distinguish when being used in `build()` or `observable()`
     color: store.getState().getTrackColor(label),
   }))
 );

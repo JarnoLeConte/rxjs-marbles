@@ -37,14 +37,14 @@ export function Runner({ trackRecord }: { trackRecord: TrackRecord }) {
   }, [mainTrackEntry]);
 
   // Run observable
-  useEffect(() => {
-    if (!mainTrackEntry?.ref?.current) return;
-    const observable$ = mainTrackEntry.ref.current.observable();
-    const subscription = observable$.subscribe((boxedValue) => {
-      // console.debug(unboxDeep(boxedValue))
-    });
-    return () => subscription.unsubscribe();
-  }, [mainTrackEntry]);
+  // useEffect(() => {
+  //   if (!mainTrackEntry?.ref?.current) return;
+  //   const observable$ = mainTrackEntry.ref.current.observable();
+  //   const subscription = observable$.subscribe((boxedValue) => {
+  //     // console.debug(unboxDeep(boxedValue))
+  //   });
+  //   return () => subscription.unsubscribe();
+  // }, [mainTrackEntry]);
 
   /* Render */
 

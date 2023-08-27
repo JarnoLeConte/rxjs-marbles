@@ -46,7 +46,7 @@ export const store = createStore<Store>()((set, get) => ({
     });
   },
   getTrackObservable: (label) => {
-    const observable$ = get().trackMap.get(label)?.ref.current?.observable();
+    const observable$ = get().trackMap.get(label)?.ref.current?.build();
     if (!observable$) {
       console.warn(`No observable found for track "${label}"`);
     }
