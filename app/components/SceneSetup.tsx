@@ -1,6 +1,5 @@
 import {
   CameraControls,
-  Center,
   Environment,
   PerspectiveCamera,
 } from "@react-three/drei";
@@ -8,17 +7,10 @@ import { Canvas } from "@react-three/fiber";
 import { Physics } from "@react-three/rapier";
 import { useControls } from "leva";
 import { Suspense } from "react";
-import type { Example } from "~/examples";
 import { Balls } from "./Balls";
 import { Overlay } from "./Overlay";
 
-export function SceneSetup({
-  example,
-  children,
-}: {
-  example?: Example;
-  children: React.ReactNode;
-}) {
+export function SceneSetup({ children }: { children: React.ReactNode }) {
   const { debug } = useControls("Debug", {
     debug: false,
   });
@@ -43,9 +35,7 @@ export function SceneSetup({
           <CameraControls />
           <Physics debug={debug}>
             <Balls />
-            <Center key={example} disable={example === "test"}>
-              {children}
-            </Center>
+            {children}
           </Physics>
           {debug && <gridHelper />}
           {debug && <axesHelper args={[5]} />}

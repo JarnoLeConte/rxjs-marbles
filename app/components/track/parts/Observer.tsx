@@ -38,7 +38,7 @@ export const Observer = forwardRef(function Observer(
       <Bucket
         onBallDetection={onBallDetection}
         displayText={displayText ?? `).subscribe(...)`}
-        contentLabel={`console.log`}
+        contentLabel={`observer`}
         content={label ?? "-"}
       />
       <Identity ref={ref} />

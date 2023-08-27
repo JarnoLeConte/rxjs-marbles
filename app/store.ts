@@ -13,7 +13,7 @@ type AddBallOptions = {
   ghost?: boolean;
 };
 
-type TrackEntry = {
+export type TrackEntry = {
   ref: React.MutableRefObject<ObservableBuilder | null>;
   label: string;
   track: Track;
@@ -71,7 +71,9 @@ export const store = createStore<Store>()((set, get) => ({
     set((state) => ({ balls: state.balls.filter((ball) => ball.id !== id) })),
   lastActivity: Date.now(),
   updateActivity: () => set({ lastActivity: Date.now() }),
-  reset: () => set({ balls: [], lastActivity: Date.now() }),
+  reset: () => {
+    set({ balls: [], lastActivity: Date.now(), trackMap: new Map() });
+  },
 }));
 
 export const useStore = <T>(selector: (state: Store) => T) =>

@@ -1,28 +1,31 @@
+import { Center } from "@react-three/drei";
 import { useEffect } from "react";
 import { useStore } from "~/store";
-import { unboxDeep } from "~/utils";
-import { Build } from "./Build";
 import type { TrackRecord } from "~/types";
+import { Build } from "./Build";
+import { objectId } from "~/utils";
 
 export function Runner({ trackRecord }: { trackRecord: TrackRecord }) {
   const reset = useStore((state) => state.reset);
   const trackMap = useStore((state) => state.trackMap);
   const addTrack = useStore((state) => state.addTrack);
 
-  // Add tracks
+  // Reset running activity when changing to a new scene
+  useEffect(() => {
+    return () => {
+      reset();
+    };
+  }, [reset, trackRecord]);
+
+  // Add provided tracks
   useEffect(() => {
     Object.entries(trackRecord).forEach(([label, track]) =>
       addTrack(label, track)
     );
-  }, [trackRecord, addTrack]);
+  }, [addTrack, trackRecord]);
 
   // Find main track
   const mainTrackEntry = trackMap.get("main");
-
-  // Reset previous runners
-  useEffect(() => {
-    reset();
-  }, [reset, mainTrackEntry, trackRecord]);
 
   // Run marble track
   useEffect(() => {
@@ -36,9 +39,9 @@ export function Runner({ trackRecord }: { trackRecord: TrackRecord }) {
   useEffect(() => {
     if (!mainTrackEntry?.ref?.current) return;
     const observable$ = mainTrackEntry.ref.current.observable();
-    const subscription = observable$.subscribe((boxedValue) =>
-      console.debug(unboxDeep(boxedValue))
-    );
+    const subscription = observable$.subscribe((boxedValue) => {
+      // console.debug(unboxDeep(boxedValue))
+    });
     return () => subscription.unsubscribe();
   }, [mainTrackEntry]);
 
@@ -49,9 +52,14 @@ export function Runner({ trackRecord }: { trackRecord: TrackRecord }) {
     return <></>;
   }
 
-  return Array.from(trackMap).map(([key, { ref, track }], index) => (
-    <group key={key} position={[0, 2 * index, -4 * index]}>
-      <Build ref={ref} track={track} />
-    </group>
-  ));
+  // Render all tracks from the store
+  return (
+    <Center key={objectId(mainTrackEntry)}>
+      {Array.from(trackMap).map(([key, { ref, track }], index) => (
+        <group key={key} position={[0, 2 * index, -4 * index]}>
+          <Build ref={ref} track={track} />
+        </group>
+      ))}
+    </Center>
+  );
 }
