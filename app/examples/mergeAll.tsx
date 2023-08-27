@@ -16,12 +16,13 @@ const track: Track = {
   part: Part.Producer,
   props: {
     source$,
+    displayText: "(A, B, C, D, E)",
   },
   tail: {
     part: Part.MergeAll,
     props: {
       concurrent: 2,
-      displayText: "mergeAll(2),",
+      displayText: "mergeAll(2)",
     },
     tail: {
       part: Part.DownHill,

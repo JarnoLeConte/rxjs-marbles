@@ -53,6 +53,9 @@ export const Factory = forwardRef(function Factory(
   useImperativeHandle(
     ref,
     () => ({
+      operator() {
+        return pipe();
+      },
       build() {
         return pipe(
           mergeWith(

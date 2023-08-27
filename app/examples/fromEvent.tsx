@@ -15,7 +15,7 @@ const trackA: Track = {
   part: Part.Producer,
   props: {
     source$: click$,
-    displayText: "click$.pipe(",
+    displayText: "click",
   },
   tail: {
     part: Part.Ramp,
@@ -23,7 +23,7 @@ const trackA: Track = {
       part: Part.Map,
       props: {
         project: (boxedValue, index) => box(index),
-        displayText: `map((x, i) => i),`,
+        displayText: `index`,
       },
       tail: null,
     },
@@ -34,7 +34,7 @@ const trackB: Track = {
   part: Part.Producer,
   props: {
     source$: keyboard$,
-    displayText: "keyboard$.pipe(",
+    displayText: "keyup",
   },
   tail: {
     part: Part.Ramp,

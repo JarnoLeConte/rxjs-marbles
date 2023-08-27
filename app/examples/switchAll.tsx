@@ -16,6 +16,7 @@ const track: Track = {
   part: Part.Producer,
   props: {
     source$,
+    displayText: "(A, B, C)",
   },
   tail: {
     part: Part.Ramp,

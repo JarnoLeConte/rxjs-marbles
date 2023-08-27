@@ -68,7 +68,7 @@ export const Map = forwardRef(function Map(
     <group>
       <Tunnel
         onBallDetection={(ball) => detection$.next(ball)}
-        displayText={displayText}
+        displayText={displayText ?? "map"}
       />
       <group position={[2, 0, 0]}>
         <BuildTail ref={tail} track={track.tail} />

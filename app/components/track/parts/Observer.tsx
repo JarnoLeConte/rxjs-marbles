@@ -37,7 +37,7 @@ export const Observer = forwardRef(function Observer(
     <group>
       <Bucket
         onBallDetection={onBallDetection}
-        displayText={displayText ?? `).subscribe(...)`}
+        displayText={displayText}
         contentLabel={`observer`}
         content={label ?? "-"}
       />

@@ -185,7 +185,7 @@ export const MergeAll = forwardRef(function MergeAll(
       <group position={[4, -1, 0]}>
         <Tunnel
           onBallDetection={onEnter}
-          displayText={displayText ?? "mergeAll(),"}
+          displayText={displayText ?? "mergeAll"}
           exitClosed
         />
         {items.map((item, index) => (

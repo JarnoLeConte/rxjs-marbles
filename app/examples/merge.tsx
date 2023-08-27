@@ -48,9 +48,6 @@ const track: Track = {
   },
   tail: {
     part: Part.Subscriber,
-    props: {
-      displayText: ".subscribe(...)",
-    },
   },
 };
 

@@ -1,16 +1,16 @@
-import { range } from "rxjs";
+import { range, take, timer } from "rxjs";
 import type { Track } from "~/components/track/parts";
 import { Part } from "~/components/track/parts";
 import { boxed } from "~/observables/boxed";
-import { delayInBetween } from "~/observables/delayInBetween";
 import { box, numberToChar } from "~/utils";
 
-const source$ = range(0, 4).pipe(delayInBetween(3000), boxed());
+const source$ = timer(0, 3000).pipe(take(4), boxed());
 
 const track: Track = {
   part: Part.Producer,
   props: {
     source$,
+    displayText: "(0, 1, 2, 3)",
   },
   tail: {
     part: Part.Ramp,
@@ -19,7 +19,9 @@ const track: Track = {
       props: {
         project: (value) =>
           box(range(1, 3).pipe(boxed()), numberToChar(Number(value))),
-        displayText: "map((x) => ...),",
+        displayText: `map
+0→A, 1→B,
+2→C, 3→D`,
       },
       tail: {
         part: Part.ConcatAll,

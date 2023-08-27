@@ -107,6 +107,7 @@ export const CombineLatest = forwardRef(function CombineLatest(
           position={[0, 0, 0]}
           content={labelA}
           contentLabel="memory"
+          displayText="A"
           onBallDetection={(ball) => detectionA$.next(ball)}
         />
         <Base position={[0, -3, 0]} />
@@ -114,6 +115,7 @@ export const CombineLatest = forwardRef(function CombineLatest(
           position={[2, 0, -2]}
           content={labelB}
           contentLabel="memory"
+          displayText="B"
           onBallDetection={(ball) => detectionB$.next(ball)}
         />
         <Base position={[2, -3, -2]} />

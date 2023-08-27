@@ -56,7 +56,7 @@ export const Merge = forwardRef(function Merge(
 
   return (
     <group position={[0, 0, 0]}>
-      <RightJoin displayText={displayText ?? "mergeWith(...),"} />
+      <RightJoin displayText={displayText ?? "merge"} />
       <Center left top>
         <Build ref={a} track={track.incoming[0]} />
       </Center>

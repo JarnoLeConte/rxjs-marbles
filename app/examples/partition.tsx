@@ -1,17 +1,15 @@
-import { map, timer } from "rxjs";
+import { timer } from "rxjs";
 import { Part } from "~/components/track/parts";
 import { boxed } from "~/observables/boxed";
 import type { Track } from "~/types";
 
-const source$ = timer(0, 3000).pipe(
-  map((x) => x + 1),
-  boxed()
-);
+const source$ = timer(0, 3000).pipe(boxed());
 
 const track: Track = {
   part: Part.Producer,
   props: {
     source$,
+    displayText: "interval(3s)",
   },
   tail: {
     part: Part.Ramp,
@@ -19,9 +17,9 @@ const track: Track = {
       part: Part.Partition,
       props: {
         predicate: (value) => Number(value) % 2 === 0,
-        displayText: "isEven?",
-        trueLabel: "true",
-        falseLabel: "false",
+        displayText: "is even?",
+        trueLabel: "yes",
+        falseLabel: "no",
       },
       trueTail: {
         part: Part.DownHill,

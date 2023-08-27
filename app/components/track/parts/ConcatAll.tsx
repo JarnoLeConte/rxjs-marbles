@@ -101,7 +101,7 @@ export const ConcatAll = forwardRef(function ConcatAll(
       <group position={[4, -1, 0]}>
         <Tunnel
           onBallDetection={onEnter}
-          displayText={displayText ?? "concatAll(),"}
+          displayText={displayText ?? "concatAll"}
           entryClosed={isClosed}
           exitClosed
         />

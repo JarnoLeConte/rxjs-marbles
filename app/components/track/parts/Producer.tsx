@@ -47,7 +47,7 @@ export const Producer = forwardRef(function Producer(
 
   return (
     <group>
-      <Factory ref={factory} displayText={displayText ?? `source$.pipe(`} />
+      <Factory ref={factory} displayText={displayText ?? "source"} />
       <group position={[2, 0, 0]}>
         <BuildTail ref={tail} track={track.tail} />
       </group>

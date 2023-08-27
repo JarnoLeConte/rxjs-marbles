@@ -52,7 +52,7 @@ export const Concat = forwardRef(function Concat(
 
   return (
     <group position={[0, 0, 0]}>
-      <RightJoin displayText={displayText ?? "concatWith(...),"} />
+      <RightJoin displayText={displayText ?? "concat"} />
       <Center left top>
         <Build ref={a} track={track.incoming[0]} />
       </Center>

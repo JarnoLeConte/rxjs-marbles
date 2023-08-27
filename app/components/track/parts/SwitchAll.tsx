@@ -84,7 +84,7 @@ export const SwitchAll = forwardRef(function SwitchAll(
       <group>
         <Tunnel
           onBallDetection={(ball) => detection$.next(ball)}
-          displayText={displayText ?? "switchAll(),"}
+          displayText={displayText ?? "switchAll"}
           exitClosed
         />
         <group position={[0, 2, 0]} visible={!!label}>

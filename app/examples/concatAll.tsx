@@ -4,7 +4,7 @@ import { Part } from "~/components/track/parts";
 import { boxed } from "~/observables/boxed";
 import { delayInBetween } from "~/observables/delayInBetween";
 
-const source$ = of("A", "B", "C", "D").pipe(
+const source$ = of("A", "A", "A").pipe(
   delayInBetween(3000),
   map((label) => ({ label, value: range(1, 3).pipe(boxed()) }))
 );
@@ -13,6 +13,7 @@ const track: Track = {
   part: Part.Producer,
   props: {
     source$,
+    displayText: "(A, A, A)",
   },
   tail: {
     part: Part.ConcatAll,

@@ -17,7 +17,7 @@ const trackA: Track = {
   part: Part.Producer,
   props: {
     source$: A$,
-    displayText: "A",
+    displayText: "",
   },
   tail: null,
 };
@@ -26,7 +26,7 @@ const trackB: Track = {
   part: Part.Producer,
   props: {
     source$: B$,
-    displayText: "B",
+    displayText: "",
   },
   tail: {
     part: Part.Ramp,
@@ -41,9 +41,6 @@ const track: Track = {
     part: Part.DownHill,
     tail: {
       part: Part.Subscriber,
-      props: {
-        displayText: ".subscribe(...)",
-      },
     },
   },
 };
