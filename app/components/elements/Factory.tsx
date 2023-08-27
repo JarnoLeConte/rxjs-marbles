@@ -8,7 +8,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { EMPTY, defer, finalize, map, mergeWith, pipe } from "rxjs";
+import { EMPTY, defer, finalize, map, mergeWith, pipe, tap } from "rxjs";
 import { Vector3 } from "three";
 import { blockBrake } from "~/observables/blockBrake";
 import { useStore } from "~/store";
@@ -26,6 +26,7 @@ export const Factory = forwardRef(function Factory(
   ref: ForwardedRef<OperatorBuilder>
 ) {
   const addBall = useStore((state) => state.addBall);
+  const removeBall = useStore((state) => state.removeBall);
   const [status, setStatus] = useState<Status>("waiting");
   const [onEnter, enter$] = useObservableCallback<Ball>();
   const [onExit, exit$] = useObservableCallback<Ball>();
@@ -58,6 +59,10 @@ export const Factory = forwardRef(function Factory(
         return pipe();
       },
       build() {
+        // Keep registry of balls that are on the track
+        // So we can remove them when observable completes early
+        const ballRegistry: number[] = [];
+
         return pipe(
           mergeWith(
             defer(() => {
@@ -69,12 +74,17 @@ export const Factory = forwardRef(function Factory(
             ...boxedValue,
             ballId: newBall(boxedValue.label, boxedValue.color),
           })),
+          tap(({ ballId }) => ballRegistry.push(ballId!)), // register ball
           blockBrake(enter$, exit$),
+          tap(({ ballId }) =>
+            ballRegistry.splice(ballRegistry.indexOf(ballId!), 1)
+          ), // unregister balls that have left the track
+          finalize(() => ballRegistry.forEach(removeBall)), // clean up balls on completion
           finalize(() => setStatus("complete"))
         );
       },
     }),
-    [newBall, enter$, exit$]
+    [newBall, removeBall, enter$, exit$]
   );
 
   return (

@@ -1,10 +1,11 @@
 import type { ForwardedRef } from "react";
 import { forwardRef, useImperativeHandle, useRef } from "react";
-import { EMPTY } from "rxjs";
+import { EMPTY, finalize, tap } from "rxjs";
 import { BuildTail } from "~/components/Build";
 import { Factory } from "~/components/elements/Factory";
 import type { ObservableBuilder, OperatorBuilder } from "~/types";
 import type { Part, TrackPart } from "../parts";
+import { useStore } from "~/store";
 
 /*
   ⚠️ Current implementation differs from rxjs, in that:
@@ -26,6 +27,7 @@ export const Producer = forwardRef(function Producer(
   ref: ForwardedRef<ObservableBuilder>
 ) {
   const { displayText, source$ = EMPTY } = track.props ?? {};
+  const removeBall = useStore((state) => state.removeBall);
 
   /* Builder */
 
@@ -39,10 +41,22 @@ export const Producer = forwardRef(function Producer(
         return source$.pipe(tail.current.operator());
       },
       build() {
-        return source$.pipe(factory.current.build(), tail.current.build());
+        // Keep registry of balls that are on the track
+        // So we can remove them when observable completes early
+        const ballRegistry: number[] = [];
+
+        return source$.pipe(
+          factory.current.build(), // produce a new ball
+          tap(({ ballId }) => ballRegistry.push(ballId!)), // register ball
+          tail.current.build(), // continue the track
+          tap(({ ballId }) =>
+            ballRegistry.splice(ballRegistry.indexOf(ballId!), 1)
+          ), // unregister balls that have left the track
+          finalize(() => ballRegistry.forEach(removeBall)) // clean up balls on completion
+        );
       },
     }),
-    [source$]
+    [source$, removeBall]
   );
 
   return (

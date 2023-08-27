@@ -65,14 +65,15 @@ export const SwitchAll = forwardRef(function SwitchAll(
         return pipe(
           delayWhen(() => detection$.pipe(tap((ball) => removeBall(ball.id)))),
           assertBoxedObservable(),
-          switchMap(({ value: source$, label }) => {
+          switchMap(({ value: source$, label, color }) => {
             setLabel(label);
             return source$.pipe(
-              factory.current.build(),
-              finalize(() => setLabel(undefined)),
-              tail.current.build()
+              map((boxedValue) => ({ ...boxedValue, color }))
             );
-          })
+          }),
+          factory.current.build(),
+          finalize(() => setLabel(undefined)),
+          tail.current.build()
         );
       },
     }),
