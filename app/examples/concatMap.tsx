@@ -65,9 +65,9 @@ const track: Track = {
           });
         },
         displayText: "map",
-        projectionText: `1→A
-2→B
-3→C`,
+        projectionText: `1 —> A
+2 —> B
+3 —> C`,
       },
       tail: {
         part: Part.ConcatAll,

@@ -1,3 +1,4 @@
+import type { Color } from "@react-three/fiber";
 import { useObservableCallback } from "observable-hooks";
 import type { ForwardedRef, RefObject } from "react";
 import {
@@ -62,6 +63,7 @@ export const MergeAll = forwardRef(function MergeAll(
     id: number;
     boxedObservable: Boxed<Observable<Boxed<Value>>>;
     status: Status;
+    color: Color;
   };
 
   // Keep track of the active producers which are currently emitting balls.
@@ -127,12 +129,17 @@ export const MergeAll = forwardRef(function MergeAll(
             updateBall(ballId!, (ball) => ({ ...ball, ghost: true }))
           ),
           mergeMap((boxedObservable, itemId) => {
-            const { ballId, value: source$ } = boxedObservable;
+            const { ballId, value: source$, color } = boxedObservable;
 
             return defer(() => {
               // Create a new reference pointing to the new producer chain on next render
               factories.current[itemId] = createRef<OperatorBuilder>();
-              register({ id: itemId, boxedObservable, status: "waiting" });
+              register({
+                id: itemId,
+                boxedObservable,
+                color,
+                status: "waiting",
+              });
               updateBall(ballId!, (ball) => ({ ...ball, ghost: false }));
               setIsClosed(false);
 
@@ -199,6 +206,7 @@ export const MergeAll = forwardRef(function MergeAll(
           <Factory
             ref={item ? factories.current[item.id] : undefined}
             displayText={item?.boxedObservable.label}
+            textBackgroundColor={item?.color}
             hidePlumbob
           />
         </group>

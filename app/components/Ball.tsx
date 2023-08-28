@@ -8,7 +8,7 @@ import {
 } from "@react-three/rapier";
 import { useRef } from "react";
 import { CollisionGroup } from "~/utils";
-import { Text2D } from "./Text2D";
+import { Text } from "./Text";
 import { DoubleSide } from "three";
 
 type BallProps = StaticBallProps & {
@@ -52,9 +52,7 @@ export function Ball({ id, label, color, ghost, ...props }: BallProps) {
 function StaticBall({ label, color, ghost, ...props }: StaticBallProps) {
   return (
     <group {...props}>
-      <Text2D opacity={ghost ? 0.3 : 1} fontSize={0.25}>
-        {label}
-      </Text2D>
+      <Text fontSize={0.19}>{label}</Text>
       <Sphere args={[RADIUS]}>
         <meshStandardMaterial
           color={color}

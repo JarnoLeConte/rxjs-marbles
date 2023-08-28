@@ -20,11 +20,6 @@ export function SceneSetup({ children }: { children: React.ReactNode }) {
       <Canvas shadows>
         <Suspense>
           <Environment path="/" files="lebombo_1k.hdr" />
-          <directionalLight
-            position={[0, 3, 2]}
-            intensity={0.4}
-            color="beige"
-          />
           <PerspectiveCamera
             makeDefault
             position={[0, 10, 20]}

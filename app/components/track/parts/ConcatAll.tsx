@@ -21,6 +21,7 @@ import type { Ball, OperatorBuilder } from "~/types";
 import { assertBoxedObservable, unbox } from "~/utils";
 import { Tunnel } from "../../elements/Tunnel";
 import type { Part, TrackPart } from "../parts";
+import type { Color } from "@react-three/fiber";
 
 /*
   ⚠️ Current implementation differs from rxjs, in that:
@@ -44,7 +45,8 @@ export const ConcatAll = forwardRef(function ConcatAll(
   const [onEnter, enter$] = useObservableCallback<Ball>();
   const [onBeforeEnter, beforeEnter$] = useObservableCallback<Ball>();
   const [isClosed, setIsClosed] = useState(false);
-  const [label, setLabel] = useState<string | undefined>();
+  const [label, setLabel] = useState<string>();
+  const [color, setColor] = useState<Color>();
 
   /* Builder */
 
@@ -77,6 +79,7 @@ export const ConcatAll = forwardRef(function ConcatAll(
               return when(enter$, ({ id }) => {
                 setIsClosed(true);
                 setLabel(label);
+                setColor(color);
                 removeBall(id);
                 return source$.pipe(
                   map((boxedValue) => ({ ...boxedValue, color })),
@@ -107,7 +110,12 @@ export const ConcatAll = forwardRef(function ConcatAll(
           exitClosed
         />
         <group position={[0, 2, 0]} visible={!!label}>
-          <Factory ref={factory} displayText={label} hidePlumbob />
+          <Factory
+            ref={factory}
+            displayText={label}
+            textBackgroundColor={color}
+            hidePlumbob
+          />
         </group>
         <group position={[2, 0, 0]}>
           <BuildTail ref={tail} track={track.tail} />

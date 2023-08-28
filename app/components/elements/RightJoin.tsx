@@ -1,5 +1,5 @@
 import { BallDetector } from "../BallDetector";
-import { Text2D } from "../Text2D";
+import { Text } from "../Text";
 import { Element } from "./Element";
 
 type Props = JSX.IntrinsicElements["group"] & {
@@ -17,9 +17,9 @@ export function RightJoin({ displayText, ...props }: Props) {
         <BallDetector position={[0, 1, 1]} />
         <BallDetector position={[2, 1, 1]} />
         {displayText && (
-          <Text2D position={[0, 0.5, 2]} fontSize={0.2} maxWidth={1.7}>
+          <Text position={[0, 0.5, 2]} fontSize={0.156}>
             {displayText}
-          </Text2D>
+          </Text>
         )}
       </group>
     </group>

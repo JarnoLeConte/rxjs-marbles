@@ -1,3 +1,4 @@
+import type { Color } from "@react-three/fiber";
 import type { ForwardedRef } from "react";
 import {
   forwardRef,
@@ -43,7 +44,8 @@ export const SwitchAll = forwardRef(function SwitchAll(
   const { displayText } = track.props ?? {};
   const removeBall = useStore((state) => state.removeBall);
   const detection$ = useMemo(() => new Subject<Ball>(), []);
-  const [label, setLabel] = useState<string | undefined>();
+  const [label, setLabel] = useState<string>();
+  const [color, setColor] = useState<Color>();
 
   /* Builder */
 
@@ -67,6 +69,7 @@ export const SwitchAll = forwardRef(function SwitchAll(
           assertBoxedObservable(),
           switchMap(({ value: source$, label, color }) => {
             setLabel(label);
+            setColor(color);
             return source$.pipe(
               map((boxedValue) => ({ ...boxedValue, color }))
             );
@@ -89,7 +92,12 @@ export const SwitchAll = forwardRef(function SwitchAll(
           exitClosed
         />
         <group position={[0, 2, 0]} visible={!!label}>
-          <Factory ref={factory} displayText={label} hidePlumbob />
+          <Factory
+            ref={factory}
+            displayText={label}
+            textBackgroundColor={color}
+            hidePlumbob
+          />
         </group>
       </group>
       <group position={[2, 0, 0]}>

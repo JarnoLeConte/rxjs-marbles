@@ -18,11 +18,12 @@ import { Plumbob } from "./Plumbob";
 
 type Props = {
   displayText?: string;
+  textBackgroundColor?: Color;
   hidePlumbob?: boolean;
 };
 
 export const Factory = forwardRef(function Factory(
-  { displayText, hidePlumbob }: Props,
+  { displayText, textBackgroundColor, hidePlumbob }: Props,
   ref: ForwardedRef<OperatorBuilder>
 ) {
   const addBall = useStore((state) => state.addBall);
@@ -89,7 +90,12 @@ export const Factory = forwardRef(function Factory(
 
   return (
     <group ref={root}>
-      <Begin displayText={displayText} onEnter={onEnter} onExit={onExit} />
+      <Begin
+        displayText={displayText}
+        textBackgroundColor={textBackgroundColor}
+        onEnter={onEnter}
+        onExit={onExit}
+      />
       <Plumbob position={[1, 2.7, 0]} status={status} visible={!hidePlumbob} />
     </group>
   );
