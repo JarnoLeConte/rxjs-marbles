@@ -51,11 +51,11 @@ export const Map = forwardRef(function Map(
             ...project(boxedValue.value, index),
           })),
           tap((boxedValue) => {
-            const { ballId, label } = boxedValue;
+            const { ballId, label, color } = boxedValue;
             if (!ballId) {
               return console.error("Ball id is missing");
             }
-            updateBall(ballId, (ball) => ({ ...ball, label }));
+            updateBall(ballId, (ball) => ({ ...ball, label, color }));
           }),
           tail.current.build()
         );
