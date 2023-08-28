@@ -9,6 +9,7 @@ type Props = JSX.IntrinsicElements["group"] & {
   entryClosed?: boolean;
   exitClosed?: boolean;
   displayText?: string;
+  upperText?: string;
 };
 
 export function Tunnel({
@@ -16,6 +17,7 @@ export function Tunnel({
   entryClosed,
   exitClosed,
   displayText,
+  upperText,
   ...props
 }: Props) {
   return (
@@ -28,6 +30,11 @@ export function Tunnel({
         {displayText && (
           <Text2D position={[0, -0.5, 1]} maxWidth={1.7}>
             {displayText}
+          </Text2D>
+        )}
+        {upperText && (
+          <Text2D position={[0, 0.5, 1]} maxWidth={1.7}>
+            {upperText}
           </Text2D>
         )}
       </group>

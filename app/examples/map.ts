@@ -18,7 +18,8 @@ const track: Track = {
       part: Part.Map,
       props: {
         project: (value) => box({ value: Number(value) * 2 }),
-        displayText: "2x",
+        displayText: "map",
+        projectionText: "2x",
       },
       tail: {
         part: Part.DownHill,

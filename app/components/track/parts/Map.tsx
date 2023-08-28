@@ -23,7 +23,7 @@ export const Map = forwardRef(function Map(
   { track }: Props,
   ref: ForwardedRef<OperatorBuilder>
 ) {
-  const { project, displayText } = track.props;
+  const { project, displayText, projectionText } = track.props;
   const updateBall = useStore((state) => state.updateBall);
   const detection$ = useMemo(() => new Subject<Ball>(), []);
 
@@ -69,6 +69,7 @@ export const Map = forwardRef(function Map(
       <Tunnel
         onBallDetection={(ball) => detection$.next(ball)}
         displayText={displayText ?? "map"}
+        upperText={projectionText}
       />
       <group position={[2, 0, 0]}>
         <BuildTail ref={tail} track={track.tail} />
