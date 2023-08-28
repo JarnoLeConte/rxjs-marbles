@@ -6,6 +6,7 @@ import { Stopper } from "./Stopper";
 
 type Props = JSX.IntrinsicElements["group"] & {
   onBallDetection?: BallDetectionHandler;
+  onBeforeEnter?: BallDetectionHandler;
   entryClosed?: boolean;
   exitClosed?: boolean;
   displayText?: string;
@@ -14,6 +15,7 @@ type Props = JSX.IntrinsicElements["group"] & {
 
 export function Tunnel({
   onBallDetection,
+  onBeforeEnter,
   entryClosed,
   exitClosed,
   displayText,
@@ -25,6 +27,7 @@ export function Tunnel({
       <group position={[1, 1, 0]}>
         <Element name="Cube062" rotation={[0, Math.PI / 2, 0]} />
         <BallDetector position={[0.2, 0, 0]} onEnter={onBallDetection} />
+        <BallDetector position={[-1, 0, 0]} onEnter={onBeforeEnter} />
         {entryClosed && <Stopper position={[-0.99, 0, 0]} />}
         {exitClosed && <Stopper position={[0.99, 0, 0]} />}
         {displayText && (

@@ -22,7 +22,6 @@ import {
   throwError,
 } from "rxjs";
 import { BuildTail } from "~/components/Build";
-import { DownHill } from "~/components/elements/DownHill";
 import { Factory } from "~/components/elements/Factory";
 import { initialize } from "~/observables/initialize";
 import { when } from "~/observables/when";
@@ -57,6 +56,7 @@ export const MergeAll = forwardRef(function MergeAll(
   const updateBall = useStore((state) => state.updateBall);
   const [onEnter, enter$] = useObservableCallback<Ball>();
   const [onBeforeEnter, beforeEnter$] = useObservableCallback<Ball>();
+  const [isClosed, setIsClosed] = useState(true);
 
   type Item = {
     id: number;
@@ -134,11 +134,13 @@ export const MergeAll = forwardRef(function MergeAll(
               factories.current[itemId] = createRef<OperatorBuilder>();
               register({ id: itemId, boxedObservable, status: "waiting" });
               updateBall(ballId!, (ball) => ({ ...ball, ghost: false }));
+              setIsClosed(false);
 
               return when(
                 enter$.pipe(filter((ball) => ball.id === ballId!)),
                 ({ id }) => {
                   removeBall(id);
+                  setIsClosed(true);
 
                   // Reference will now point to the new producer chain,
                   // because at least one render has happened.
@@ -157,13 +159,13 @@ export const MergeAll = forwardRef(function MergeAll(
                       update(itemId, (item) => ({ ...item, status: "active" }))
                     ),
                     factoryOperator,
-                    finalize(() => unregister(itemId)),
-                    tail.current.build()
+                    finalize(() => unregister(itemId))
                   );
                 }
               );
             });
-          }, concurrent)
+          }, concurrent),
+          tail.current.build()
         );
       },
     }),
@@ -181,29 +183,28 @@ export const MergeAll = forwardRef(function MergeAll(
 
   return (
     <group>
-      <DownHill onBeforeExit={onBeforeEnter} />
-      <group position={[4, -1, 0]}>
-        <Tunnel
-          onBallDetection={onEnter}
-          displayText={displayText ?? "mergeAll"}
-          exitClosed
-        />
-        {items.map((item, index) => (
-          <group
-            key={index}
-            position={[0, 2 + index * 2, 0]}
-            visible={item?.status === "active"}
-          >
-            <Factory
-              ref={item ? factories.current[item.id] : undefined}
-              displayText={item?.boxedObservable.label}
-              hidePlumbob
-            />
-          </group>
-        ))}
-        <group position={[2, 0, 0]}>
-          <BuildTail ref={tail} track={track.tail} />
+      <Tunnel
+        onBallDetection={onEnter}
+        onBeforeEnter={onBeforeEnter}
+        displayText={displayText ?? "mergeAll"}
+        entryClosed={isClosed}
+        exitClosed
+      />
+      {items.map((item, index) => (
+        <group
+          key={index}
+          position={[0, 2 + index * 2, 0]}
+          visible={item?.status === "active"}
+        >
+          <Factory
+            ref={item ? factories.current[item.id] : undefined}
+            displayText={item?.boxedObservable.label}
+            hidePlumbob
+          />
         </group>
+      ))}
+      <group position={[2, 0, 0]}>
+        <BuildTail ref={tail} track={track.tail} />
       </group>
     </group>
   );
