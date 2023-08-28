@@ -17,9 +17,9 @@ const track: Track = {
       part: Part.Partition,
       props: {
         predicate: (value) => Number(value) % 2 === 0,
-        displayText: "is even?",
-        trueLabel: "yes",
-        falseLabel: "no",
+        displayText: "partition",
+        trueLabel: "even",
+        falseLabel: "odd",
       },
       trueTail: {
         part: Part.DownHill,
