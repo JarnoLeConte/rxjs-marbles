@@ -22,7 +22,7 @@ const trackA: Track = {
     tail: {
       part: Part.Map,
       props: {
-        project: (boxedValue, index) => box({ value: index }),
+        project: ({ color }, index) => box({ value: index, color }),
         displayText: `index`,
       },
       tail: null,

@@ -38,7 +38,7 @@ export const Map = forwardRef(function Map(
         return pipe(
           map((boxedValue, index) => ({
             ...boxedValue,
-            ...project(boxedValue.value, index),
+            ...project(boxedValue, index),
           })),
           tail.current.operator()
         );
@@ -48,7 +48,7 @@ export const Map = forwardRef(function Map(
           delayWhen(() => detection$),
           map((boxedValue, index) => ({
             ...boxedValue,
-            ...project(boxedValue.value, index),
+            ...project(boxedValue, index),
           })),
           tap((boxedValue) => {
             const { ballId, label, color } = boxedValue;

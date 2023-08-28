@@ -12,10 +12,10 @@ import { Build, BuildTail } from "~/components/Build";
 import { Factory } from "~/components/elements/Factory";
 import { useStore } from "~/store";
 import type { Ball, ObservableBuilder, OperatorBuilder } from "~/types";
+import { box, renderValue } from "~/utils";
 import { Base } from "../../elements/Base";
 import { Bucket } from "../../elements/Bucket";
 import type { Part, TrackPart } from "../parts";
-import { box, renderValue } from "~/utils";
 
 /*
   ⚠️ Current implementation differs from rxjs, in that:
@@ -89,11 +89,24 @@ export const CombineLatest = forwardRef(function CombineLatest(
             )
           )
         );
-        return combineLatest([A$, B$]).pipe(
+        let trigger = "A";
+        return combineLatest([
+          A$.pipe(
+            tap(() => {
+              trigger = "A";
+            })
+          ),
+          B$.pipe(
+            tap(() => {
+              trigger = "B";
+            })
+          ),
+        ]).pipe(
           map(([boxedA, boxedB]) =>
             box({
               value: [boxedA, boxedB],
               label: renderValue([boxedA, boxedB]),
+              color: trigger === "A" ? boxedA.color : boxedB.color,
             })
           ),
           factory.current.build(),

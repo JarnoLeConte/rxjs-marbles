@@ -48,7 +48,7 @@ const trackC: Track = {
 const track: Track = {
   part: Part.Producer,
   props: {
-    source$: of(1, 2, 3).pipe(delayInBetween(3000), boxed()),
+    source$: of(1, 2, 3).pipe(delayInBetween(3000), boxed({ color: "white" })),
     displayText: "(1, 2, 3)",
   },
   tail: {
@@ -56,7 +56,7 @@ const track: Track = {
     tail: {
       part: Part.Map,
       props: {
-        project: (value) => {
+        project: ({ value }) => {
           const label = numberToChar(Number(value) - 1);
           return box({
             label,

@@ -1,16 +1,22 @@
-import { from, map, switchMap, timer } from "rxjs";
+import { map, of, switchMap, timer } from "rxjs";
 import { Part } from "~/components/track/parts";
 import { boxed } from "~/observables/boxed";
 import type { Track } from "~/types";
+import { Color, box } from "~/utils";
 
 const A$ = timer(0, 9000).pipe(
   map((x) => x + 10),
-  boxed()
+  boxed({ color: Color.Blue })
 );
 
 const B$ = timer(0, 9000).pipe(
   map((x) => x * 2 + 1),
-  switchMap((x) => from([x, x + 1]).pipe(boxed()))
+  switchMap((x) =>
+    of(
+      box({ value: x, color: Color.Red }),
+      box({ value: x + 1, color: Color.Green })
+    )
+  )
 );
 
 const trackA: Track = {

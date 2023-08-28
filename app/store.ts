@@ -24,7 +24,7 @@ interface Store {
   trackMap: Map<string, TrackEntry>;
   addTrack: (label: string, track: Track) => void;
   getTrackObservable: (label: string) => Observable<Boxed<Value>>;
-  getTrackColor: (label: string) => Color | undefined;
+  getTrackColor: (label: string) => Color;
   balls: Ball[];
   addBall: (options: AddBallOptions) => number;
   getBall: (id: number) => Ball | undefined;
@@ -52,7 +52,7 @@ export const store = createStore<Store>()((set, get) => ({
     }
     return observable$ ?? EMPTY;
   },
-  getTrackColor: (label) => get().trackMap.get(label)?.track.color,
+  getTrackColor: (label) => get().trackMap.get(label)?.track.color ?? "white",
   balls: [],
   addBall: ({ label, position, color, ghost }) => {
     get().updateActivity();

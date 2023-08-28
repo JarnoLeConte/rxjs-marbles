@@ -84,7 +84,7 @@ export type TrackTail =
   | {
       part: Part.Map;
       props: {
-        project: (value: Value, index: number) => Boxed<Value>;
+        project: (boxedValue: Boxed<Value>, index: number) => Boxed<Value>;
         displayText?: string;
         projectionText?: string;
       };

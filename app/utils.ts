@@ -19,11 +19,15 @@ export enum Color {
   Red = "#dc5d78",
   Green = "#2bd065",
   Blue = "#2b7dd0",
-  Cyan = "#4ca9d4",
+  // Cyan = "#4ca9d4",
+  // Lime = "#88d02b",
+  Yellow = "#e2cc33",
+  Orange = "#e1923f",
+  Purple = "#d13a9e",
 }
 
 export function randomColor() {
-  const colors = ["red", "blue", "green", "yellow", "orange", "purple"];
+  const colors = Object.values(Color);
   return colors[Math.floor(Math.random() * colors.length)];
 }
 
@@ -37,7 +41,7 @@ export function box(
 ): Boxed<Value> {
   return {
     ...props,
-    color: props.color ?? "white",
+    color: props.color ?? randomColor(),
     label: props.label ?? renderValue(props.value),
   };
 }
