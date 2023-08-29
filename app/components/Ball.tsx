@@ -53,7 +53,7 @@ function StaticBall({ label, color, ghost, ...props }: StaticBallProps) {
   return (
     <group {...props}>
       <Text fontSize={0.19}>{label}</Text>
-      <Sphere args={[RADIUS]}>
+      <Sphere args={[RADIUS]} renderOrder={1}>
         <meshStandardMaterial
           color={color}
           metalness={0.2}
