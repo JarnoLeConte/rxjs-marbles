@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useStore } from "~/store";
 import type { TrackRecord } from "~/types";
 import { Build } from "./Build";
-import { objectId } from "~/utils";
+import { makeCode, objectId } from "~/utils";
 import { TrackThemeProvider } from "./TrackThemeProvider";
 
 export function Runner({ trackRecord }: { trackRecord: TrackRecord }) {
@@ -45,6 +45,13 @@ export function Runner({ trackRecord }: { trackRecord: TrackRecord }) {
   //   });
   //   return () => subscription.unsubscribe();
   // }, [mainTrackEntry]);
+
+  // Code generator
+  useEffect(() => {
+    if (!mainTrackEntry?.ref?.current) return;
+    const codeString = makeCode(mainTrackEntry.ref.current.code());
+    console.log(codeString);
+  }, [mainTrackEntry]);
 
   /* Render */
 

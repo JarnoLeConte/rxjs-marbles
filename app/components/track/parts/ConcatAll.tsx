@@ -18,7 +18,7 @@ import { Factory } from "~/components/elements/Factory";
 import { when } from "~/observables/when";
 import { useStore } from "~/store";
 import type { Ball, OperatorBuilder } from "~/types";
-import { assertBoxedObservable, unbox } from "~/utils";
+import { assertBoxedObservable, makeCodeOperator, unbox } from "~/utils";
 import { Tunnel } from "../../elements/Tunnel";
 import type { Part, TrackPart } from "../parts";
 import type { Color } from "@react-three/fiber";
@@ -56,6 +56,9 @@ export const ConcatAll = forwardRef(function ConcatAll(
   useImperativeHandle(
     ref,
     () => ({
+      code() {
+        return makeCodeOperator("concatAll", [], tail.current);
+      },
       operator() {
         return pipe(
           assertBoxedObservable(),

@@ -28,7 +28,7 @@ import { initialize } from "~/observables/initialize";
 import { when } from "~/observables/when";
 import { useStore } from "~/store";
 import type { Ball, Boxed, OperatorBuilder, Status, Value } from "~/types";
-import { assertBoxedObservable, unbox } from "~/utils";
+import { assertBoxedObservable, makeCodeOperator, unbox } from "~/utils";
 import { Tunnel } from "../../elements/Tunnel";
 import type { Part, TrackPart } from "../parts";
 
@@ -111,6 +111,9 @@ export const MergeAll = forwardRef(function MergeAll(
   useImperativeHandle(
     ref,
     () => ({
+      code() {
+        return makeCodeOperator("mergeAll", ["2"], tail.current);
+      },
       operator() {
         return pipe(
           assertBoxedObservable(),

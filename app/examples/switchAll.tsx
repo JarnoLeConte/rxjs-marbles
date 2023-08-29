@@ -23,6 +23,10 @@ const trackA: Track = {
   props: {
     source$: range(1, 4).pipe(boxed({ color: Color.Red })),
     displayText: "(1, 2, 3, 4)",
+    sourceCode: {
+      imports: ["range", "delayWhen", "interval"],
+      code: `range(1, 4).pipe(delayWhen((_, i) => interval(i * 1000)))`,
+    },
   },
   tail: {
     part: Part.PreviewObserver,
@@ -36,6 +40,10 @@ const trackB: Track = {
   props: {
     source$: range(1, 4).pipe(boxed({ color: Color.Green })),
     displayText: "(1, 2, 3, 4)",
+    sourceCode: {
+      imports: ["range", "delayWhen", "interval"],
+      code: `range(1, 4).pipe(delayWhen((_, i) => interval(i * 1000)))`,
+    },
   },
   tail: {
     part: Part.PreviewObserver,
@@ -49,6 +57,10 @@ const trackC: Track = {
   props: {
     source$: range(1, 4).pipe(boxed({ color: Color.Blue })),
     displayText: "(1, 2, 3, 4)",
+    sourceCode: {
+      imports: ["range", "delayWhen", "interval"],
+      code: `range(1, 4).pipe(delayWhen((_, i) => interval(i * 1000)))`,
+    },
   },
   tail: {
     part: Part.PreviewObserver,
@@ -61,6 +73,15 @@ const track: Track = {
   props: {
     source$,
     displayText: "(A, B, C)",
+    sourceCode: {
+      imports: ["of", "range", "delayWhen", "interval"],
+      code: [
+        `const a$ = range(1, 4).pipe(delayWhen((_, i) => interval(i * 1000)))`,
+        `const b$ = range(1, 4).pipe(delayWhen((_, i) => interval(i * 1000)))`,
+        `const c$ = range(1, 4).pipe(delayWhen((_, i) => interval(i * 1000)))`,
+        `of(a$, b$, c$).pipe(delayWhen((_, i) => interval(i * 2500)))`,
+      ].join(";\n\n"),
+    },
   },
   tail: {
     part: Part.Ramp,

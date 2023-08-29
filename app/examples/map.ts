@@ -11,6 +11,10 @@ const track: Track = {
   props: {
     source$,
     displayText: "interval(3s)",
+    sourceCode: {
+      imports: ["interval"],
+      code: `interval(3000)`,
+    },
   },
   tail: {
     part: Part.Ramp,
@@ -18,6 +22,7 @@ const track: Track = {
       part: Part.Map,
       props: {
         project: ({ value, color }) => box({ value: Number(value) * 2, color }),
+        projectionCode: `(value) => value * 2`,
         displayText: "map",
         projectionText: "2x",
       },

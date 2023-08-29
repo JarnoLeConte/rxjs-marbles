@@ -2,6 +2,7 @@ import type { ForwardedRef } from "react";
 import { forwardRef, useImperativeHandle } from "react";
 import { EMPTY } from "rxjs";
 import type { ObservableBuilder } from "~/types";
+import { makeCodeDefaults } from "~/utils";
 
 export const Empty = forwardRef(function Empty(
   props,
@@ -10,6 +11,9 @@ export const Empty = forwardRef(function Empty(
   useImperativeHandle(
     ref,
     () => ({
+      code() {
+        return makeCodeDefaults();
+      },
       observable() {
         return EMPTY;
       },

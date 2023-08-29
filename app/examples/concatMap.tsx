@@ -12,6 +12,10 @@ const trackA: Track = {
   props: {
     source$: range(1, 3).pipe(boxed({ color: Color.Red })),
     displayText: "(1, 2, 3)",
+    sourceCode: {
+      imports: ["range"],
+      code: `range(1, 3)`,
+    },
   },
   tail: {
     part: Part.PreviewObserver,
@@ -25,6 +29,10 @@ const trackB: Track = {
   props: {
     source$: range(1, 3).pipe(boxed({ color: Color.Green })),
     displayText: "(1, 2, 3)",
+    sourceCode: {
+      imports: ["range"],
+      code: `range(1, 3)`,
+    },
   },
   tail: {
     part: Part.PreviewObserver,
@@ -38,6 +46,10 @@ const trackC: Track = {
   props: {
     source$: range(1, 3).pipe(boxed({ color: Color.Blue })),
     displayText: "(1, 2, 3)",
+    sourceCode: {
+      imports: ["range"],
+      code: `range(1, 3)`,
+    },
   },
   tail: {
     part: Part.PreviewObserver,
@@ -50,6 +62,10 @@ const track: Track = {
   props: {
     source$: of(1, 2, 3).pipe(delayInBetween(3000), boxed({ color: "white" })),
     displayText: "(1, 2, 3)",
+    sourceCode: {
+      imports: ["range"],
+      code: `range(1, 3)`,
+    },
   },
   tail: {
     part: Part.Ramp,
@@ -64,6 +80,7 @@ const track: Track = {
             color: store.getState().getTrackColor(label),
           });
         },
+        projectionCode: `(value) => value * 2`,
         displayText: "map",
         projectionText: `1 —> A
 2 —> B

@@ -1,6 +1,6 @@
 import type { Color } from "@react-three/fiber";
 import type { Observable } from "rxjs";
-import type { Boxed, Value } from "~/types";
+import type { Boxed, Code, Value } from "~/types";
 
 export enum Part {
   Straight = "Straight",
@@ -24,8 +24,9 @@ export enum Part {
 export type TrackHead =
   | {
       part: Part.Producer;
-      props?: {
-        source$?: Observable<Boxed<Value>>;
+      props: {
+        source$: Observable<Boxed<Value>>;
+        sourceCode: Code;
         displayText?: string;
       };
       tail: TrackTail;
@@ -85,6 +86,7 @@ export type TrackTail =
       part: Part.Map;
       props: {
         project: (boxedValue: Boxed<Value>, index: number) => Boxed<Value>;
+        projectionCode: string;
         displayText?: string;
         projectionText?: string;
       };
@@ -116,6 +118,7 @@ export type TrackTail =
       part: Part.Partition;
       props?: {
         predicate?: (value: Value, index: number) => boolean;
+        predicateCode?: string;
         displayText?: string;
         trueLabel?: string;
         falseLabel?: string;

@@ -16,6 +16,10 @@ const trackA: Track = {
   props: {
     source$: click$,
     displayText: "click",
+    sourceCode: {
+      imports: ["fromEvent", "map"],
+      code: `fromEvent(document, "click").pipe(map(() => "{click}"))`,
+    },
   },
   tail: {
     part: Part.Ramp,
@@ -23,6 +27,7 @@ const trackA: Track = {
       part: Part.Map,
       props: {
         project: ({ color }, index) => box({ value: index, color }),
+        projectionCode: `(value, index) => index`,
         displayText: `index`,
       },
       tail: null,
@@ -35,6 +40,10 @@ const trackB: Track = {
   props: {
     source$: keyboard$,
     displayText: "keyup",
+    sourceCode: {
+      imports: ["fromEvent"],
+      code: `fromEvent(document, "keyup").pipe(map((event) => event.key))`,
+    },
   },
   tail: {
     part: Part.Ramp,

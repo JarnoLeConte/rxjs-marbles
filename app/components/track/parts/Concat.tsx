@@ -4,8 +4,9 @@ import { forwardRef, useImperativeHandle, useRef } from "react";
 import { concat } from "rxjs";
 import { Build, BuildTail } from "~/components/Build";
 import type { ObservableBuilder, OperatorBuilder } from "~/types";
-import type { Part, TrackPart } from "../parts";
+import { makeCodeCombinator } from "~/utils";
 import { RightJoin } from "../../elements/RightJoin";
+import type { Part, TrackPart } from "../parts";
 
 /*
   ⚠️ Current implementation differs from rxjs, in that:
@@ -34,6 +35,9 @@ export const Concat = forwardRef(function Concat(
   useImperativeHandle(
     ref,
     () => ({
+      code() {
+        return makeCodeCombinator("concat", a.current, b.current, tail.current);
+      },
       observable() {
         const A$ = a.current.observable();
         const B$ = b.current.observable();

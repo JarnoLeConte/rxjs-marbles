@@ -4,9 +4,9 @@ import { forwardRef, useImperativeHandle, useState } from "react";
 import { delayWhen, filter, pipe, tap } from "rxjs";
 import { useStore } from "~/store";
 import type { Ball, OperatorBuilder } from "~/types";
+import { makeCodeDefaults } from "~/utils";
 import { Bucket } from "../../elements/Bucket";
 import type { Part, TrackPart } from "../parts";
-import { Identity } from "./Identity";
 
 /*
   ⚠️ Current implementation differs from rxjs, in that:
@@ -33,6 +33,9 @@ export const Observer = forwardRef(function Observer(
   useImperativeHandle(
     ref,
     () => ({
+      code() {
+        return makeCodeDefaults();
+      },
       operator() {
         return pipe();
       },
@@ -59,7 +62,6 @@ export const Observer = forwardRef(function Observer(
         contentLabel={`observer`}
         content={label ?? "-"}
       />
-      <Identity ref={ref} />
     </group>
   );
 });

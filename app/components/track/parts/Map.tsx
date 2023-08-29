@@ -4,6 +4,7 @@ import { Subject, delayWhen, map, pipe, tap } from "rxjs";
 import { BuildTail } from "~/components/Build";
 import { useStore } from "~/store";
 import type { Ball, OperatorBuilder } from "~/types";
+import { makeCodeOperator } from "~/utils";
 import { Tunnel } from "../../elements/Tunnel";
 import type { Part, TrackPart } from "../parts";
 
@@ -23,7 +24,7 @@ export const Map = forwardRef(function Map(
   { track }: Props,
   ref: ForwardedRef<OperatorBuilder>
 ) {
-  const { project, displayText, projectionText } = track.props;
+  const { project, displayText, projectionText, projectionCode } = track.props;
   const updateBall = useStore((state) => state.updateBall);
   const detection$ = useMemo(() => new Subject<Ball>(), []);
 
@@ -34,6 +35,9 @@ export const Map = forwardRef(function Map(
   useImperativeHandle(
     ref,
     () => ({
+      code() {
+        return makeCodeOperator("map", [projectionCode], tail.current);
+      },
       operator() {
         return pipe(
           map((boxedValue, index) => ({
@@ -61,7 +65,7 @@ export const Map = forwardRef(function Map(
         );
       },
     }),
-    [project, detection$, updateBall]
+    [project, projectionCode, detection$, updateBall]
   );
 
   return (

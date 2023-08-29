@@ -35,6 +35,7 @@ export const Partition = forwardRef(function Partition(
 ) {
   const {
     predicate = Boolean,
+    predicateCode = "Boolean",
     displayText,
     trueLabel,
     falseLabel,
@@ -53,6 +54,27 @@ export const Partition = forwardRef(function Partition(
   useImperativeHandle(
     ref,
     () => ({
+      code() {
+        const { imports: trueTailImports, code: trueTailCode } =
+          trueTail.current.code();
+        const { imports: falseTailImports, code: falseTailCode } =
+          falseTail.current.code();
+        return {
+          imports: [
+            "partition",
+            "map",
+            "merge",
+            ...trueTailImports,
+            ...falseTailImports,
+          ],
+          code: [
+            `const [true$, false$] = partition(${predicateCode})`,
+            `const labeledTrue$ = true$.pipe(${trueTailCode}, tap(map((value) => ['true', value])))`,
+            `const labeledFalse$ = false$.pipe(${falseTailCode}, tap(map((value) => ['false', value])))`,
+            `merge(labeledTrue$, labeledFalse$)`,
+          ].join(";\n\n"),
+        };
+      },
       operator() {
         // TODO: In reallity `partition` should not be implemented as an operator,
         return (source$) => {
@@ -95,7 +117,7 @@ export const Partition = forwardRef(function Partition(
         };
       },
     }),
-    [predicate, detection$, removeBall]
+    [predicate, predicateCode, detection$, removeBall]
   );
 
   return (

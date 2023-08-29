@@ -23,6 +23,10 @@ const trackA: Track = {
   props: {
     source$: range(1, 3).pipe(boxed({ color: Color.Red })),
     displayText: "(1, 2, 3)",
+    sourceCode: {
+      imports: ["range"],
+      code: `range(1, 3)`,
+    },
   },
   tail: {
     part: Part.PreviewObserver,
@@ -36,6 +40,10 @@ const trackB: Track = {
   props: {
     source$: range(1, 4).pipe(boxed({ color: Color.Green })),
     displayText: "(1, 2, 3, 4)",
+    sourceCode: {
+      imports: ["range"],
+      code: `range(1, 4)`,
+    },
   },
   tail: {
     part: Part.PreviewObserver,
@@ -49,6 +57,10 @@ const trackC: Track = {
   props: {
     source$: range(1, 2).pipe(boxed({ color: Color.Blue })),
     displayText: "(1, 2)",
+    sourceCode: {
+      imports: ["range"],
+      code: `range(1, 2)`,
+    },
   },
   tail: {
     part: Part.PreviewObserver,
@@ -61,6 +73,15 @@ const track: Track = {
   props: {
     source$,
     displayText: "(A, B, C)",
+    sourceCode: {
+      imports: ["of", "range"],
+      code: [
+        `const a$ = range(1, 3)`,
+        `const b$ = range(1, 4)`,
+        `const c$ = range(1, 2)`,
+        `of(a$, b$, c$)`,
+      ].join(";\n\n"),
+    },
   },
   tail: {
     part: Part.ConcatAll,

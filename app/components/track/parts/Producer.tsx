@@ -1,11 +1,11 @@
 import type { ForwardedRef } from "react";
 import { forwardRef, useImperativeHandle, useRef } from "react";
-import { EMPTY, finalize, tap } from "rxjs";
+import { finalize, tap } from "rxjs";
 import { BuildTail } from "~/components/Build";
 import { Factory } from "~/components/elements/Factory";
+import { useStore } from "~/store";
 import type { ObservableBuilder, OperatorBuilder } from "~/types";
 import type { Part, TrackPart } from "../parts";
-import { useStore } from "~/store";
 
 /*
   ⚠️ Current implementation differs from rxjs, in that:
@@ -26,7 +26,7 @@ export const Producer = forwardRef(function Producer(
   { track }: Props,
   ref: ForwardedRef<ObservableBuilder>
 ) {
-  const { displayText, source$ = EMPTY } = track.props ?? {};
+  const { displayText, source$, sourceCode } = track.props ?? {};
   const removeBall = useStore((state) => state.removeBall);
 
   /* Builder */
@@ -37,6 +37,15 @@ export const Producer = forwardRef(function Producer(
   useImperativeHandle(
     ref,
     () => ({
+      code() {
+        const { imports, code } = sourceCode;
+        const { imports: tailImports, code: tailCode } = tail.current.code();
+        const pipe = tailCode.trim() ? `.pipe(${tailCode.trim()})` : "";
+        return {
+          imports: [...imports, ...tailImports],
+          code: `${code}${pipe}`,
+        };
+      },
       observable() {
         return source$.pipe(tail.current.operator());
       },
@@ -56,7 +65,7 @@ export const Producer = forwardRef(function Producer(
         );
       },
     }),
-    [source$, removeBall]
+    [source$, sourceCode, removeBall]
   );
 
   return (

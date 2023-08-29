@@ -23,6 +23,10 @@ const trackA: Track = {
   part: Part.Producer,
   props: {
     source$: A$,
+    sourceCode: {
+      imports: ["timer"],
+      code: `timer(0, 1000)`,
+    },
     displayText: "",
   },
   tail: null,
@@ -32,6 +36,10 @@ const trackB: Track = {
   part: Part.Producer,
   props: {
     source$: B$,
+    sourceCode: {
+      imports: ["timer"],
+      code: `timer(500, 1000)`,
+    },
     displayText: "",
   },
   tail: {

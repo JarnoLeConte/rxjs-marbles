@@ -2,6 +2,7 @@ import type { ForwardedRef } from "react";
 import { forwardRef, useImperativeHandle } from "react";
 import { pipe } from "rxjs";
 import type { OperatorBuilder } from "~/types";
+import { makeCodeDefaults } from "~/utils";
 
 export const Identity = forwardRef(function Identity(
   props,
@@ -10,6 +11,9 @@ export const Identity = forwardRef(function Identity(
   useImperativeHandle(
     ref,
     () => ({
+      code() {
+        return makeCodeDefaults();
+      },
       operator() {
         return pipe();
       },

@@ -7,7 +7,14 @@ import {
   type Observable,
   type OperatorFunction,
 } from "rxjs";
-import type { Boxed, RealValue, Value } from "./types";
+import type {
+  Boxed,
+  Code,
+  ObservableBuilder,
+  OperatorBuilder,
+  RealValue,
+  Value,
+} from "./types";
 
 export enum CollisionGroup {
   Track = 0,
@@ -116,3 +123,55 @@ export const objectId = (() => {
     return map.get(object);
   };
 })();
+
+// Generate code
+export const makeCode = (code: Code): string => {
+  const imports = Array.from(new Set(code.imports));
+  return `import { ${imports.join(
+    ", "
+  )} } from "rxjs";\n\n${code.code.trim()}.subscribe({ \n\tnext: console.log\n});`;
+};
+
+export const makeCodeCombinator = (
+  operator: string,
+  a: ObservableBuilder,
+  b: ObservableBuilder,
+  tail: OperatorBuilder
+): Code => {
+  const codeA = a.code();
+  const codeB = b.code();
+  const codeTail = tail.code();
+  const pipe = codeTail.code.trim() ? `.pipe(${codeTail.code.trim()})` : "";
+  return {
+    imports: [
+      `${operator}`,
+      ...codeA.imports,
+      ...codeB.imports,
+      ...codeTail.imports,
+    ],
+    code: [
+      `const a$ = ${codeA.code}`,
+      `const b$ = ${codeB.code}`,
+      `${operator}(a$, b$)${pipe}`,
+    ].join(";\n\n"),
+  };
+};
+
+export const makeCodeOperator = (
+  operator: string,
+  args: string[],
+  tail: OperatorBuilder
+): Code => {
+  const { imports: tailImports, code: tailCode } = tail.code();
+  return {
+    imports: [operator, ...tailImports],
+    code: [`${operator}(${args.join(", ")})`, `${tailCode.trim()}`]
+      .filter(Boolean)
+      .join(", "),
+  };
+};
+
+export const makeCodeDefaults = () => ({
+  imports: [],
+  code: "",
+});

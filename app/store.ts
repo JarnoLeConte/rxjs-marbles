@@ -3,7 +3,15 @@ import { createRef } from "react";
 import type { Observable } from "rxjs";
 import { EMPTY } from "rxjs";
 import { createStore, useStore as useVanillaStore } from "zustand";
-import type { Ball, Boxed, ObservableBuilder, Track, Value } from "./types";
+import type {
+  Ball,
+  Boxed,
+  Code,
+  ObservableBuilder,
+  Track,
+  Value,
+} from "./types";
+import { makeCodeDefaults } from "./utils";
 
 let nextId = 1;
 
@@ -24,6 +32,7 @@ interface Store {
   trackMap: Map<string, TrackEntry>;
   addTrack: (label: string, track: Track) => void;
   getTrackObservable: (label: string) => Observable<Boxed<Value>>;
+  getTrackCode: (label: string) => Code;
   getTrackColor: (label: string) => Color;
   balls: Ball[];
   addBall: (options: AddBallOptions) => number;
@@ -48,9 +57,16 @@ export const store = createStore<Store>()((set, get) => ({
   getTrackObservable: (label) => {
     const observable$ = get().trackMap.get(label)?.ref.current?.build();
     if (!observable$) {
-      console.warn(`No observable found for track "${label}"`);
+      console.warn(`Can't read observable because track "${label}" not found.`);
     }
     return observable$ ?? EMPTY;
+  },
+  getTrackCode: (label) => {
+    const code = get().trackMap.get(label)?.ref.current?.code();
+    if (!code) {
+      console.warn(`Can't generate code because track "${label}" not found.`);
+    }
+    return code ?? makeCodeDefaults();
   },
   getTrackColor: (label) => get().trackMap.get(label)?.track.color ?? "white",
   balls: [],

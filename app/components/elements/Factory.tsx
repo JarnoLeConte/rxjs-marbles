@@ -56,6 +56,9 @@ export const Factory = forwardRef(function Factory(
   useImperativeHandle(
     ref,
     () => ({
+      code() {
+        throw new Error("Not implemented");
+      },
       operator() {
         return pipe();
       },

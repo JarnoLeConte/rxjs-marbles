@@ -21,7 +21,7 @@ import { BuildTail } from "~/components/Build";
 import { Factory } from "~/components/elements/Factory";
 import { useStore } from "~/store";
 import type { Ball, OperatorBuilder } from "~/types";
-import { assertBoxedObservable, unbox } from "~/utils";
+import { assertBoxedObservable, makeCodeOperator, unbox } from "~/utils";
 import { Tunnel } from "../../elements/Tunnel";
 import type { Part, TrackPart } from "../parts";
 
@@ -55,6 +55,9 @@ export const SwitchAll = forwardRef(function SwitchAll(
   useImperativeHandle(
     ref,
     () => ({
+      code() {
+        return makeCodeOperator("switchAll", [], tail.current);
+      },
       operator() {
         return pipe(
           assertBoxedObservable(),

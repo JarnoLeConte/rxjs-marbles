@@ -10,6 +10,10 @@ const track: Track = {
   props: {
     source$,
     displayText: "interval(3s)",
+    sourceCode: {
+      imports: ["interval"],
+      code: `interval(3000)`,
+    },
   },
   tail: {
     part: Part.Ramp,

@@ -18,6 +18,10 @@ const trackA: Track = {
   props: {
     source$: A$,
     displayText: `A (1, 2, 3, ...)`,
+    sourceCode: {
+      imports: ["timer"],
+      code: `timer(0, 1000)`,
+    },
   },
   tail: {
     part: Part.Ramp,
@@ -30,6 +34,10 @@ const trackB: Track = {
   props: {
     source$: B$,
     displayText: "B (10, 20, 30, ...)",
+    sourceCode: {
+      imports: ["timer"],
+      code: `timer(500, 1000)`,
+    },
   },
   tail: {
     part: Part.Ramp,

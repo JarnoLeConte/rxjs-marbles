@@ -11,6 +11,10 @@ const trackA: Track = {
   props: {
     source$: A$,
     displayText: "A (1, 2, 3)",
+    sourceCode: {
+      imports: ["range"],
+      code: `range(1, 3)`,
+    },
   },
   tail: {
     part: Part.Ramp,
@@ -22,6 +26,10 @@ const trackB: Track = {
   props: {
     source$: B$,
     displayText: "B (1, 2, 3)",
+    sourceCode: {
+      imports: ["range"],
+      code: `range(1, 3)`,
+    },
   },
   tail: {
     part: Part.Ramp,

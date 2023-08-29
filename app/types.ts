@@ -35,11 +35,15 @@ export type { Track } from "~/components/track/parts";
 
 export type TrackRecord = Record<string, Track>;
 
+export type Code = { imports: string[]; code: string };
+
 export type OperatorBuilder = {
+  code: () => Code;
   operator: () => OperatorFunction<Boxed<Value>, Boxed<Value>>;
   build: () => OperatorFunction<Boxed<Value>, Boxed<Value>>;
 };
 export type ObservableBuilder = {
+  code: () => Code;
   observable: () => Observable<Boxed<Value>>;
   build: () => Observable<Boxed<Value>>;
 };

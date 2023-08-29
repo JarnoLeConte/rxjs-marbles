@@ -12,7 +12,7 @@ import { Build, BuildTail } from "~/components/Build";
 import { Factory } from "~/components/elements/Factory";
 import { useStore } from "~/store";
 import type { Ball, ObservableBuilder, OperatorBuilder } from "~/types";
-import { box, renderValue } from "~/utils";
+import { box, makeCodeCombinator, renderValue } from "~/utils";
 import { Base } from "../../elements/Base";
 import { Bucket } from "../../elements/Bucket";
 import type { Part, TrackPart } from "../parts";
@@ -54,6 +54,14 @@ export const CombineLatest = forwardRef(function CombineLatest(
   useImperativeHandle(
     ref,
     () => ({
+      code() {
+        return makeCodeCombinator(
+          "combineLatest",
+          a.current,
+          b.current,
+          tail.current
+        );
+      },
       observable() {
         const A$ = a.current.observable();
         const B$ = b.current.observable();

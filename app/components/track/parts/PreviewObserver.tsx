@@ -4,9 +4,9 @@ import { forwardRef, useImperativeHandle } from "react";
 import { delayWhen, filter, pipe, tap } from "rxjs";
 import { useStore } from "~/store";
 import type { Ball, OperatorBuilder } from "~/types";
+import { makeCodeDefaults } from "~/utils";
 import { Bucket } from "../../elements/Bucket";
 import type { Part, TrackPart } from "../parts";
-import { Identity } from "./Identity";
 
 type Props = {
   track: TrackPart<Part.PreviewObserver>;
@@ -23,6 +23,9 @@ export const PreviewObserver = forwardRef(function PreviewObserver(
   useImperativeHandle(
     ref,
     () => ({
+      code() {
+        return makeCodeDefaults();
+      },
       operator() {
         return pipe();
       },
@@ -45,7 +48,6 @@ export const PreviewObserver = forwardRef(function PreviewObserver(
         contentLabel="observable"
         content={displayText}
       />
-      <Identity ref={ref} />
     </group>
   );
 });
