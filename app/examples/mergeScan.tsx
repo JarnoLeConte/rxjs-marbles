@@ -21,7 +21,7 @@ const track: Track = {
           const acc = Number(boxedAcc.value);
           return box({
             value: range(acc + 1, 3).pipe(boxed({ color })),
-            label: `(${acc + 1}, ${acc + 2}, ${acc + 3})`,
+            label: `(${acc}+1, ${acc}+2, ${acc}+3)`,
             color,
           });
         },
