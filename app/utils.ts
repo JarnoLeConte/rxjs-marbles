@@ -31,14 +31,27 @@ export function randomColor() {
   return colors[Math.floor(Math.random() * colors.length)];
 }
 
-export function numberToChar(index: number, startChar = "A") {
+export function indexToColor(index: number) {
+  const colors = Object.values(Color);
+  return colors[index % colors.length];
+}
+
+export function numberToColor(number: number) {
+  return indexToColor(number - 1);
+}
+
+export function indexToChar(index: number, startChar = "A") {
   const startCharCode = startChar.charCodeAt(0);
   return String.fromCharCode(startCharCode + index);
 }
 
-export function box(
-  props: Required<Pick<Boxed<Value>, "value">> & Partial<Boxed<Value>>
-): Boxed<Value> {
+export function numberToChar(number: number, startChar = "A") {
+  return indexToChar(number - 1, startChar);
+}
+
+export function box<V extends Value>(
+  props: Required<Pick<Boxed<V>, "value">> & Partial<Boxed<V>>
+): Boxed<V> {
   return {
     ...props,
     color: props.color ?? randomColor(),

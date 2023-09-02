@@ -11,13 +11,12 @@ import {
 } from "react";
 import type { Observable } from "rxjs";
 import {
-  defer,
   delayWhen,
   filter,
   finalize,
   map,
-  mergeAll,
   mergeMap,
+  of,
   pipe,
   tap,
   throwError,
@@ -25,34 +24,26 @@ import {
 import { BuildTail } from "~/components/Build";
 import { Factory } from "~/components/elements/Factory";
 import { initialize } from "~/observables/initialize";
-import { when } from "~/observables/when";
 import { useStore } from "~/store";
 import type { Ball, Boxed, OperatorBuilder, Status, Value } from "~/types";
-import { assertBoxedObservable, unbox } from "~/utils";
+import { unbox } from "~/utils";
 import { Tunnel } from "../../elements/Tunnel";
 import type { Part, TrackPart } from "../parts";
 
-/*
-  ⚠️ Current implementation differs from rxjs, in that:
-
-  Virtual time is used to perform animations.
-  Therefore processing a single frame takes an unknown amount of time,
-  it depends on the amount of incoming balls and balls being produced.
-
-  Values that are emitted within the same frame are delayed
-  to make them appear one after the other. Though, we do preserve the order
-  in which producers emit.
-*/
-
 type Props = {
-  track: TrackPart<Part.MergeAll>;
+  track: TrackPart<Part.MergeMap>;
 };
 
-export const MergeAll = forwardRef(function MergeAll(
+export const MergeMap = forwardRef(function MergeMap(
   { track }: Props,
   ref: ForwardedRef<OperatorBuilder>
 ) {
-  const { displayText, concurrent = Infinity } = track.props ?? {};
+  const {
+    project,
+    projectionText,
+    displayText,
+    concurrent = Infinity,
+  } = track.props;
   const removeBall = useStore((state) => state.removeBall);
   const updateBall = useStore((state) => state.updateBall);
   const [onEnter, enter$] = useObservableCallback<Ball>();
@@ -113,64 +104,66 @@ export const MergeAll = forwardRef(function MergeAll(
     () => ({
       operator() {
         return pipe(
-          assertBoxedObservable(),
-          map(unbox),
-          mergeAll(concurrent),
+          mergeMap((value, index) => unbox(project(value, index)), concurrent),
           tail.current.operator()
         );
       },
       build() {
         return pipe(
-          assertBoxedObservable(),
           delayWhen(({ ballId }) =>
             beforeEnter$.pipe(filter(({ id }) => id === ballId))
           ),
           tap(({ ballId }) =>
+            // Wait before rolling into the tunnel
             updateBall(ballId!, (ball) => ({ ...ball, ghost: true }))
           ),
-          mergeMap((boxedObservable, itemId) => {
-            const { ballId, value: source$, color } = boxedObservable;
+          mergeMap((boxedValue, itemId) => {
+            const { ballId, color } = boxedValue;
 
-            return defer(() => {
-              // Create a new reference pointing to the new producer chain on next render
-              factories.current[itemId] = createRef<OperatorBuilder>();
-              register({
-                id: itemId,
-                boxedObservable,
-                color,
-                status: "waiting",
-              });
-              updateBall(ballId!, (ball) => ({ ...ball, ghost: false }));
-              setIsClosed(false);
+            return of(boxedValue).pipe(
+              map((value) => project(value, itemId)),
+              tap((boxedObservable) => {
+                // Start rolling into the tunnel
+                updateBall(ballId!, (ball) => ({ ...ball, ghost: false }));
+                setIsClosed(false);
 
-              return when(
-                enter$.pipe(filter((ball) => ball.id === ballId!)),
-                ({ id }) => {
-                  removeBall(id);
-                  setIsClosed(true);
+                // Create a new reference pointing to the new producer chain on next render
+                factories.current[itemId] = createRef<OperatorBuilder>();
+                register({
+                  id: itemId,
+                  boxedObservable,
+                  color,
+                  status: "waiting",
+                });
+              }),
+              delayWhen(() =>
+                enter$.pipe(filter((ball) => ball.id === ballId!))
+              ),
+              mergeMap(({ value: source$ }) => {
+                removeBall(ballId!);
+                setIsClosed(true);
 
-                  // Reference will now point to the new producer chain,
-                  // because at least one render has happened.
-                  const factory = factories.current[itemId];
-                  const factoryOperator = factory.current?.build();
+                // Reference will now point to the new producer chain,
+                // because at least one render has happened.
+                const factory = factories.current[itemId];
+                const factoryOperator = factory.current?.build();
 
-                  if (!factoryOperator) {
-                    return throwError(
-                      () => new Error(`Factory operator is not defined.`)
-                    );
-                  }
-
-                  // Show producer now it becomes active
-                  return source$.pipe(
-                    initialize(() =>
-                      update(itemId, (item) => ({ ...item, status: "active" }))
-                    ),
-                    factoryOperator,
-                    finalize(() => unregister(itemId))
+                if (!factoryOperator) {
+                  return throwError(
+                    () => new Error(`Factory operator is not defined.`)
                   );
                 }
-              );
-            });
+
+                // Show producer now it becomes active
+                return source$.pipe(
+                  initialize(() =>
+                    update(itemId, (item) => ({ ...item, status: "active" }))
+                  ),
+                  factoryOperator,
+                  finalize(() => unregister(itemId))
+                );
+              })
+            );
           }, concurrent),
           tail.current.build()
         );
@@ -184,6 +177,7 @@ export const MergeAll = forwardRef(function MergeAll(
       register,
       unregister,
       update,
+      project,
       concurrent,
     ]
   );
@@ -193,7 +187,8 @@ export const MergeAll = forwardRef(function MergeAll(
       <Tunnel
         onBallDetection={onEnter}
         onBeforeEnter={onBeforeEnter}
-        displayText={displayText ?? "mergeAll"}
+        displayText={displayText ?? "mergeMap"}
+        upperText={projectionText}
         entryClosed={isClosed}
         exitClosed
       />

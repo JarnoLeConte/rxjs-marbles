@@ -5,8 +5,10 @@ import concatMap from "./concatMap";
 import fromEvent from "./fromEvent";
 import interval from "./interval";
 import map from "./map";
+import mapConcatAll from "./mapConcatAll";
 import merge from "./merge";
 import mergeAll from "./mergeAll";
+import mergeMap from "./mergeMap";
 import partition from "./partition";
 import switchAll from "./switchAll";
 import test from "./test";
@@ -39,6 +41,14 @@ const examples = [
     trackRecord: concatAll,
   },
   {
+    name: "mapConcatAll" as const,
+    trackRecord: mapConcatAll,
+  },
+  {
+    name: "concatMap" as const,
+    trackRecord: concatMap,
+  },
+  {
     name: "switchAll" as const,
     trackRecord: switchAll,
   },
@@ -47,8 +57,8 @@ const examples = [
     trackRecord: mergeAll,
   },
   {
-    name: "concatMap" as const,
-    trackRecord: concatMap,
+    name: "mergeMap" as const,
+    trackRecord: mergeMap,
   },
   {
     name: "combineLatest" as const,

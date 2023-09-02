@@ -26,8 +26,8 @@ const track: Track = {
         projectionText: `1 —> A (1, 2, 3)
 2 —> B (4, 5, 6)
 3 —> C (7, 8, 9)`,
-        displayText: "concatMap",
-        concurrent: 1,
+        displayText: "mergeMap(2)",
+        concurrent: 2,
       },
       tail: {
         part: Part.DownHill,
