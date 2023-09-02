@@ -9,6 +9,7 @@ import mapConcatAll from "./mapConcatAll";
 import merge from "./merge";
 import mergeAll from "./mergeAll";
 import mergeMap from "./mergeMap";
+import mergeScan from "./mergeScan";
 import partition from "./partition";
 import switchAll from "./switchAll";
 import test from "./test";
@@ -59,6 +60,10 @@ const examples = [
   {
     name: "mergeMap" as const,
     trackRecord: mergeMap,
+  },
+  {
+    name: "mergeScan" as const,
+    trackRecord: mergeScan,
   },
   {
     name: "combineLatest" as const,

@@ -20,6 +20,7 @@ import { ConcatAll } from "./track/parts/ConcatAll";
 import { Partition } from "./track/parts/Partition";
 import { PreviewObserver } from "./track/parts/PreviewObserver";
 import { MergeMap } from "./track/parts/MergeMap";
+import { MergeScan } from "./track/parts/MergeScan";
 
 export const Build = forwardRef(function Build(
   { track }: { track: TrackHead },
@@ -70,6 +71,8 @@ export const BuildTail = forwardRef(function BuildTail(
       return <MergeAll ref={ref} track={track} />;
     case Part.MergeMap:
       return <MergeMap ref={ref} track={track} />;
+    case Part.MergeScan:
+      return <MergeScan ref={ref} track={track} />;
     case Part.SwitchAll:
       return <SwitchAll ref={ref} track={track} />;
     case Part.ConcatAll:

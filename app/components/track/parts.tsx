@@ -17,6 +17,7 @@ export enum Part {
   MergeAll = "MergeAll",
   Merge = "Merge",
   MergeMap = "MergeMap",
+  MergeScan = "MergeScan",
   Concat = "Concat",
   CombineLatest = "CombineLatest",
   Partition = "Partition",
@@ -122,6 +123,21 @@ export type TrackTail =
         ) => Boxed<Observable<Boxed<Value>>>;
         displayText?: string;
         projectionText?: string;
+        concurrent?: number;
+      };
+      tail: TrackTail;
+    }
+  | {
+      part: Part.MergeScan;
+      props: {
+        accumulator: (
+          boxedAcc: Boxed<Value>,
+          boxedValue: Boxed<Value>,
+          index: number
+        ) => Boxed<Observable<Boxed<Value>>>;
+        seed: Boxed<Value>;
+        displayText?: string;
+        accumulatorText?: string;
         concurrent?: number;
       };
       tail: TrackTail;
