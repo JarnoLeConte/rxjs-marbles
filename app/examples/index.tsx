@@ -13,6 +13,7 @@ import mergeScan from "./mergeScan";
 import partition from "./partition";
 import switchAll from "./switchAll";
 import test from "./test";
+import withLatestFrom from "./withLatestFrom";
 
 export type Example = (typeof examples)[number]["name"];
 
@@ -68,6 +69,10 @@ const examples = [
   {
     name: "combineLatest" as const,
     trackRecord: combineLatest,
+  },
+  {
+    name: "withLatestFrom" as const,
+    trackRecord: withLatestFrom,
   },
   {
     name: "partition" as const,

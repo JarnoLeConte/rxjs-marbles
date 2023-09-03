@@ -3,24 +3,25 @@ import { forwardRef } from "react";
 import type { ObservableBuilder, OperatorBuilder } from "~/types";
 import type { TrackHead, TrackTail } from "./track/parts";
 import { Part } from "./track/parts";
+import { CombineLatest } from "./track/parts/CombineLatest";
+import { Concat } from "./track/parts/Concat";
+import { ConcatAll } from "./track/parts/ConcatAll";
+import { DownHill } from "./track/parts/DownHill";
 import { Empty } from "./track/parts/Empty";
 import { Identity } from "./track/parts/Identity";
 import { Map } from "./track/parts/Map";
-import { Producer } from "./track/parts/Producer";
-import { Ramp } from "./track/parts/Ramp";
-import { Concat } from "./track/parts/Concat";
-import { Straight } from "./track/parts/Straight";
-import { Observer } from "./track/parts/Observer";
-import { CombineLatest } from "./track/parts/CombineLatest";
-import { DownHill } from "./track/parts/DownHill";
 import { Merge } from "./track/parts/Merge";
 import { MergeAll } from "./track/parts/MergeAll";
-import { SwitchAll } from "./track/parts/SwitchAll";
-import { ConcatAll } from "./track/parts/ConcatAll";
-import { Partition } from "./track/parts/Partition";
-import { PreviewObserver } from "./track/parts/PreviewObserver";
 import { MergeMap } from "./track/parts/MergeMap";
 import { MergeScan } from "./track/parts/MergeScan";
+import { Observer } from "./track/parts/Observer";
+import { Partition } from "./track/parts/Partition";
+import { PreviewObserver } from "./track/parts/PreviewObserver";
+import { Producer } from "./track/parts/Producer";
+import { Ramp } from "./track/parts/Ramp";
+import { Straight } from "./track/parts/Straight";
+import { SwitchAll } from "./track/parts/SwitchAll";
+import { WithLatestFrom } from "./track/parts/WithLatestFrom";
 
 export const Build = forwardRef(function Build(
   { track }: { track: TrackHead },
@@ -79,6 +80,8 @@ export const BuildTail = forwardRef(function BuildTail(
       return <ConcatAll ref={ref} track={track} />;
     case Part.Partition:
       return <Partition ref={ref} track={track} />;
+    case Part.WithLatestFrom:
+      return <WithLatestFrom ref={ref} track={track} />;
     default:
       throw new Error(
         `Unknown how to construct pipe operator from track ${track}`

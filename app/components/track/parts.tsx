@@ -20,6 +20,7 @@ export enum Part {
   MergeScan = "MergeScan",
   Concat = "Concat",
   CombineLatest = "CombineLatest",
+  WithLatestFrom = "WithLatestFrom",
   Partition = "Partition",
 }
 
@@ -152,6 +153,14 @@ export type TrackTail =
       };
       trueTail: TrackTail;
       falseTail: TrackTail;
+    }
+  | {
+      part: Part.WithLatestFrom;
+      props?: {
+        displayText?: string;
+      };
+      other: Track;
+      tail: TrackTail;
     };
 
 export type TrackPart<P = Part> = {
