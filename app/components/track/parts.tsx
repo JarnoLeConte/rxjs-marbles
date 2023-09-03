@@ -3,6 +3,7 @@ import type { Observable } from "rxjs";
 import type { Boxed, Value } from "~/types";
 
 export enum Part {
+  /* Static parts */
   Straight = "Straight",
   Ramp = "Ramp",
   DownHill = "DownHill",
@@ -22,6 +23,7 @@ export enum Part {
   CombineLatest = "CombineLatest",
   WithLatestFrom = "WithLatestFrom",
   Partition = "Partition",
+  DelayWhen = "DelayWhen",
 }
 
 export type TrackHead =
@@ -160,6 +162,18 @@ export type TrackTail =
         displayText?: string;
       };
       other: Track;
+      tail: TrackTail;
+    }
+  | {
+      part: Part.DelayWhen;
+      props: {
+        displayText?: string;
+        durationSelectorText?: string;
+        durationSelector: (
+          value: Value,
+          index: number
+        ) => Boxed<Observable<Boxed<Value>>>;
+      };
       tail: TrackTail;
     };
 

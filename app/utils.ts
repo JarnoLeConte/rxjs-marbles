@@ -91,6 +91,9 @@ export function renderValue(value?: Value): string {
       if (Array.isArray(value)) {
         return `[${value.map(renderBoxedValue).join(", ")}]`;
       }
+      if (isObservable(value)) {
+        return "$";
+      }
     default:
       throw new Error(`Unknown value type ${value}`);
   }

@@ -22,6 +22,7 @@ import { Ramp } from "./track/parts/Ramp";
 import { Straight } from "./track/parts/Straight";
 import { SwitchAll } from "./track/parts/SwitchAll";
 import { WithLatestFrom } from "./track/parts/WithLatestFrom";
+import { DelayWhen } from "./track/parts/DelayWhen";
 
 export const Build = forwardRef(function Build(
   { track }: { track: TrackHead },
@@ -82,6 +83,8 @@ export const BuildTail = forwardRef(function BuildTail(
       return <Partition ref={ref} track={track} />;
     case Part.WithLatestFrom:
       return <WithLatestFrom ref={ref} track={track} />;
+    case Part.DelayWhen:
+      return <DelayWhen ref={ref} track={track} />;
     default:
       throw new Error(
         `Unknown how to construct pipe operator from track ${track}`

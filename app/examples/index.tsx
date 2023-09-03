@@ -2,6 +2,7 @@ import combineLatest from "./combineLatest";
 import concat from "./concat";
 import concatAll from "./concatAll";
 import concatMap from "./concatMap";
+import delayWhen from "./delayWhen";
 import fromEvent from "./fromEvent";
 import interval from "./interval";
 import map from "./map";
@@ -81,6 +82,10 @@ const examples = [
   {
     name: "fromEvent" as const,
     trackRecord: fromEvent,
+  },
+  {
+    name: "delayWhen" as const,
+    trackRecord: delayWhen,
   },
 ];
 
