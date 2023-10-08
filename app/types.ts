@@ -2,21 +2,7 @@ import type { Color } from "@react-three/fiber";
 import type { Observable, OperatorFunction } from "rxjs";
 import type { Track } from "./types";
 
-export type RealValue =
-  | number
-  | string
-  | boolean
-  | RealValue[]
-  | Observable<RealValue>;
-
-export type Value =
-  | number
-  | string
-  | boolean
-  | Boxed<Value>[]
-  | Observable<Boxed<Value>>;
-
-export type Boxed<V extends Value> = {
+export type Boxed<V> = {
   value: V;
   label: string;
   ballId?: number;
@@ -36,12 +22,12 @@ export type { Track } from "~/components/track/parts";
 export type TrackRecord = Record<string, Track>;
 
 export type OperatorBuilder = {
-  operator: () => OperatorFunction<Boxed<Value>, Boxed<Value>>;
-  build: () => OperatorFunction<Boxed<Value>, Boxed<Value>>;
+  operator: () => OperatorFunction<Boxed<unknown>, Boxed<unknown>>;
+  build: () => OperatorFunction<Boxed<unknown>, Boxed<unknown>>;
 };
 export type ObservableBuilder = {
-  observable: () => Observable<Boxed<Value>>;
-  build: () => Observable<Boxed<Value>>;
+  observable: () => Observable<Boxed<unknown>>;
+  build: () => Observable<Boxed<unknown>>;
 };
 
 export type Status = "waiting" | "active" | "complete" | "error";

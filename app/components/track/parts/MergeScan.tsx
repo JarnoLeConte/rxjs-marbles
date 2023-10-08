@@ -29,7 +29,7 @@ import { Element } from "~/components/elements/Element";
 import { Factory } from "~/components/elements/Factory";
 import { initialize } from "~/observables/initialize";
 import { useStore } from "~/store";
-import type { Ball, Boxed, OperatorBuilder, Status, Value } from "~/types";
+import type { Ball, Boxed, OperatorBuilder, Status } from "~/types";
 import { unbox } from "~/utils";
 import { Tunnel } from "../../elements/Tunnel";
 import type { Part, TrackPart } from "../parts";
@@ -58,11 +58,11 @@ export const MergeScan = forwardRef(function MergeScan(
   const [onBeforeEnter, beforeEnter$] = useObservableCallback<Ball>();
   const [onEnterAccumulator, enterAccumulator$] = useObservableCallback<Ball>();
   const [isClosed, setIsClosed] = useState(true);
-  const [result, setResult] = useState<Boxed<Value>>(seed);
+  const [result, setResult] = useState<Boxed<unknown>>(seed);
 
   type Item = {
     id: number;
-    boxedObservable: Boxed<Observable<Boxed<Value>>>;
+    boxedObservable: Boxed<Observable<Boxed<unknown>>>;
     status: Status;
     color: Color;
   };
@@ -247,7 +247,7 @@ export const MergeScan = forwardRef(function MergeScan(
           <BallDetector position={[0, 1, 0]} onEnter={onEnterAccumulator} />
           <Text position={[0, 1.4, 1]}>āccumulator</Text>
           <Text position={[0, 0.7, 1]} fontSize={0.39}>
-            {result.value.toString()}
+            {`${result.value}`}
           </Text>
         </group>
         <group position={[2, 0, 0]}>

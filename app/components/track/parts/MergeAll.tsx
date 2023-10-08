@@ -27,7 +27,7 @@ import { Factory } from "~/components/elements/Factory";
 import { initialize } from "~/observables/initialize";
 import { when } from "~/observables/when";
 import { useStore } from "~/store";
-import type { Ball, Boxed, OperatorBuilder, Status, Value } from "~/types";
+import type { Ball, Boxed, OperatorBuilder, Status } from "~/types";
 import { assertBoxedObservable, unbox } from "~/utils";
 import { Tunnel } from "../../elements/Tunnel";
 import type { Part, TrackPart } from "../parts";
@@ -61,7 +61,7 @@ export const MergeAll = forwardRef(function MergeAll(
 
   type Item = {
     id: number;
-    boxedObservable: Boxed<Observable<Boxed<Value>>>;
+    boxedObservable: Boxed<Observable<Boxed<unknown>>>;
     status: Status;
     color: Color;
   };

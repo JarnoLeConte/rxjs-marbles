@@ -25,7 +25,7 @@ import { BuildTail } from "~/components/Build";
 import { Factory } from "~/components/elements/Factory";
 import { initialize } from "~/observables/initialize";
 import { useStore } from "~/store";
-import type { Ball, Boxed, OperatorBuilder, Status, Value } from "~/types";
+import type { Ball, Boxed, OperatorBuilder, Status } from "~/types";
 import { unbox } from "~/utils";
 import { Tunnel } from "../../elements/Tunnel";
 import type { Part, TrackPart } from "../parts";
@@ -52,7 +52,7 @@ export const MergeMap = forwardRef(function MergeMap(
 
   type Item = {
     id: number;
-    boxedObservable: Boxed<Observable<Boxed<Value>>>;
+    boxedObservable: Boxed<Observable<Boxed<unknown>>>;
     status: Status;
     color: Color;
   };

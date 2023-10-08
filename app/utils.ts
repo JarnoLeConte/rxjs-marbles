@@ -1,13 +1,6 @@
-import {
-  isObservable,
-  map,
-  mergeMap,
-  of,
-  throwError,
-  type Observable,
-  type OperatorFunction,
-} from "rxjs";
-import type { Boxed, RealValue, Value } from "./types";
+import type { Observable, OperatorFunction } from "rxjs";
+import { isObservable, map, mergeMap, of, pipe, throwError } from "rxjs";
+import type { Boxed } from "./types";
 
 export enum CollisionGroup {
   Track = 0,
@@ -49,7 +42,7 @@ export function numberToChar(number: number, startChar = "A") {
   return indexToChar(number - 1, startChar);
 }
 
-export function box<V extends Value>(
+export function box<V>(
   props: Required<Pick<Boxed<V>, "value">> & Partial<Boxed<V>>
 ): Boxed<V> {
   return {
@@ -59,26 +52,26 @@ export function box<V extends Value>(
   };
 }
 
-export function unbox<V extends Value>(boxedValue: Boxed<V>): V {
+export function unbox<V>(boxedValue: Boxed<V>): V {
   return boxedValue.value;
 }
 
-export function unboxDeep<V extends Value>(boxedValue: Boxed<V>): RealValue {
+export function unboxDeep<V>(boxedValue: Boxed<V>): V {
   const value = unbox(boxedValue);
   if (isObservable(value)) {
-    return value.pipe(map(unboxDeep));
+    return value.pipe(map((v) => (isBoxedValue(v) ? unboxDeep(v) : v))) as V;
   }
   if (Array.isArray(value)) {
-    return value.map(unboxDeep);
+    return value.map((v) => (isBoxedValue(v) ? unboxDeep(v) : v)) as V;
   }
   return value;
 }
 
-export function renderBoxedValue(boxedValue: Boxed<Value>): string {
+export function renderBoxedValue<V>(boxedValue: Boxed<V>): string {
   return boxedValue.label ?? renderValue(unbox(boxedValue));
 }
 
-export function renderValue(value?: Value): string {
+export function renderValue(value?: any): string {
   if (value === undefined || value === null) return "-";
   switch (typeof value) {
     case "number":
@@ -89,34 +82,58 @@ export function renderValue(value?: Value): string {
       return value ? "true" : "false";
     case "object":
       if (Array.isArray(value)) {
-        return `[${value.map(renderBoxedValue).join(", ")}]`;
+        return `[${value
+          .map((v) => (isBoxedValue(v) ? renderBoxedValue(v) : renderValue(v)))
+          .join(", ")}]`;
       }
       if (isObservable(value)) {
         return "$";
       }
+      return "{...}";
     default:
       throw new Error(`Unknown value type ${value}`);
   }
 }
 
-export function isBoxedObservable(
-  boxedValue: Boxed<Value>
-): boxedValue is Boxed<Observable<Boxed<Value>>> {
-  return isObservable(unbox(boxedValue));
+export function isBoxedValue<V>(boxedValue: any): boxedValue is Boxed<V> {
+  // TODO: improve quality of this check
+  return (
+    typeof boxedValue === "object" &&
+    boxedValue !== null &&
+    "value" in boxedValue &&
+    "label" in boxedValue
+  );
 }
 
-export function assertBoxedObservable(): OperatorFunction<
-  Boxed<Value>,
-  Boxed<Observable<Boxed<Value>>>
-> {
-  return mergeMap((boxedValue) =>
-    isBoxedObservable(boxedValue)
-      ? of(boxedValue)
+export function isBoxedObservable<T>(
+  boxedValue: any
+): boxedValue is Boxed<Observable<T>> {
+  return isBoxedValue(boxedValue) && isObservable(unbox(boxedValue));
+}
+
+export function assert<T>(
+  predicate: (value: any) => value is T
+): OperatorFunction<any, T> {
+  return mergeMap((value) =>
+    predicate(value)
+      ? of(value)
       : throwError(
-          () =>
-            new Error(`Expected an boxed observable, but got: ${boxedValue}`)
+          () => new Error(`Value '${value}' does not match assertion.`)
         )
   );
+}
+
+export function assertInner<T>(
+  predicate: (value: any) => value is T
+): OperatorFunction<Boxed<Observable<unknown>>, Boxed<Observable<T>>> {
+  return map(({ value, ...boxedObservable }) => ({
+    ...boxedObservable,
+    value: value.pipe(assert(predicate)),
+  }));
+}
+
+export function assertBoxedObservable() {
+  return pipe(assert(isBoxedObservable), assertInner(isBoxedValue));
 }
 
 // Get unique id for an object

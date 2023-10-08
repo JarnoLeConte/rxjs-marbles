@@ -1,3 +1,4 @@
+import type { Color } from "@react-three/fiber";
 import { useObservableCallback } from "observable-hooks";
 import type { ForwardedRef } from "react";
 import { forwardRef, useImperativeHandle, useRef, useState } from "react";
@@ -21,7 +22,6 @@ import type { Ball, OperatorBuilder } from "~/types";
 import { assertBoxedObservable, unbox } from "~/utils";
 import { Tunnel } from "../../elements/Tunnel";
 import type { Part, TrackPart } from "../parts";
-import type { Color } from "@react-three/fiber";
 
 /*
   ⚠️ Current implementation differs from rxjs, in that:
